@@ -3,7 +3,7 @@
   <header>
     <metadata>
       <created>2018-11-12T13:42:01.9175724+00:00</created>
-      <modified>2018-11-12T13:43:13.7328568+00:00</modified>
+      <modified>2018-11-12T14:38:35.0004620+00:00</modified>
     </metadata>
     <dependencies />
     <types />
@@ -24,9 +24,7 @@
     <module id="Input" display="Expanded" showPreview="false" position="10, 419" type="Xamla.Graph.GraphInputModule" />
     <module id="Output" display="Expanded" showPreview="false" position="1314, 419" type="Xamla.Graph.GraphOutputModule">
       <inputs>
-        <inputPin id="...">
-          <connection from="Input.Outputs.Input0" />
-        </inputPin>
+        <inputPin id="..." />
       </inputs>
     </module>
     <module id="Begin" display="Expanded" showPreview="false" position="10, 369" type="Xamla.Graph.GraphStartModule" />
@@ -37,7 +35,7 @@
         </inputPin>
       </inputs>
     </module>
-    <module id="item1" display="Collapsed" showPreview="true" position="465, 371" type="Python3.Python3ScriptFile">
+    <module id="item1" display="Expanded" showPreview="true" position="585, 318" type="Python3.Python3ScriptFile">
       <inputs>
         <inputPin id="flowIn">
           <connection from="Begin.Outputs.flowStart" />
@@ -60,9 +58,22 @@
         <inputPin id="path">
           <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">"example_01_pick_and_place.py"</object>
         </inputPin>
+        <inputPin id="loopCount">
+          <connection from="item3.Outputs.Output" />
+        </inputPin>
+      </inputs>
+    </module>
+    <module id="item3" display="Expanded" showPreview="true" position="254, 461" type="Xamla.Graph.Controls.Int32Input">
+      <inputs>
+        <inputPin id="Value">
+          <object type="System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">2</object>
+        </inputPin>
+        <inputPin id="Caption">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">null</object>
+        </inputPin>
       </inputs>
     </module>
   </body>
   <compilerSettings debug="false" standardAssemblies="true" />
-  <viewModel>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</viewModel>
+  <viewModel>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</viewModel>
 </xgraph>

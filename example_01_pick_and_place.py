@@ -30,14 +30,14 @@ def get_gripper(move_group: MoveGroup):
     return  WeissWsgGripper(properties, move_group.motion_service)
 
 
-def main():
-    # create move group instance
+def main(loopCount: int):
+    # create move group instance targeting the right arm of the robot
     move_group = MoveGroup("/sda10f/right_arm_torso")
 
-    # get the corresponding end effecotr
+    # get the corresponding end effector
     end_effector = move_group.get_end_effector()
 
-    # get the gripper of the current move group
+    # get the gripper attached at the right arm
     wsg_gripper = get_gripper(move_group)
 
     # get a client to communicate with the robot
@@ -46,7 +46,7 @@ def main():
     # create a instance of WorldViewClient to get access to rosvita world view
     world_view_client = WorldViewClient()
 
-    # get the example joint values
+    # get the example joint values from world view
     jv_prePick = world_view_client.get_joint_values("01_PrePick","example_01_pick_place")
     jv_pick = world_view_client.get_joint_values("02_Pick","example_01_pick_place")
     jv_prePlace = world_view_client.get_joint_values("03_PrePlace","example_01_pick_place")
@@ -56,14 +56,15 @@ def main():
     loop.add_signal_handler(signal.SIGTERM,
                             functools.partial(shutdown, loop, signal.SIGTERM))
     loop.add_signal_handler(signal.SIGINT,
-        functools.partial(shutdown, loop, signal.SIGINT))
+                            functools.partial(shutdown, loop, signal.SIGINT))
 
     async def move_supervised(joint_values: JointValues, velocity_scaling=1):
-        """Opens a window in rosvita to let the user supervise the motion to pose """
-        stepped_client = move_group.move_joints_collision_free_supervised(joint_values, velocity_scaling = velocity_scaling)
+        """Opens a window in rosvita to let the user supervise the motion to joint values """
+        stepped_client = move_group.move_joints_collision_free_supervised(joint_values, 
+                                                        velocity_scaling = velocity_scaling)
         robot_chat_stepped_motion = RobotChatSteppedMotion(robot_chat,
-                                                       stepped_client,
-                                                       move_group.name)
+                                                        stepped_client,
+                                                        move_group.name)
         await robot_chat_stepped_motion.handle_stepwise_motions()
 
     async def prepare_gripper():
@@ -108,11 +109,12 @@ def main():
     try:
         # plan a trajectory to the begin pose
         loop.run_until_complete(prepare_gripper())
-        for i in range(2):
+        for i in range(loopCount):
             loop.run_until_complete(pick_and_place())      
     finally:
         loop.close()
     
 
 if __name__ == '__main__':
-    main()
+    loopCount = 2
+    main(loopCount)
