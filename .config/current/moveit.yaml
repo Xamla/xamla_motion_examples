@@ -1,0 +1,107 @@
+xamla_motion_examples:
+  name: xamla_motion_examples
+  urdf:
+    pkg: ''
+    relative_path: ../../robot.urdf
+  self_collisions:
+    sampling_density: 9000
+    min_collision_for_always_colliding_pairs: 95
+  planning_groups:
+    /sda10f/sda10f_r1_controller:
+      solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
+      kin_search_resolution: 0.0050000000000000001
+      kin_search_timeout: 0.0050000000000000001
+      kin_search_attempts: 3
+      kinematic_chain:
+        base_link: torso_link_b1
+        tip_link: arm_left_link_tool0
+      subgroups: []
+    /sda10f/sda10f_r2_controller:
+      solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
+      kin_search_resolution: 0.0050000000000000001
+      kin_search_timeout: 0.0050000000000000001
+      kin_search_attempts: 3
+      kinematic_chain:
+        base_link: torso_link_b1
+        tip_link: arm_right_link_tool0
+      subgroups: []
+    /sda10f/sda10f_b1_controller:
+      solver: ''
+      kin_search_resolution: 0.0050000000000000001
+      kin_search_timeout: 0.050000000000000003
+      kin_search_attempts: 3
+      kinematic_chain:
+        base_link: torso_base_link
+        tip_link: torso_link_b1
+      subgroups: []
+    /sda10f/sda10f_b2_controller:
+      solver: ''
+      kin_search_resolution: 0.0050000000000000001
+      kin_search_timeout: 0.050000000000000003
+      kin_search_attempts: 3
+      kinematic_chain:
+        base_link: torso_base_link
+        tip_link: torso_link_b2
+      subgroups: []
+    /sda10f/left_arm_torso:
+      solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
+      kin_search_resolution: 0.0050000000000000001
+      kin_search_timeout: 0.050000000000000003
+      kin_search_attempts: 3
+      kinematic_chain:
+        base_link: torso_link_b1
+        tip_link: arm_left_link_tool0
+      subgroups:
+      - /sda10f/sda10f_r1_controller
+      - /sda10f/sda10f_b1_controller
+    /sda10f/right_arm_torso:
+      solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
+      kin_search_resolution: 0.0050000000000000001
+      kin_search_timeout: 0.050000000000000003
+      kin_search_attempts: 3
+      kinematic_chain:
+        base_link: torso_link_b1
+        tip_link: arm_right_link_tool0
+      subgroups:
+      - /sda10f/sda10f_r2_controller
+      - /sda10f/sda10f_b1_controller
+    /sda10f:
+      solver: ''
+      kin_search_resolution: 0.0050000000000000001
+      kin_search_timeout: 0.050000000000000003
+      kin_search_attempts: 3
+      kinematic_chain:
+        base_link: ''
+        tip_link: ''
+      subgroups:
+      - /sda10f/sda10f_r2_controller
+      - /sda10f/sda10f_r1_controller
+      - /sda10f/sda10f_b1_controller
+    /sda10f/both_arms:
+      solver: ''
+      kin_search_resolution: 0.0050000000000000001
+      kin_search_timeout: 0.050000000000000003
+      kin_search_attempts: 3
+      kinematic_chain:
+        base_link: ''
+        tip_link: ''
+      subgroups:
+      - /sda10f/sda10f_r2_controller
+      - /sda10f/sda10f_r1_controller
+  end_effectors:
+    EE_manipulator_right:
+      end_effector_group: /sda10f/sda10f_r2_controller
+      parent_link: arm_right_link_tool0
+    EE_manipulator_left:
+      end_effector_group: /sda10f/sda10f_r1_controller
+      parent_link: arm_left_link_tool0
+    EE_manipulator_left_torso:
+      end_effector_group: /sda10f/left_arm_torso
+      parent_link: arm_left_link_tool0
+    EE_manipulator_right_torso:
+      end_effector_group: /sda10f/right_arm_torso
+      parent_link: arm_right_link_tool0
+  passive_joints: []
+  author_information:
+    name: ''
+    email: ''

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<launch>
+  <group ns="sda10f">
+    <node name="xamlaSda10fController" pkg="xamlamoveit_server" type="tvpSimulationControllerNode.lua" output="screen">
+      <param name="frequency" value="0.008" />
+      <param name="feedback_delay" value="0.16" />
+      <rosparam command="load" file="$(dirname)/sim-controller_RobotSda10F_1.yaml" />
+      <rosparam command="load" file="$(dirname)/sim-jointlimits_RobotSda10F_1.yaml" />
+    </node>
+    <node name="xamlaSda10fSimulation" pkg="xamlamoveit_server" type="tvpSimulationActionNode.lua" output="screen">
+      <rosparam command="load" file="$(dirname)/sim-controller_RobotSda10F_1.yaml" />
+      <rosparam command="load" file="$(dirname)/sim-jointlimits_RobotSda10F_1.yaml" />
+    </node>
+    <node name="service_simulator" pkg="motoman_driver" type="service_simulator.lua" cwd="node" output="screen" />
+  </group>
+</launch>

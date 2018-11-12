@@ -1,0 +1,2 @@
+source_list:
+    - /move_group/fake_controller_joint_states

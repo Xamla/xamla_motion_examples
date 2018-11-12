@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<launch>
+  <include file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/moveit.launch" />
+  <include file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/motoman_sda10f.launch" />
+  <include file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/Weiss-WSG50.launch" />
+  <include file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/launch/custom.launch" />
+  <include file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/jointStateMonitor.launch" />
+  <include file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/jointJogging.launch" />
+  <include file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/xamlaMoveIt.launch" />
+  <include file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/sysmon.launch" />
+</launch>

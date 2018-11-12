@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<launch>
+  <node name="xamlaJointJogging" pkg="xamlamoveit_server" type="rosJointJoggingServiceNode.lua" output="screen">
+    <param name="move_group" type="string" value="sda10f/sda10f_r1_controller" />
+    <rosparam command="load" file="$(dirname)/JointJoggingControllers.yaml" />
+    <rosparam command="load" file="$(dirname)/JointJoggingLimits.yaml" />
+  </node>
+</launch>

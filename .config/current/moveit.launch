@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<launch>
+  <arg name="robot_description" value="robot_description" />
+  <arg name="load_robot_description" value="true" />
+  <param name="robot_description" textfile="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/robot.urdf" />
+  <param name="robot_description_semantic" textfile="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/srdf/xamla_motion_examples.srdf" />
+  <group ns="robot_description_kinematics">
+    <rosparam command="load" file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/srdf/kinematics.yaml" />
+  </group>
+  <group ns="robot_description_planning">
+    <rosparam command="load" file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/srdf/joint_limits.yaml" />
+  </group>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+  <group ns="move_group">
+    <param name="planning_plugin" value="ompl_interface/OMPLPlanner" />
+    <param name="request_adapters" value="default_planner_request_adapters/AddTimeParameterization default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints" />
+    <param name="start_state_max_bounds_error" value="0.1" />
+    <rosparam command="load" file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/srdf/ompl_planning.yaml" />
+  </group>
+  <group ns="move_group">
+    <param name="trajectory_execution/allowed_execution_duration_scaling" value="1.2" />
+    <param name="use_controller_manager" value="false" />
+    <param name="trajectory_execution/execution_duration_monitoring" value="false" />
+    <param name="trajectory_execution/allowed_goal_duration_margin" value="0.5" />
+    <rosparam command="load" file="/home/xamla/Rosvita.Control/projects/xamla_motion_examples/.config/current/MoveItControllers.yaml" />
+    <param name="moveit_controller_manager" value="moveit_simple_controller_manager/MoveItSimpleControllerManager" />
+  </group>
+  <group ns="move_group">
+    <param name="octomap_resolution" value="0.025" type="double" />
+    <param name="max_range" value="0.5" />
+  </group>
+  <node name="move_group" launch-prefix="" pkg="moveit_ros_move_group" type="move_group" respawn="true" respawn_delay="0" output="screen" args="">
+    <param name="allow_trajectory_execution" value="true" />
+    <param name="max_safe_path_cost" value="1" />
+    <param name="jiggle_fraction" value="0.05" />
+    <param name="capabilities" value="move_group/MoveGroupCartesianPathService move_group/MoveGroupExecuteTrajectoryAction move_group/MoveGroupKinematicsService move_group/MoveGroupMoveAction move_group/MoveGroupPickPlaceAction move_group/MoveGroupPlanService move_group/MoveGroupQueryPlannersService move_group/MoveGroupStateValidationService move_group/MoveGroupGetPlanningSceneService move_group/ClearOctomapService" />
+    <param name="planning_scene_monitor/publish_planning_scene" value="true" />
+    <param name="planning_scene_monitor/publish_geometry_updates" value="true" />
+    <param name="planning_scene_monitor/publish_state_updates" value="true" />
+    <param name="planning_scene_monitor/publish_transforms_updates" value="true" />
+  </node>
+</launch>

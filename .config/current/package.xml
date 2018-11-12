@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package format="2">
+  <name>current</name>
+  <version>0.0.1</version>
+  <description>Power to the robots</description>
+  <maintainer email="info@xamla.com">Xamla</maintainer>
+  <license>Proprietary</license>
+</package>

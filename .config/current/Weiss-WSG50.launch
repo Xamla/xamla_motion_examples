@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<launch>
+  <node name="wsg50_controller" pkg="xamlamoveit_server" type="tvpSimulationControllerNode.lua" output="screen">
+    <param name="frequency" value="0.008" />
+    <param name="feedback_delay" value="0.16" />
+    <rosparam command="load" file="$(dirname)/sim-controller_wsg50.yaml" />
+    <rosparam command="load" file="$(dirname)/sim-jointlimits_wsg50.yaml" />
+  </node>
+  <node name="wsg50" pkg="xamlamoveit_server" type="weissTwoFingerSimulationNode.lua" ns="/xamla/wsg_driver" output="screen">
+    <param name="joint_command_namespace" type="string" value="/wsg50_controller" />
+    <param name="actuated_joint_name" type="string" value="_base_joint_gripper_right" />
+  </node>
+</launch>

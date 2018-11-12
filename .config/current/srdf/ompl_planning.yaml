@@ -1,0 +1,91 @@
+planner_configs:
+  PRMstar:
+    type: geometric::PRMstar
+    range: 0.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    delay_collision_checking: 5  # Stop collision checking as soon as C-free parent found. default 1
+  RRTstar:
+    type: geometric::RRTstar
+    range: 0.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    optimization_objective: MaximizeMinClearanceObjective  # http://docs.ros.org/indigo/api/moveit_tutorials/html/doc/ompl_interface_tutorial.html
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    delay_collision_checking: 5  # Stop collision checking as soon as C-free parent found. default 1
+  SPARStwo:
+    type: geometric::SPARStwo
+    stretch_factor: 3.0  # roadmap spanner stretch factor. multiplicative upper bound on path quality. It does not make sense to make this parameter more than 3. default: 3.0
+    sparse_delta_fraction: 0.25  # delta fraction for connection distance. This value represents the visibility range of sparse samples. default: 0.25
+    dense_delta_fraction: 0.001  # delta fraction for interface detection. default: 0.001
+    max_failures: 5000  # maximum consecutive failure limit. default: 5000
+  RRTConnect:
+    type: geometric::RRTConnect
+    range: 0.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+/sda10f/sda10f_r2_controller:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - PRMstar
+    - RRTstar
+    - SPARStwo
+    - RRTConnect
+  projection_evaluator: joints(arm_right_joint_1_s,arm_right_joint_2_l)
+  longest_valid_segment_fraction: 0.001
+/sda10f/sda10f_r1_controller:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - PRMstar
+    - RRTstar
+    - SPARStwo
+    - RRTConnect
+  projection_evaluator: joints(arm_left_joint_1_s,arm_left_joint_2_l)
+  longest_valid_segment_fraction: 0.001
+/sda10f/sda10f_b1_controller:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - PRMstar
+    - RRTstar
+    - SPARStwo
+    - RRTConnect
+  longest_valid_segment_fraction: 0.001
+/sda10f/sda10f_b2_controller:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - PRMstar
+    - RRTstar
+    - SPARStwo
+    - RRTConnect
+  longest_valid_segment_fraction: 0.001
+/sda10f/left_arm_torso:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - PRMstar
+    - RRTstar
+    - SPARStwo
+    - RRTConnect
+  projection_evaluator: joints(torso_joint_b1,arm_left_joint_1_s)
+  longest_valid_segment_fraction: 0.001
+/sda10f/right_arm_torso:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - PRMstar
+    - RRTstar
+    - SPARStwo
+    - RRTConnect
+  projection_evaluator: joints(torso_joint_b1,arm_right_joint_1_s)
+  longest_valid_segment_fraction: 0.001
+/sda10f:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - PRMstar
+    - RRTstar
+    - SPARStwo
+    - RRTConnect
+  projection_evaluator: joints(torso_joint_b1,arm_left_joint_1_s)
+  longest_valid_segment_fraction: 0.001
+/sda10f/both_arms:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - PRMstar
+    - RRTstar
+    - SPARStwo
+    - RRTConnect
+  projection_evaluator: joints(arm_left_joint_1_s,arm_left_joint_2_l)
+  longest_valid_segment_fraction: 0.001

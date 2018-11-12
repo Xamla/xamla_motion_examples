@@ -1,0 +1,13 @@
+joint_limits:
+  _base_joint_gripper_right:
+    has_position_limits: true
+    min_position: 0.0027000000000000001
+    max_position: 0.055
+    has_velocity_limits: true
+    max_velocity: 0.41999999999999998
+    has_acceleration_limits: true
+    max_acceleration: 5.0
+    has_jerk_limits: false
+    max_jerk: 0.0
+    has_effort_limits: false
+    max_effort: 0.0

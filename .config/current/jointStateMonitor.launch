@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<launch>
+  <node name="xamlaJointMonitor" pkg="xamlamoveit_server" type="jointStateLatencyHeartbeatNode.lua" output="screen">
+    <param name="frequency" type="double" value="60.0" />
+    <param name="heartbeat" type="double" value="10.0" />
+    <rosparam command="load" file="$(dirname)/JointMonitor.yaml" />
+  </node>
+</launch>

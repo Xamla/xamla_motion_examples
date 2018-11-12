@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<launch>
+  <group>
+    <node name="xamlaMoveActions" pkg="xamlamoveit_server" type="moveJActionServer.lua" output="screen" />
+    <node name="xamlaMoveGroupServices" pkg="xamlamoveit_server" type="moveGroupServices.lua" output="screen" />
+    <node name="xamlaPlanningServices" pkg="xamlamoveit_server" type="planningServices.lua" output="screen" />
+    <node name="xamlaResourceLockService" pkg="xamlamoveit_server" type="resourceLockService.lua" output="screen" />
+  </group>
+</launch>
