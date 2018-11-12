@@ -47,6 +47,7 @@ def main(loopCount: int):
     world_view_client = WorldViewClient()
 
     # get the example joint values from world view
+    jv_home = world_view_client.get_joint_values("Home","")
     jv_prePick = world_view_client.get_joint_values("01_PrePick","example_01_pick_place")
     jv_pick = world_view_client.get_joint_values("02_Pick","example_01_pick_place")
     jv_prePlace = world_view_client.get_joint_values("03_PrePlace","example_01_pick_place")
@@ -71,7 +72,7 @@ def main(loopCount: int):
         print("Home the gripper") 
         # Allows parallel homing and supervised movement
         t1 = wsg_gripper.homing()
-        t2 = move_supervised(jv_prePick)
+        t2 = move_supervised(jv_home)
         await asyncio.gather(t1, t2)
 
     async def go_to_prepick():
@@ -84,7 +85,7 @@ def main(loopCount: int):
     async def pick_up():
         """Simple example of a "picking up" motion """
         print("Pick up")
-        await move_group.move_joints_collision_free(jv_pick, velocity_scaling=0.02)
+        await move_group.move_joints_collision_free(jv_pick, velocity_scaling=0.04)
         await wsg_gripper.grasp(0.002, 0.1, 0.05)
         await move_group.move_joints_collision_free(jv_prePick)
 
@@ -95,7 +96,7 @@ def main(loopCount: int):
     async def place():
         """Simple example of a "placing" motion """
         print("Place")
-        await move_group.move_joints_collision_free(jv_place, velocity_scaling=0.02)
+        await move_group.move_joints_collision_free(jv_place, velocity_scaling=0.04)
         await wsg_gripper.grasp(0.04, 1, 0.05)
         await move_group.move_joints_collision_free(jv_prePlace)  
 

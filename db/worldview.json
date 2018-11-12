@@ -124,6 +124,35 @@
           "visible": true
         }
       ]
+    },
+    {
+      "type": "JointValues",
+      "id": "JointValues_Home",
+      "tags": [],
+      "value": {
+        "jointNames": [
+          "torso_joint_b1",
+          "arm_right_joint_1_s",
+          "arm_right_joint_2_l",
+          "arm_right_joint_3_e",
+          "arm_right_joint_4_u",
+          "arm_right_joint_5_r",
+          "arm_right_joint_6_b",
+          "arm_right_joint_7_t"
+        ],
+        "values": [
+          0.11534672567941151,
+          2.5913223874938178,
+          -1.0394151146913218,
+          -0.19990169288143816,
+          -0.77526990556911612,
+          -2.2421510040653465,
+          1.5925429130455511,
+          -1.1493751616213821
+        ]
+      },
+      "enabled": true,
+      "visible": true
     }
   ]
 }
