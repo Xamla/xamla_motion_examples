@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<robot name="motoman_sda10f" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:include filename="$(find part_motoman_sda10f)/common_torso_macro.xacro" />
+    <xacro:include filename="$(find part_motoman_sda10f)/arm_macro.xacro" />
+
+    <xacro:macro name="motoman_sda10f" params="prefix parent *origin">
+        <xacro:torso prefix="${prefix}torso_"/>
+        <joint name="${prefix}torso_base_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${prefix}torso_base_link"/>
+            <xacro:insert_block name="origin" />
+        </joint>
+
+        <xacro:motoman_arm prefix="${prefix}arm_left_" parent="${prefix}torso_link_b1" reflect="1">
+            <origin xyz="0.09996 0.0275 0.32214" rpy="${pi/2} 0 0" />
+        </xacro:motoman_arm>
+
+        <xacro:motoman_arm prefix="${prefix}arm_right_" parent="${prefix}torso_link_b1" reflect="-1">
+            <origin xyz="0.09996 -0.0275 0.32214" rpy="${pi/2} 0 0" />
+        </xacro:motoman_arm>
+
+        <link name="${prefix}_head_base"></link>
+        <joint name="${prefix}_base_2_head_base" type="fixed">
+            <parent link="${prefix}torso_link_b1"/>
+            <child link="${prefix}_head_base" />
+            <origin rpy="0 0 0.0" xyz="0.09996 0 0.441" />
+        </joint>
+    </xacro:macro>
+    <!--@@{BEGIN_XAMLA_STANDALONE_TEMPLATE}
+     <xacro:property name="pi" value="3.1415926535897931" />
+      <link name="world" />
+      <xacro:motoman_sda10f prefix="" parent="world">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </xacro:motoman_sda10f>
+    @@{END_XAMLA_STANDALONE_TEMPLATE}-->
+</robot>

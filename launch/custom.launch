@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<launch>
+  <!--
+Created by Rosvita
+
+Here you can add your custom launch file content. 
+
+Minimal example:
+  <node name="talker" pkg="rospy_tutorials" type="talker" />
+
+Extended example:
+  <group ns="wg2">
+    <node pkg="rospy_tutorials" type="talker" name="talker" args="- -test" respawn="true" >
+      <remap from="chatter" to="hello" />
+      <param name="talker_1_param" value="a value" />
+    </node>
+  </group>
+
+For more information see: http://wiki.ros.org/roslaunch/XML
+ -->
+</launch>

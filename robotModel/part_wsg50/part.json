@@ -1,0 +1,19 @@
+{
+    "id": "weiss_robotics$wsg_50",
+    "displayName": "WSG-50",
+    "thumbnailUrl": "/images/part-thumbs/wsg-50-gripper.png",
+    "modelFile": "./weiss-wsg50.xacro",
+    "manufacturer": {
+        "name": "Weiss Robotics",
+        "url": "http://www.weiss-robotics.com/"
+    },
+    "maintainer": {
+        "organization": "Xamla",
+        "url": "http://www.xamla.com/",
+        "email": "support@xamla.com"
+    },
+    "partType": "gripper",
+    "baseLink": "${prefix}_base_link",
+    "endLinks": ["${prefix}_gripper_right_tool0", "${prefix}_gripper_left_tool0"],
+    "macroName": "part_wsg50"
+}

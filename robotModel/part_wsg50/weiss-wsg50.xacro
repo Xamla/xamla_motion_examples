@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<robot  xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+	xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+        xmlns:xacro="http://ros.org/wiki/xacro"
+	name="part_wsg50">
+
+<xacro:macro name="part_wsg50" params="prefix parent *origin">
+<xacro:property name="scaling" value="0.001" />
+ <joint name="${prefix}_anterior_gripper_joint" type="fixed">
+    <xacro:insert_block name="origin"/>
+    <parent link="${parent}"/>
+    <child link="${prefix}_base_link"/>
+ </joint>
+
+<!-- BASE LINK -->
+ <link name="${prefix}_base_link">
+      <inertial>
+          <mass value="0.25" />
+          <origin xyz="0 0 0" />
+     	  <!--inertia ixx="1.0" ixy="0.0" ixz="0.0"
+               iyy="100.0" iyz="0.0"
+               izz="1.0" /-->
+      	  <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="1.0"  iyz="0.0"  izz="1.0" />
+      </inertial>
+
+      <visual>
+          <origin xyz="0.0 0 0" rpy="${pi} 0 ${pi/2}" />
+          <geometry>
+             <mesh filename="package://part_wsg50/visual/wsg50_base.dae" scale="${scaling} ${scaling} ${scaling}"/>
+	     <!--box size="0.146 0.05 0.0735"/-->
+          </geometry>
+          <material name="grey">
+		        <color rgba="0.5 0.5 0.5 1"/>
+      	  </material>
+      </visual>
+
+      <collision>
+          <origin xyz="0.0 0 0" rpy="${pi} 0 ${pi/2}" />
+          <geometry>
+	     <!--box size="0.146 0.05 0.0735"/-->
+             <mesh filename="package://part_wsg50/collision/wsg50_base.stl" scale="${scaling} ${scaling} ${scaling}"/>
+         </geometry>
+     </collision>
+  </link>
+
+  <gazebo reference="${prefix}_base_link">
+    <material>Gazebo/Grey</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <!-- GRIPPER LEFT -->
+
+  <joint name="${prefix}_base_joint_gripper_left" type="prismatic">
+     <limit lower="-0.055" upper="-0.0027" effort="80.0" velocity="0.42"/>
+     <origin xyz="0 0 0.0731" rpy="0 0 0" />      <!--origin xyz="-0.0067 0 0.049" rpy="0 0 0" /-->
+     <parent link="${prefix}_base_link"/>
+     <child link="${prefix}_gripper_left" />
+     <dynamics friction="100" damping="100" />
+     <axis xyz="-1 0 0"/>
+     <mimic joint="${prefix}_base_joint_gripper_right" multiplier="-1.0" offset="0.0" />
+  </joint>
+
+  <transmission name="${prefix}_base_trans_left" type="pr2_mechanism_model/SimpleTransmission">
+     <actuator name="${prefix}_base_motor_left" />
+     <joint name="${prefix}_base_joint_gripper_left" />
+     <mechanicalReduction>1</mechanicalReduction>
+     <motorTorqueConstant>1</motorTorqueConstant>
+  </transmission>
+
+  <link name="${prefix}_gripper_left">
+      <inertial>
+          <mass value="0.1" />
+          <origin xyz="0 0 0" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+               iyy="1.0" iyz="0.0"
+               izz="1.0" />
+      </inertial>
+
+      <visual>
+          <origin xyz="0.0 0 0" rpy="${pi} 0 ${-pi/2}" />
+          <geometry>
+             <mesh filename="package://part_wsg50/visual/wsg50_base_gripper_left.dae" scale="${scaling} ${scaling} ${scaling}"/>
+	     <!--box size="0.0175 0.03 0.024"/-->
+          </geometry>
+      </visual>
+
+      <collision>
+          <origin xyz="0 0 0" rpy="${pi} 0 ${-pi/2}" />
+          <geometry>
+	     <!--box size="0.0175 0.03 0.024"/-->
+             <mesh filename="package://part_wsg50/collision/wsg50_base_gripper_left.stl" scale="${scaling} ${scaling} ${scaling}"/>
+         </geometry>
+     </collision>
+  </link>
+
+  <gazebo reference="${prefix}_gripper_left">
+    <material>Gazebo/Blue</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+
+  <!-- GRIPPER RIGHT -->
+
+  <joint name="${prefix}_base_joint_gripper_right" type="prismatic">
+     <limit lower="0.0027" upper="0.055" effort="80.0" velocity="0.42"/>
+     <origin xyz="0 0 0.0731" rpy="0 0 0" />
+     <parent link="${prefix}_base_link"/>
+     <child link="${prefix}_gripper_right" />
+     <axis xyz="-1 0 0"/>
+  </joint>
+
+  <transmission name="${prefix}_base_trans_right" type="pr2_mechanism_model/SimpleTransmission">
+     <actuator name="${prefix}_base_motor_right" />
+     <joint name="${prefix}_base_joint_gripper_right" />
+     <mechanicalReduction>1</mechanicalReduction>
+     <motorTorqueConstant>1</motorTorqueConstant>
+  </transmission>
+
+    <link name="${prefix}_gripper_right">
+      <inertial>
+          <mass value="0.1" />
+          <origin xyz="0 0 0" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+               iyy="1.0" iyz="0.0"
+               izz="1.0" />
+      </inertial>
+
+      <visual>
+          <origin xyz="0.0 0 0" rpy="${pi} 0 ${-pi/2}" />
+          <geometry>
+             <mesh filename="package://part_wsg50/visual/wsg50_base_gripper_right.dae" scale="${scaling} ${scaling} ${scaling}"/>
+	     <!--box size="0.0175 0.03 0.024"/-->
+          </geometry>
+      </visual>
+
+      <collision>
+          <origin xyz="0 0 0" rpy="${pi} 0 ${-pi/2}" />
+          <geometry>
+	     <!--box size="0.0175 0.03 0.024"/-->
+             <mesh filename="package://part_wsg50/collision/wsg50_base_gripper_right.stl" scale="${scaling} ${scaling} ${scaling}"/>
+         </geometry>
+     </collision>
+  </link>
+
+  <link name="${prefix}_gripper_right_tool0"/>
+    <joint name="${prefix}_base_joint_gripper_right_tool0" type="fixed">
+     <origin xyz="-0.001 0 0.024" rpy="0 0 0" />
+     <parent link="${prefix}_gripper_right"/>
+     <child link="${prefix}_gripper_right_tool0" />
+  </joint>
+
+  <link name="${prefix}_gripper_left_tool0"/>
+  <joint name="${prefix}_base_joint_gripper_left_tool0" type="fixed">
+     <origin xyz="0.001 0 0.024" rpy="0 0 ${pi}" />
+     <parent link="${prefix}_gripper_left"/>
+     <child link="${prefix}_gripper_left_tool0" />
+  </joint>
+
+  <gazebo reference="gripper_right">
+    <material>Gazebo/White</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+</xacro:macro>
+    <!--@@{BEGIN_XAMLA_STANDALONE_TEMPLATE}
+     <xacro:property name="pi" value="3.1415926535897931" />
+      <link name="world" />
+      <xacro:part_wsg50 prefix="" parent="world">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </xacro:part_wsg50>
+    @@{END_XAMLA_STANDALONE_TEMPLATE}-->
+
+</robot>

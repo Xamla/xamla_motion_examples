@@ -1,0 +1,249 @@
+{
+  "elements": [
+    {
+      "id": "__xacroProcessor",
+      "inputFilename": "robotModel/main.xacro",
+      "outputFilename": "robot.urdf",
+      "type": "xacroProcessor"
+    },
+    {
+      "id": "__moveIt",
+      "selfCollision": {
+        "samplingDensity": 9000,
+        "minCollisionForAlwaysCollidingPairs": 95
+      },
+      "groups": [
+        {
+          "id": "group_1423f449a7dd49df8a472d889300a48e",
+          "name": "/sda10f/sda10f_r1_controller",
+          "solver": "trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin",
+          "searchResolution": 0.005,
+          "searchTimeout": 0.005,
+          "searchAttempts": 3,
+          "kinematicChain": {
+            "baselink": "torso_link_b1",
+            "tipLink": "arm_left_link_tool0"
+          },
+          "subGroups": []
+        },
+        {
+          "id": "group_0fd2be45dbab4891a819904e931266a4",
+          "name": "/sda10f/sda10f_r2_controller",
+          "solver": "trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin",
+          "searchResolution": 0.005,
+          "searchTimeout": 0.005,
+          "searchAttempts": 3,
+          "kinematicChain": {
+            "baselink": "torso_link_b1",
+            "tipLink": "arm_right_link_tool0"
+          },
+          "subGroups": []
+        },
+        {
+          "id": "group_d8b4c7d0422f49a48ef43a1c6a109b4c",
+          "name": "/sda10f/sda10f_b1_controller",
+          "solver": "",
+          "searchResolution": 0.005,
+          "searchTimeout": 0.05,
+          "searchAttempts": 3,
+          "kinematicChain": {
+            "baselink": "torso_base_link",
+            "tipLink": "torso_link_b1"
+          },
+          "subGroups": []
+        },
+        {
+          "id": "group_b05a5eee151749fe835b3984116d2716",
+          "name": "/sda10f/sda10f_b2_controller",
+          "solver": "",
+          "searchResolution": 0.005,
+          "searchTimeout": 0.05,
+          "searchAttempts": 3,
+          "kinematicChain": {
+            "baselink": "torso_base_link",
+            "tipLink": "torso_link_b2"
+          },
+          "subGroups": []
+        },
+        {
+          "id": "group_597ea60738784881ae6b4fc0f07576b7",
+          "name": "/sda10f/left_arm_torso",
+          "solver": "trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin",
+          "searchResolution": 0.005,
+          "searchTimeout": 0.05,
+          "searchAttempts": 3,
+          "kinematicChain": {
+            "baselink": "torso_link_b1",
+            "tipLink": "arm_left_link_tool0"
+          },
+          "subGroups": [
+            "/sda10f/sda10f_r1_controller",
+            "/sda10f/sda10f_b1_controller"
+          ]
+        },
+        {
+          "id": "group_97f47d03aef94c82a03074a57288e175",
+          "name": "/sda10f/right_arm_torso",
+          "solver": "trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin",
+          "searchResolution": 0.005,
+          "searchTimeout": 0.05,
+          "searchAttempts": 3,
+          "kinematicChain": {
+            "baselink": "torso_link_b1",
+            "tipLink": "arm_right_link_tool0"
+          },
+          "subGroups": [
+            "/sda10f/sda10f_r2_controller",
+            "/sda10f/sda10f_b1_controller"
+          ]
+        },
+        {
+          "id": "group_1915e2d286b549a390234a7d21b39b97",
+          "name": "/sda10f",
+          "solver": "",
+          "searchResolution": 0.005,
+          "searchTimeout": 0.05,
+          "searchAttempts": 3,
+          "kinematicChain": {
+            "baselink": "",
+            "tipLink": ""
+          },
+          "subGroups": [
+            "/sda10f/sda10f_r2_controller",
+            "/sda10f/sda10f_r1_controller",
+            "/sda10f/sda10f_b1_controller"
+          ]
+        },
+        {
+          "id": "group_78a4fb0b33314a7484f862897ea8f135",
+          "name": "/sda10f/both_arms",
+          "solver": "",
+          "searchResolution": 0.005,
+          "searchTimeout": 0.05,
+          "searchAttempts": 3,
+          "kinematicChain": {
+            "baselink": "",
+            "tipLink": ""
+          },
+          "subGroups": [
+            "/sda10f/sda10f_r2_controller",
+            "/sda10f/sda10f_r1_controller"
+          ]
+        }
+      ],
+      "endEffectors": [
+        {
+          "id": "endEffector_60d8ad11d3834a06a393272a49c30ce9",
+          "name": "EE_manipulator_right",
+          "group": "/sda10f/sda10f_r2_controller",
+          "parentLink": "arm_right_link_tool0",
+          "positionIncrementMax": 0.5,
+          "positionIncrementMin": 0.001,
+          "rotationIncrementMax": 0.1,
+          "rotationIncrementMin": 0.01,
+          "velocityXYZLimit": 0.9,
+          "accelerationXYZLimit": 1.8,
+          "velocityAngularLimit": 1.0,
+          "accelerationAngularLimit": 0.1
+        },
+        {
+          "id": "endEffector_258a62d4ec50418c8cac8f61a400b8cf",
+          "name": "EE_manipulator_left",
+          "group": "/sda10f/sda10f_r1_controller",
+          "parentLink": "arm_left_link_tool0",
+          "positionIncrementMax": 0.5,
+          "positionIncrementMin": 0.001,
+          "rotationIncrementMax": 0.1,
+          "rotationIncrementMin": 0.01,
+          "velocityXYZLimit": 0.9,
+          "accelerationXYZLimit": 1.8,
+          "velocityAngularLimit": 1.0,
+          "accelerationAngularLimit": 0.1
+        },
+        {
+          "id": "endEffector_04f9890a369c440b8498ef5392d26ed1",
+          "name": "EE_manipulator_left_torso",
+          "group": "/sda10f/left_arm_torso",
+          "parentLink": "arm_left_link_tool0",
+          "positionIncrementMax": 0.5,
+          "positionIncrementMin": 0.001,
+          "rotationIncrementMax": 0.1,
+          "rotationIncrementMin": 0.01,
+          "velocityXYZLimit": 0.9,
+          "accelerationXYZLimit": 1.8,
+          "velocityAngularLimit": 1.0,
+          "accelerationAngularLimit": 0.1
+        },
+        {
+          "id": "endEffector_98f2086dcb634e1da4c1ef7ebb51c56c",
+          "name": "EE_manipulator_right_torso",
+          "group": "/sda10f/right_arm_torso",
+          "parentLink": "arm_right_link_tool0",
+          "positionIncrementMax": 0.5,
+          "positionIncrementMin": 0.001,
+          "rotationIncrementMax": 0.1,
+          "rotationIncrementMin": 0.01,
+          "velocityXYZLimit": 0.9,
+          "accelerationXYZLimit": 1.8,
+          "velocityAngularLimit": 1.0,
+          "accelerationAngularLimit": 0.1
+        }
+      ],
+      "solvers": [
+        "",
+        "trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin",
+        "kdl_kinematics_plugin/KDLKinematicsPlugin",
+        "lma_kinematics_plugin/LMAKinematicsPlugin",
+        "srv_kinematics_plugin/SrvKinematicsPlugin"
+      ],
+      "author": {
+        "name": "",
+        "email": ""
+      },
+      "srdfConfigurationOutputPath": "moveitConfig.yaml",
+      "launchFileOutputPath": "moveit.launch",
+      "respawn": true,
+      "respawnDelay": 0.0,
+      "type": "MoveIt"
+    },
+    {
+      "id": "__customLaunchFile",
+      "fileName": "custom.launch",
+      "type": "CustomLaunchFile"
+    },
+    {
+      "id": "yaskawa$motoman_sda10f_1",
+      "partPath": "robotModel/part_motoman_sda10f/part.json",
+      "prefix": "",
+      "parentLink": "world",
+      "type": "robotpart:yaskawa$motoman_sda10f"
+    },
+    {
+      "id": "weiss_robotics$wsg_50_1",
+      "partPath": "robotModel/part_wsg50/part.json",
+      "prefix": "",
+      "parentLink": "arm_right_link_tool0",
+      "type": "robotpart:weiss_robotics$wsg_50"
+    },
+    {
+      "id": "GripperWsg50_1",
+      "name": "wsg50",
+      "prefix": "",
+      "simulate": true,
+      "hostname": "WSG50-00000000",
+      "port": 1000,
+      "reconnectTimeout": 150,
+      "type": "GripperWsg50"
+    },
+    {
+      "id": "RobotSda10F_1",
+      "ns": "sda10f",
+      "prefix": "",
+      "simulate": true,
+      "velocityScaling": 0.8,
+      "accelerationScaling": 0.5,
+      "ipAddress": "10.0.0.1",
+      "type": "RobotSda10F"
+    }
+  ]
+}

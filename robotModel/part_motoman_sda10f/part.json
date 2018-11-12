@@ -1,0 +1,171 @@
+{
+    "id": "yaskawa$motoman_sda10f",
+    "displayName": "Motoman SDA10F",
+    "thumbnailUrl": "/images/part-thumbs/yaskawa-sda10.png",
+    "modelFile": "./sda10f_macro.xacro",
+    "manufacturer": {
+        "name": "Yaskawa",
+        "url": "https://www.yaskawa.eu.com/"
+    },
+    "maintainer": {
+        "organization": "Xamla",
+        "url": "http://www.xamla.com/",
+        "email": "support@xamla.com "
+    },
+    "partType": "robot",
+    "baseLink": "${prefix}torso_base_link",
+    "endLinks": ["${prefix}arm_right_link_tool0", "${prefix}arm_left_link_tool0", "${prefix}_head_base"],
+    "planningGroups": [
+        {
+            "name": "/sda10f/sda10f_r1_controller",
+            "solver": "trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin",
+            "searchResolution": 0.005,
+            "searchTimeout": 0.005,
+            "searchAttempts": 3,
+            "subGroups": [],
+            "kinematicChain": {
+                "baseLink": "${prefix}torso_link_b1",
+                "tipLink": "${prefix}arm_left_link_tool0"
+            }
+        },
+        {
+            "name": "/sda10f/sda10f_r2_controller",
+            "solver": "trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin",
+            "searchResolution": 0.005,
+            "searchTimeout": 0.005,
+            "searchAttempts": 3,
+            "subGroups": [],
+            "kinematicChain": {
+                "baseLink": "${prefix}torso_link_b1",
+                "tipLink": "${prefix}arm_right_link_tool0"
+            }
+        },
+        {
+            "name": "/sda10f/sda10f_b1_controller",
+            "solver": "",
+            "searchResolution": 0.005,
+            "searchTimeout": 0.05,
+            "searchAttempts": 3,
+            "subGroups": [],
+            "kinematicChain": {
+                "baseLink": "${prefix}torso_base_link",
+                "tipLink": "${prefix}torso_link_b1"
+            }
+        },
+        {
+            "name": "/sda10f/sda10f_b2_controller",
+            "solver": "",
+            "searchResolution": 0.005,
+            "searchTimeout": 0.05,
+            "searchAttempts": 3,
+            "subGroups": [],
+            "kinematicChain": {
+                "baseLink": "${prefix}torso_base_link",
+                "tipLink": "${prefix}torso_link_b2"
+            }
+        },
+        {
+            "name": "/sda10f/left_arm_torso",
+            "solver": "trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin",
+            "searchResolution": 0.005,
+            "searchTimeout": 0.05,
+            "searchAttempts": 3,
+            "subGroups": ["/sda10f/sda10f_r1_controller", "/sda10f/sda10f_b1_controller"],
+            "kinematicChain": {
+                "baseLink": "${prefix}torso_link_b1",
+                "tipLink": "${prefix}arm_left_link_tool0"
+            }
+        },
+        {
+            "name": "/sda10f/right_arm_torso",
+            "solver": "trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin",
+            "searchResolution": 0.005,
+            "searchTimeout": 0.05,
+            "searchAttempts": 3,
+            "subGroups": ["/sda10f/sda10f_r2_controller", "/sda10f/sda10f_b1_controller"],
+            "kinematicChain": {
+                "baseLink": "${prefix}torso_link_b1",
+                "tipLink": "${prefix}arm_right_link_tool0"
+            }
+        },
+        {
+            "name": "/sda10f",
+            "solver": "",
+            "searchResolution": 0.005,
+            "searchTimeout": 0.05,
+            "searchAttempts": 3,
+            "subGroups": ["/sda10f/sda10f_r2_controller","/sda10f/sda10f_r1_controller", "/sda10f/sda10f_b1_controller"],
+            "kinematicChain": {
+                "baseLink": "",
+                "tipLink": ""
+            }
+        },
+        {
+            "name": "/sda10f/both_arms",
+            "solver": "",
+            "searchResolution": 0.005,
+            "searchTimeout": 0.05,
+            "searchAttempts": 3,
+            "subGroups": ["/sda10f/sda10f_r2_controller","/sda10f/sda10f_r1_controller"],
+            "kinematicChain": {
+                "baseLink": "",
+                "tipLink": ""
+            }
+        }
+    ],
+    "endEffectors": [
+        {
+            "name": "EE_manipulator_right",
+            "group": "/sda10f/sda10f_r2_controller",
+            "parentLink": "${prefix}arm_right_link_tool0",
+            "positionIncrementMax" : 0.5,
+            "positionIncrementMin" : 0.001,
+            "rotationIncrementMax" : 0.1,
+            "rotationIncrementMin" : 0.01,
+            "velocityXYZLimit" : 0.9,
+            "accelerationXYZLimit" : 1.8,
+            "velocityAngularLimit": 1.0,
+            "accelerationAngularLimit": 0.1
+        },
+        {
+            "name": "EE_manipulator_left",
+            "group": "/sda10f/sda10f_r1_controller",
+            "parentLink": "${prefix}arm_left_link_tool0",
+            "positionIncrementMax" : 0.5,
+            "positionIncrementMin" : 0.001,
+            "rotationIncrementMax" : 0.1,
+            "rotationIncrementMin" : 0.01,
+            "velocityXYZLimit" : 0.9,
+            "accelerationXYZLimit" : 1.8,
+            "velocityAngularLimit": 1.0,
+            "accelerationAngularLimit": 0.1
+        },
+        {
+            "name": "EE_manipulator_left_torso",
+            "group": "/sda10f/left_arm_torso",
+            "parentLink": "${prefix}arm_left_link_tool0",
+            "positionIncrementMax" : 0.5,
+            "positionIncrementMin" : 0.001,
+            "rotationIncrementMax" : 0.1,
+            "rotationIncrementMin" : 0.01,
+            "velocityXYZLimit" : 0.9,
+            "accelerationXYZLimit" : 1.8,
+            "velocityAngularLimit": 1.0,
+            "accelerationAngularLimit": 0.1
+        },
+        {
+            "name": "EE_manipulator_right_torso",
+            "group": "/sda10f/right_arm_torso",
+            "parentLink": "${prefix}arm_right_link_tool0",
+            "positionIncrementMax" : 0.5,
+            "positionIncrementMin" : 0.001,
+            "rotationIncrementMax" : 0.1,
+            "rotationIncrementMin" : 0.01,
+            "velocityXYZLimit" : 0.9,
+            "accelerationXYZLimit" : 1.8,
+            "velocityAngularLimit": 1.0,
+            "accelerationAngularLimit": 0.1
+        }
+    ],
+    "macroName": "motoman_sda10f"
+}
