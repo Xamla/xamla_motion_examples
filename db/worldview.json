@@ -153,6 +153,57 @@
       },
       "enabled": true,
       "visible": true
+    },
+    {
+      "type": "Folder",
+      "id": "Folder_example$5f02$5fpalletizing",
+      "tags": [],
+      "visible": true,
+      "enabled": true,
+      "children": [
+        {
+          "type": "Pose",
+          "id": "Pose_source",
+          "tags": [],
+          "value": {
+            "frame": "world",
+            "translation": [
+              0.9585307240486145,
+              -0.35993969440460205,
+              0.82838732004165649
+            ],
+            "rotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          "enabled": true,
+          "visible": false
+        },
+        {
+          "type": "Pose",
+          "id": "Pose_target",
+          "tags": [],
+          "value": {
+            "frame": "world",
+            "translation": [
+              0.9585307240486145,
+              0.0017198208952322602,
+              0.82838732004165649
+            ],
+            "rotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        }
+      ]
     }
   ]
 }
