@@ -6,17 +6,14 @@ from xamla_motion.data_types import JointValues
 from xamla_motion.gripper_client import WeissWsgGripperProperties, WeissWsgGripper
 from xamla_motion.robot_chat_client import RobotChatClient, RobotChatSteppedMotion
 
-def get_gripper(move_group: MoveGroup):
-    # create instance of wsg gripper by name
-    properties = WeissWsgGripperProperties('wsg50')
-    return  WeissWsgGripper(properties, move_group.motion_service)
+import example_utils 
 
 def main(loopCount: int):
     # create move group instance targeting the right arm of the robot
-    move_group = MoveGroup("/sda10f/right_arm_torso")
+    move_group = example_utils.get_move_group()
 
     # get the gripper attached at the right arm
-    wsg_gripper = get_gripper(move_group)
+    wsg_gripper = example_utils.get_gripper(move_group)
 
     # get a client to communicate with the robot
     robot_chat = RobotChatClient()
