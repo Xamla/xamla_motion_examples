@@ -6,7 +6,124 @@
       "tags": [],
       "visible": true,
       "enabled": true,
-      "children": []
+      "children": [
+        {
+          "type": "JointValues",
+          "id": "JointValues_$301$5fPrePick",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              0.038220671784375215,
+              2.457555025696939,
+              -0.7852727577128007,
+              -0.23453519826608046,
+              -2.0130294968192546,
+              -1.7839925489615365,
+              0.72750814922770513,
+              -2.6033141691380028
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        },
+        {
+          "type": "JointValues",
+          "id": "JointValues_$302$5fPick",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              0.0418148732672716,
+              2.4671546270225546,
+              -0.72331386780091877,
+              -0.29043673558129762,
+              -1.986441945162106,
+              -1.7427925433179026,
+              0.673204798220182,
+              -2.6385619235700895
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        },
+        {
+          "type": "JointValues",
+          "id": "JointValues_$303$5fPrePlace",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              0.51300454471218548,
+              2.9034938727822088,
+              -0.61924005923547576,
+              -0.48416395385610128,
+              -0.94948016343425334,
+              -2.1217868656456065,
+              1.1303618302692595,
+              -1.2265167941060804
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        },
+        {
+          "type": "JointValues",
+          "id": "JointValues_$304$5fPlace",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              0.5187780928904917,
+              2.9543770220849828,
+              -0.59383606857479454,
+              -0.54126622441490713,
+              -0.924996451018365,
+              -2.120648208203872,
+              1.1071826539877458,
+              -1.220419834570053
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        }
+      ]
     }
   ]
 }

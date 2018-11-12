@@ -244,6 +244,13 @@
       "accelerationScaling": 0.5,
       "ipAddress": "10.0.0.1",
       "type": "RobotSda10F"
+    },
+    {
+      "id": "object$sda10d_cell_1",
+      "partPath": "robotModel/part_sda10d_cell/part.json",
+      "prefix": "",
+      "parentLink": "world",
+      "type": "robotpart:object$sda10d_cell"
     }
   ]
 }

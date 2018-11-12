@@ -10,4 +10,8 @@
   <xacro:part_wsg50 xamla:xref="weiss_robotics$wsg_50_1" prefix="" parent="arm_right_link_tool0">
     <origin xyz="0 0 0" rpy="0 0 0" />
   </xacro:part_wsg50>
+  <xacro:include filename="part_sda10d_cell/sda10d_cell.xacro" xamla:xref="object$sda10d_cell_1" />
+  <xacro:sda10d_cell xamla:xref="object$sda10d_cell_1" prefix="" parent="world">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:sda10d_cell>
 </robot>

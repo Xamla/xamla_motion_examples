@@ -1,0 +1,19 @@
+{
+    "id": "object$sda10d_cell",
+    "displayName": "SAD10D Cell",
+    "thumbnailUrl": "/images/part-thumbs/xamla-sda-10-cell.png",
+    "modelFile": "./sda10d_cell.xacro",
+    "manufacturer": {
+        "name": "Xamla",
+        "url": "http://www.xamla.com/"
+    },
+    "maintainer": {
+        "organization": "Xamla",
+        "url": "http://www.xamla.com/",
+        "email": "support@xamla.com"
+    },
+    "partType": "object",
+    "baseLink": "${prefix}cell_body",
+    "endLinks": ["${prefix}cell_tool0"],
+    "macroName": "sda10d_cell"
+}

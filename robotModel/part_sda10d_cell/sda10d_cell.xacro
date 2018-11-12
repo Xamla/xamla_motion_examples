@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot name="sda10d_cell" xmlns:xacro="http://ros.org/wiki/xacro">
+ <xacro:macro name="sda10d_cell" params="prefix parent *origin">
+  <xacro:property name="pi" value="3.1415926535897931" />
+  <link name="${prefix}cell_body">
+    <inertial>
+      <mass value="1.0" />
+      <!-- center of mass (com) is defined w.r.t. link local coordinate system -->
+      <origin xyz="0.25 -0.5 0" />
+      <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="1.0"  iyz="0.0"  izz="1.0" />
+    </inertial>
+    <visual>
+      <!-- visual origin is defined w.r.t. link local coordinate system -->
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://part_sda10d_cell/visual/cell.dae" scale="1.00 1.00 1.00"/>
+      </geometry>
+    </visual>
+    <collision>
+      <!-- collision origin is defined w.r.t. link local coordinate system -->
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://part_sda10d_cell/collision/cell.stl" scale="1.00 1.00 1.00"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="${prefix}cell_tool0"/>
+
+  <joint name="${prefix}world_to_cell_body" type="fixed">
+    <parent link="${parent}" />
+     <child link="${prefix}cell_body" />
+     <xacro:insert_block name="origin" />
+  </joint>
+  <joint name="${prefix}cell_body_to_tool0" type="fixed">
+    <parent link="${prefix}cell_body" />
+     <child link="${prefix}cell_tool0" />
+     <origin xyz="0 0 0.16" rpy="0 0 0" />
+  </joint>
+  <gazebo reference="cell_body">
+    <material>Gazebo/LightWood</material>
+  </gazebo>
+</xacro:macro>
+<!--@@{BEGIN_XAMLA_STANDALONE_TEMPLATE}
+     <xacro:property name="pi" value="3.1415926535897931" />
+      <link name="world" />
+      <xacro:sda10d_cell prefix="" parent="world">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </xacro:sda10d_cell>
+    @@{END_XAMLA_STANDALONE_TEMPLATE}-->
+</robot>
