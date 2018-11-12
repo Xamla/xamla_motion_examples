@@ -1,5 +1,3 @@
-import signal
-import functools
 import asyncio
 
 from xamla_motion.world_view_client import WorldViewClient
@@ -8,23 +6,10 @@ from xamla_motion.data_types import JointValues
 from xamla_motion.gripper_client import WeissWsgGripperProperties, WeissWsgGripper
 from xamla_motion.robot_chat_client import RobotChatClient, RobotChatSteppedMotion
 
-def shutdown(loop, reason):
-    """function to shutdown asyncio properly """
-    print('shutdown asyncio due to : {}'.format(reason), flush=True)
-    tasks = asyncio.gather(*asyncio.Task.all_tasks(loop=loop),
-                           loop=loop, return_exceptions=True)
-    tasks.add_done_callback(lambda t: loop.stop())
-    tasks.cancel()
-    # Keep the event loop running until it is either destroyed or all
-    # tasks have really terminated
-    while not tasks.done() and not loop.is_closed():
-        loop.run_forever()
-
 def get_gripper(move_group: MoveGroup):
     # create instance of wsg gripper by name
     properties = WeissWsgGripperProperties('wsg50')
     return  WeissWsgGripper(properties, move_group.motion_service)
-
 
 def main(loopCount: int):
     # create move group instance targeting the right arm of the robot
@@ -47,10 +32,6 @@ def main(loopCount: int):
     jv_place = world_view_client.get_joint_values("04_Place","example_01_pick_place") 
 
     loop = asyncio.get_event_loop()
-    loop.add_signal_handler(signal.SIGTERM,
-                            functools.partial(shutdown, loop, signal.SIGTERM))
-    loop.add_signal_handler(signal.SIGINT,
-                            functools.partial(shutdown, loop, signal.SIGINT))
 
     async def move_supervised(joint_values: JointValues, velocity_scaling=1):
         """Opens a window in rosvita to let the user supervise the motion to joint values """
@@ -62,7 +43,7 @@ def main(loopCount: int):
         await robot_chat_stepped_motion.handle_stepwise_motions()
 
     async def prepare_gripper():
-        print("Home the gripper") 
+        print("Home the gripper and move to joints") 
         # Allows parallel homing and supervised movement
         t1 = wsg_gripper.homing()
         t2 = move_supervised(jv_home)
