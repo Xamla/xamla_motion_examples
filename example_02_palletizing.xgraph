@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xgraph xmlns:xamla="http://www.xamla.com/" schemaVersion="2014-1.0" xmlns="http://schemas.xamla.com/2013/xgraph">
+  <header>
+    <metadata>
+      <created>2018-11-16T15:49:47.7307768+00:00</created>
+      <modified>2018-11-16T16:00:00.5450446+00:00</modified>
+    </metadata>
+    <dependencies />
+    <types />
+  </header>
+  <interface>
+    <output id="output0">
+      <object type="System.Object, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+        <default>null</default>
+      </object>
+    </output>
+  </interface>
+  <body viewCenter="0, 0" zoomLevel="1">
+    <module id="Input" display="Expanded" showPreview="false" position="10, 387" type="Xamla.Graph.GraphInputModule" />
+    <module id="Output" display="Expanded" showPreview="false" position="1314, 387" type="Xamla.Graph.GraphOutputModule">
+      <inputs>
+        <inputPin id="output0">
+          <connection from="item1.Outputs.output0" />
+        </inputPin>
+      </inputs>
+    </module>
+    <module id="Begin" display="Expanded" showPreview="false" position="10, 337" type="Xamla.Graph.GraphStartModule" />
+    <module id="End" display="Expanded" showPreview="false" position="1314, 337" type="Xamla.Graph.GraphEndModule">
+      <inputs>
+        <inputPin id="flowEnd">
+          <connection from="item1.Outputs.flowOut" />
+        </inputPin>
+      </inputs>
+    </module>
+    <module id="item1" display="Expanded" showPreview="true" position="466, 348" type="Python3.Python3ScriptFile">
+      <inputs>
+        <inputPin id="flowIn">
+          <connection from="Begin.Outputs.flowStart" />
+        </inputPin>
+        <inputPin id="caption">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">null</object>
+        </inputPin>
+        <inputPin id="functionName">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">"main"</object>
+        </inputPin>
+        <inputPin id="outputPinNames">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">""</object>
+        </inputPin>
+        <inputPin id="useMainThread">
+          <object type="System.Boolean, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">true</object>
+        </inputPin>
+        <inputPin id="parserError">
+          <object type="Xamla.Graph.Models.ExceptionModel, Xamla.Graph.Contracts, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null">{"exceptionTypeName":"System.Exception","exceptionFullType":"System.Exception","message":"Script is empty.","stackTrace":null,"stringRepresentation":"System.Exception: Script is empty.","id":"Exception","trace":null,"objectId":null,"nodeType":"Exception","children":null}</object>
+        </inputPin>
+        <inputPin id="path">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">"example_02_palletizing.py"</object>
+        </inputPin>
+        <inputPin id="xSize">
+          <connection from="item3.Outputs.Output" />
+        </inputPin>
+        <inputPin id="ySize">
+          <connection from="item5.Outputs.Output" />
+        </inputPin>
+        <inputPin id="xStepSize">
+          <connection from="item6.Outputs.Output" />
+        </inputPin>
+        <inputPin id="yStepSize">
+          <connection from="item7.Outputs.Output" />
+        </inputPin>
+      </inputs>
+    </module>
+    <module id="item3" display="Expanded" showPreview="true" position="146, 168" type="Xamla.Graph.Controls.Int32Input">
+      <inputs>
+        <inputPin id="Value">
+          <object type="System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">3</object>
+        </inputPin>
+        <inputPin id="Caption">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">null</object>
+        </inputPin>
+      </inputs>
+    </module>
+    <module id="item5" display="Expanded" showPreview="true" position="114, 463" type="Xamla.Graph.Controls.Int32Input">
+      <inputs>
+        <inputPin id="Value">
+          <object type="System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">3</object>
+        </inputPin>
+        <inputPin id="Caption">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">null</object>
+        </inputPin>
+      </inputs>
+    </module>
+    <module id="item6" display="Expanded" showPreview="true" position="203, 617" type="Xamla.Graph.Controls.Float64Input">
+      <inputs>
+        <inputPin id="Value">
+          <object type="System.Double, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">0.05</object>
+        </inputPin>
+        <inputPin id="Caption">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">null</object>
+        </inputPin>
+      </inputs>
+    </module>
+    <module id="item7" display="Expanded" showPreview="true" position="196, 699" type="Xamla.Graph.Controls.Float64Input">
+      <inputs>
+        <inputPin id="Value">
+          <object type="System.Double, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">0.05</object>
+        </inputPin>
+        <inputPin id="Caption">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">null</object>
+        </inputPin>
+      </inputs>
+    </module>
+  </body>
+  <compilerSettings debug="false" standardAssemblies="true" />
+  <viewModel>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</viewModel>
+</xgraph>

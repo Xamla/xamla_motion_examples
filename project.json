@@ -243,6 +243,7 @@
       "velocityScaling": 0.8,
       "accelerationScaling": 0.5,
       "ipAddress": "10.0.0.1",
+      "jointRange": 0.99,
       "type": "RobotSda10F"
     },
     {

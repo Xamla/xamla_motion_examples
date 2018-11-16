@@ -6,6 +6,8 @@ from xamla_motion.data_types import JointValues
 from xamla_motion.gripper_client import WeissWsgGripperProperties, WeissWsgGripper
 from xamla_motion.robot_chat_client import RobotChatClient, RobotChatSteppedMotion
 
+from xamla_motion.utility import register_asyncio_shutdown_handler 
+
 import example_utils 
 
 def main(loopCount: int):
@@ -29,6 +31,8 @@ def main(loopCount: int):
     jv_place = world_view_client.get_joint_values("04_Place","example_01_pick_place") 
 
     loop = asyncio.get_event_loop()
+    # register the loop handler to be shutdown appropriately
+    register_asyncio_shutdown_handler(loop)
 
     async def move_supervised(joint_values: JointValues, velocity_scaling=1):
         """Opens a window in rosvita to let the user supervise the motion to joint values """
