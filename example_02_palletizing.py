@@ -8,7 +8,6 @@ This example shows
 
 """
 
-
 from typing import List, Tuple
 
 import asyncio
@@ -32,45 +31,48 @@ import signal
 import functools
 
 
+def get_grid_poses(pose: Pose, size: Tuple[int, int], step: Tuple[float, float]) -> List[Pose]:
+    """
+    This function uses a pose to calculate a grid of poses
 
-def get_plane_from_points(point1, point2, point3):
-    """Returns a plane definition given 3 points  """
-    p1, p2, p3 = point1.translation, point2.translation, point3.translation
-    v1 = p3 - p1
-    v2 = p2 - p1
-    a, b, c = np.cross(v1, v2)
-    d = - np.dot((a,b,c), p1)
-    return a, b, c, d
+        Parameters
+        ----------
+        pose : Pose
+            Defines the position and orientation of the grid
+        size : Tuple[int, int]
+            Number of elements of the grid in x- and y-direction
+        step : Tuple[float, float]
+            The distance between the poses in x- and y-direction
 
+        Returns
+        ------  
+        List[Pose]
+            A list of generated poses
 
-def get_grid_poses(point, size: Tuple[int, int], step: Tuple[float, float]):
-    """This function uses a points to calculate a grid of poses
-
-    The rotation of the poses are set by point
     """
 
     # The point defines the rotation and the begining of the grid
-    rotation = point.quaternion
-
-    # Define a vector in x and y direction
+    rotation = pose.quaternion
+    # Calculate the delta of each step in x- and y-direction
+    # For that, we scale the unit vector pointing in x-direction/y-direction
+    # and then rotate it by the rotation of the pose
     delta_x = rotation.rotate(np.array([step[0], 0.0, 0.0]))
     delta_y = rotation.rotate(np.array([0.0, step[1], 0.0]))
-
-    print(type(delta_x))
-
-    # Assuming that the first position has the correct orientation 
     poses = []  # type: List[Pose]
     for y_index in range(size[1]):
         for x_index in range(size[0]):
-            translation = point.translation + x_index*delta_x + y_index*delta_y
-            pose = Pose(translation, rotation)
-            poses.append(pose)
+            translation = pose.translation + x_index*delta_x + y_index*delta_y
+            poses.append(Pose(translation, rotation))
     return poses
     
+def create_collision_boxes(poses: List[Pose], vector: np.array, size = (0.09, 0.09)) -> CollisionObject:
+    """
+    Creates a bunch of boxes located relative to corresponding poses with an offset defined by vector 
 
-def create_collision_boxes(poses: List[Pose], vector: np.array) -> CollisionObject:
-    """Creates a bunch of boxes located relative to corresponding poses with an offset defined by vector """
-    func = lambda pose : CollisionPrimitive.create_box(0.09, 0.09, 0.01, Pose(pose.translation + vector, pose.quaternion))
+    This is just a visualization aid to locate the poses
+    
+    """
+    func = lambda pose : CollisionPrimitive.create_box(size[0], size[1], 0.01, Pose(pose.translation + vector, pose.quaternion))
     return list(map( func , poses))
 
 
@@ -105,10 +107,7 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     # Describe in a matrix of boolean the already visited elements
 
     # get the pose of the position which defines the grid
-    point1 = world_view_client.get_pose("Pose_1","example_02_palletizing")
-    #point2 = world_view_client.get_pose("Pose_2","example_02_palletizing"):
-    #point3 = world_view_client.get_pose("Pose_3","example_02_palletizing")
-
+    pose = world_view_client.get_pose("Pose_1","example_02_palletizing")
     jv_home = world_view_client.get_joint_values("Home","example_02_palletizing")
 
     end_effector = move_group.get_end_effector()
@@ -117,18 +116,15 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     # register the loop handler to be shutdown appropriately
     register_asyncio_shutdown_handler(loop)
 
-    poses = get_grid_poses(point1, (xSize, ySize), (xStepSize, yStepSize))
+    poses = get_grid_poses(pose, (xSize, ySize), (xStepSize, yStepSize))
 
-    print(poses)
-
-    rotation = point1.quaternion
+    rotation = pose.quaternion
    
     orthogonal = rotation.rotate(np.array([0,0,1]))
 
 
     # For visualization and possible collisions, add some boxes below the positions we want to visit
-    boxes = create_collision_boxes(poses , (orthogonal * (0.2)))
-    placed_objects = [] 
+    boxes = create_collision_boxes(poses , (orthogonal * (0.12)), (xStepSize*0.9, yStepSize*0.9))
 
     # Now calculate the poses which hover over the desired poses 
     func = lambda pose : Pose(pose.translation + (orthogonal * (-0.1)), pose.quaternion) 
@@ -143,10 +139,7 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
         # Add a folder to hold calculated joint values to be accessed in  world view
         world_view_client.add_folder("generated", "/example_02_palletizing")
         world_view_client.add_folder("collision_objects", "/example_02_palletizing/generated")
-        #plane = CollisionPrimitive.create_plane(rotation.real, rotation.vector[0], rotation.vector[1], rotation.vector[2], point1)
         world_view_client.add_collision_object("collision_matrix", "/example_02_palletizing/generated/collision_objects", CollisionObject(boxes))
-        # world_view_client.add_collision_object("collision_placed_objects", "/example_02_palletizing/generated/collision_objects", CollisionObject([plane]))
-
 
 
     # Now that we have all the poses we want to visit, we should find the corresponding joint values
@@ -184,13 +177,6 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
                                 "/example_02_palletizing/generated/place_joint_values", 
                                 place_jvs[i])
 
-
-
-
-    #def place_object_at_pose(pose: Pose):
-    #    """This function just adds a collision object at the pose """
-    #    placed_objects.append(CollisionPrimitive.create_box(0.02, 0.02, 0.04, Pose(pose.translation + (orthogonal * (0.1)), pose.quaternion) ))
-    #    world_view_client.update_collision_object("collision_placed_objects", "/example_02_palletizing/generated/collision_objects", CollisionObject(placed_objects))  
 
     async def place(jv_pre_place: JointValues, jv_place: JointValues):
         """Moves from home to place position and back """
