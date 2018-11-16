@@ -26,17 +26,16 @@ from xamla_motion.utility import register_asyncio_shutdown_handler
 
 import example_utils 
 
-# only for test
-
-
 def generate_folders(world_view_client: WorldViewClient) -> None:
-    # generate the folder we want to use
+    """ 
+    Generate the folder we want to use in world view
+    """
+
     try:
         # delete folder if it already exists
         world_view_client.remove_element("generated", "/example_02_palletizing")
     except Exception as e:
         None
-    
     # Add a folder to hold calculated joint values to be accessed in  world view
     world_view_client.add_folder("generated", "/example_02_palletizing")
     world_view_client.add_folder("collision_objects", "/example_02_palletizing/generated")
@@ -82,63 +81,70 @@ def create_collision_boxes(poses: List[Pose], vector: np.array, size = (0.09, 0.
     """
     Creates a bunch of boxes located relative to corresponding poses with an offset defined by vector 
 
-    This is just a visualization aid to locate the poses
+    This is mostly a visualization aid to locate the poses, but serves also as an obstacle the robot must plan for
     
     """
-    func = lambda pose : CollisionPrimitive.create_box(size[0], size[1], 0.01, Pose(pose.translation + vector, pose.quaternion))
+    func = lambda pose : CollisionPrimitive.create_box(size[0], size[1], 
+                                                        0.01, 
+                                                        Pose(pose.translation + vector, 
+                                                        pose.quaternion))
     return list(map( func , poses))
 
 
-def calculate_pre_place_joint_values(pre_place_poses: List[Pose], jv_home: JointValues, move_group: MoveGroup, world_view_client: WorldViewClient) -> List[JointValues]:
+def calculate_pre_place_joint_values(pre_place_poses: List[Pose], 
+                                    jv_home: JointValues, 
+                                    move_group: MoveGroup, 
+                                    world_view_client: WorldViewClient) \
+                                -> List[JointValues]:
     """ 
     Calculates the pre place joint values
-    """
-    # Now that we have all the poses we want to visit, we should find the corresponding joint values
     
-    # First, we calculate the joint values for the pre place poses
-    # Since we want the robot arm to go back and forth from the home configuration to the poses on the grid, 
-    # we use the home joint values as a const seed for every pose to minimize the distance for the joints to make
-    # const_seed = True means we always use the jv_home joint values as seed, and do not use the previous calculated joint value as seed
-    # const_seed = False would make sense if we went from pose to pose without visiting the jv_home configuration in between
+    Since we want the robot arm to go back and forth from the home configuration 
+    to the poses on the grid, we use the home joint value as a const seed for 
+    every pose to minimize the distance for the joints to make.
+    Calling  inverse_kinematics_many with "const_seed = True" lets us exclusively
+    using the jv_home joint values as seed. 
+    "const_seed = False" would use the  previously calculated joint values as seed 
+    for the next on when traversing pre_place_poses. This could be useful when  
+    we went from pose to pose without visiting the jv_home configuration in between.
+    """
     end_effector = move_group.get_end_effector()
-    ik_results = end_effector.inverse_kinematics_many(CartesianPath(pre_place_poses), collision_check = True, seed = jv_home, const_seed = True)
-    # The following asserts that a configuration could have been found for every pose
+    ik_results = end_effector.inverse_kinematics_many(CartesianPath(pre_place_poses), 
+                                                    collision_check = True, 
+                                                    seed = jv_home, 
+                                                    const_seed = True)
+    # The following asserts that a configuration has been found for every pose
     assert ik_results.succeeded
     # joint_path now contains the result of the ik-operation
-    pre_place_jvs = ik_results.path  # type: List[] 
+    pre_place_jvs = ik_results.path  
+    # export every calculated joint values to world view to illustrate the result
     for i in range(len(pre_place_jvs)):
-        # export every calculated joint values to world view 
         world_view_client.add_joint_values("joint_values_{}".format(str(i).zfill(2)), 
                                 "/example_02_palletizing/generated/pre_place_joint_values", 
                                 pre_place_jvs[i])
     return pre_place_jvs
 
-
-def calculate_place_joint_values(poses: List[Pose], pre_place_jvs: List[JointValues], move_group: MoveGroup, world_view_client: WorldViewClient) -> List[JointValues]:
+def calculate_place_joint_values(poses: List[Pose], 
+                                pre_place_jvs: List[JointValues], 
+                                move_group: MoveGroup, 
+                                world_view_client: WorldViewClient) \
+                            -> List[JointValues]:
     """ 
-    Calculates the pre place joint values
+    Calculates the place joint values
+
+    Since we want the robot to move from pre place to place pose, we use the 
+    corresponding pre place joint values as seed for the place joint values
     """
-    # Now that we have all the poses we want to visit, we should find the corresponding joint values
-    
-    # First, we calculate the joint values for the pre place poses
-    # Since we want the robot arm to go back and forth from the home configuration to the poses on the grid, 
-    # we use the home joint values as a const seed for every pose to minimize the distance for the joints to make
-    # const_seed = True means we always use the jv_home joint values as seed, and do not use the previous calculated joint value as seed
-    # const_seed = False would make sense if we went from pose to pose without visiting the jv_home configuration in between
     end_effector = move_group.get_end_effector()
-    # We do the same for the place positions. 
-    # Since we want the robot to move from pre place to place, 
-    # we use every pre place joint values as seed for the place joint values
+
     place_jvs = []
     for i in range(len(pre_place_jvs)):
-        ik_results = end_effector.inverse_kinematics(poses[i], collision_check = True, seed = pre_place_jvs[i])
-        place_jvs.append(ik_results)
+        joint_values = end_effector.inverse_kinematics(poses[i], collision_check = True, seed = pre_place_jvs[i])
+        place_jvs.append(joint_values)
         world_view_client.add_joint_values("joint_values_{}".format(str(i).zfill(2)), 
                                 "/example_02_palletizing/generated/place_joint_values", 
                                 place_jvs[i])
     return place_jvs
-
-
 
 def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     """
@@ -168,13 +174,11 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     # create a instance of WorldViewClient to get access to rosvita world view
     world_view_client = WorldViewClient()
 
-
+    # Generate the folders used by this example in world vew
     generate_folders(world_view_client)
 
-    
-
     # get the pose of the position which defines the location and rotation of the grid
-    pose = world_view_client.get_pose("Pose_1","example_02_palletizing")
+    pose = world_view_client.get_pose("GridPose","example_02_palletizing")
     jv_home = world_view_client.get_joint_values("Home","example_02_palletizing")
 
 
@@ -186,6 +190,8 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
 
     rotation = pose.quaternion
     # Calculate the orthogonal vector of the plane we want to span
+    # Since we use [1,0,0] and [0,1,0] vectors to span the grid relativ to the 
+    # pose orientation, [0,0,1] is orthogonal to the grid
     orthogonal = rotation.rotate(np.array([0,0,1]))
 
     # For visualization and possible collisions, add some boxes below the positions we want to visit
@@ -198,11 +204,23 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     func = lambda pose : Pose(pose.translation + (orthogonal * (-0.1)), pose.quaternion) 
     pre_place_poses = list(map( func , poses))
 
+    # Now that we have all the poses we want to visit, we should find the corresponding joint values
     pre_place_jvs = calculate_pre_place_joint_values(pre_place_poses, jv_home, move_group, world_view_client) 
     place_jvs = calculate_place_joint_values(poses, pre_place_jvs, move_group, world_view_client)
 
-    async def place(jv_pre_place: JointValues, jv_place: JointValues):
-        """Moves from home to place position and back """
+    async def place(jv_pre_place: JointValues, jv_place: JointValues) -> None:
+        """
+        This asynchronous function lets the robot move from home to every place position and 
+        back in a "pick and place" manner 
+
+        Parameters
+        ----------
+        jv_pre_place : JointValues
+            The pre place configuration
+        jv_place : JointValues
+            The place configuration
+
+        """
         # Creates a joint path over the joint values to the target pose
         joint_path = JointPath(jv_home.joint_set, [jv_home,jv_pre_place, jv_place,  ])
         # Move over the joints to target pose

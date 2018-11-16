@@ -163,7 +163,7 @@
       "children": [
         {
           "type": "Pose",
-          "id": "Pose_Pose$5f1",
+          "id": "Pose_GridPose",
           "tags": [],
           "value": {
             "frame": "world",
