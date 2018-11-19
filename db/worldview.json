@@ -180,7 +180,7 @@
             ]
           },
           "enabled": true,
-          "visible": true
+          "visible": false
         },
         {
           "type": "JointValues",
@@ -215,7 +215,7 @@
           "type": "Folder",
           "id": "Folder_example$5fcreate$5fjv$5ffrom$5fposes",
           "tags": [],
-          "visible": true,
+          "visible": false,
           "enabled": true,
           "children": [
             {
@@ -316,7 +316,7 @@
           "type": "Folder",
           "id": "Folder_example$5fpick$5fplace$5fposes",
           "tags": [],
-          "visible": true,
+          "visible": false,
           "enabled": true,
           "children": [
             {
@@ -499,6 +499,180 @@
               "visible": true
             }
           ]
+        },
+        {
+          "type": "Folder",
+          "id": "Folder_example$5fcreate$5fcollision$5fboxes",
+          "tags": [],
+          "visible": false,
+          "enabled": true,
+          "children": [
+            {
+              "type": "Pose",
+              "id": "Pose_Pose$5f1",
+              "tags": [],
+              "value": {
+                "frame": "world",
+                "translation": [
+                  0.78654676675796509,
+                  -0.51888424158096313,
+                  0.83063042163848877
+                ],
+                "rotation": [
+                  -0.085083417594432831,
+                  0.9725799560546875,
+                  -0.16580666601657867,
+                  0.13913027942180634
+                ]
+              },
+              "enabled": true,
+              "visible": false
+            },
+            {
+              "type": "Pose",
+              "id": "Pose_Pose$5f2",
+              "tags": [],
+              "value": {
+                "frame": "world",
+                "translation": [
+                  0.72019296884536743,
+                  -0.37132063508033752,
+                  0.89659416675567627
+                ],
+                "rotation": [
+                  -0.18543043732643127,
+                  -0.88092327117919922,
+                  -0.28643041849136353,
+                  0.32794409990310669
+                ]
+              },
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "type": "Pose",
+              "id": "Pose_Pose$5f3",
+              "tags": [],
+              "value": {
+                "frame": "world",
+                "translation": [
+                  0.69275665283203125,
+                  -0.74802440404891968,
+                  0.976763129234314
+                ],
+                "rotation": [
+                  0.37361752986907959,
+                  0.90197610855102539,
+                  -0.082829095423221588,
+                  0.19997106492519379
+                ]
+              },
+              "enabled": true,
+              "visible": false
+            },
+            {
+              "type": "Pose",
+              "id": "Pose_Pose$5f4",
+              "tags": [],
+              "value": {
+                "frame": "world",
+                "translation": [
+                  0.64952492713928223,
+                  -0.0704585537314415,
+                  1.0591500997543335
+                ],
+                "rotation": [
+                  -0.58234739303588867,
+                  -0.81291389465332031,
+                  -0.006371830590069294,
+                  0.0014716604491695762
+                ]
+              },
+              "enabled": true,
+              "visible": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Folder",
+      "id": "Folder_example$5f03$5fshifting",
+      "tags": [],
+      "visible": false,
+      "enabled": true,
+      "children": [
+        {
+          "type": "JointValues",
+          "id": "JointValues_Home",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_left_joint_1_s",
+              "arm_left_joint_2_l",
+              "arm_left_joint_3_e",
+              "arm_left_joint_4_u",
+              "arm_left_joint_5_r",
+              "arm_left_joint_6_b",
+              "arm_left_joint_7_t",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              -0.362052636422525,
+              -2.2696028564621597E-10,
+              2.2550887011867706E-10,
+              2.2638815219700756E-10,
+              2.2726762628395887E-10,
+              2.6391577725498679E-10,
+              2.6304484290168962E-10,
+              -5.3927635714851822E-10,
+              -0.348167713265785,
+              1.1307711739456514,
+              0.84257604250802653,
+              -1.1056202976518683,
+              -0.91715963764374964,
+              -1.1516467090006672,
+              -3.0985999102342165
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        },
+        {
+          "type": "JointValues",
+          "id": "JointValues_JointValues$5f1",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              -0.41815677952657715,
+              -0.38949649884477683,
+              1.4441659706766306,
+              1.2616556759371007,
+              -1.091842652471896,
+              -1.5257078336534602,
+              -1.119698365028605,
+              -2.6500669821647351
+            ]
+          },
+          "enabled": true,
+          "visible": true
         }
       ]
     }

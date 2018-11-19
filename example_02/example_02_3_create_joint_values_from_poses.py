@@ -55,13 +55,12 @@ if __name__ == '__main__':
 
     world_view_client = WorldViewClient()
 
-    # Read poses from world view 
-    pose_1 = world_view_client.get_pose("Pose_1", world_view_folder)
-    pose_2 = world_view_client.get_pose("Pose_2", world_view_folder)
-    pose_3 = world_view_client.get_pose("Pose_3", world_view_folder)
     seed = world_view_client.get_joint_values("Seed", world_view_folder)
     end_effector = example_utils.get_move_group().get_end_effector()
-    joint_values = main([pose_1, pose_2, pose_3], seed, end_effector)
+
+    # Read poses from world view 
+    poses = world_view_client.query_poses(world_view_folder)
+    joint_values = main(poses, seed, end_effector)
     # Save the generated joint value in world view
     world_view_client.add_folder("generated", world_view_folder)
     for i in range(len(joint_values)):

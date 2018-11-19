@@ -6,8 +6,11 @@ from typing import List
 
 from pyquaternion import Quaternion
 
+from xamla_motion.world_view_client import WorldViewClient
 from xamla_motion.data_types import Pose
 from xamla_motion.data_types import CollisionObject, CollisionPrimitive
+
+import example_utils
 
 def main(poses: List[Pose],  size = (0.09, 0.09, 0.01)) -> CollisionObject:
     """
@@ -32,10 +35,21 @@ def main(poses: List[Pose],  size = (0.09, 0.09, 0.01)) -> CollisionObject:
 
 if __name__ == '__main__':
     # Called when running this script standalone
-    translation = [0.6089578, 0.3406782, 0.208865]
-    rotation = Quaternion(w=0.231852, x=0.33222, y=0.746109, z=0.528387)
-    pose = Pose(translation, rotation) 
-    collision_object = main([pose], (0.2, 0.2, 0.2))
-    
-    
+    world_view_folder = "example_02_palletizing/example_create_collision_boxes"
 
+    move_group = example_utils.get_move_group()
+
+    world_view_client = WorldViewClient()
+
+    # Read poses from world view 
+    poses = world_view_client.query_poses(world_view_folder)
+
+    boxes = main(poses, (0.2, 0.2, 0.2))
+    # Save the generated collision boxes in world view
+    world_view_client.add_folder("generated", world_view_folder)
+    world_view_client.add_collision_object("collision_matrix", 
+                                "/{}/generated".format(world_view_folder), 
+                                boxes)
+
+    input("Press enter to clean up")
+    world_view_client.remove_element("generated", world_view_folder)
