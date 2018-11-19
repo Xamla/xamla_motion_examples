@@ -25,6 +25,7 @@ import asyncio
 from xamla_motion.utility import register_asyncio_shutdown_handler 
 
 import example_utils 
+import example_generate_grid
 
 def generate_folders(world_view_client: WorldViewClient) -> None:
     """ 
@@ -42,39 +43,6 @@ def generate_folders(world_view_client: WorldViewClient) -> None:
     # To show all generated joint values in the world view
     world_view_client.add_folder("pre_place_joint_values", "/example_02_palletizing/generated")
     world_view_client.add_folder("place_joint_values", "/example_02_palletizing/generated")
-
-def get_grid_poses(pose: Pose, size: Tuple[int, int], step: Tuple[float, float]) -> List[Pose]:
-    """
-    This function uses a pose to calculate a grid of poses
-
-    Parameters
-    ----------
-    pose : Pose
-        Defines the position and orientation of the grid
-    size : Tuple[int, int]
-        Number of elements of the grid in x- and y-direction
-    step : Tuple[float, float]
-        The distance between the poses in x- and y-direction
-
-    Returns
-    ------  
-    List[Pose]
-        A list of generated poses
-    """
-
-    # The point defines the rotation and the begining of the grid
-    rotation = pose.quaternion
-    # Calculate the delta of each step in x- and y-direction
-    # For that, we scale the unit vector pointing in x-direction/y-direction
-    # and then rotate it by the rotation of the pose
-    delta_x = rotation.rotate(np.array([step[0], 0.0, 0.0]))
-    delta_y = rotation.rotate(np.array([0.0, step[1], 0.0]))
-    poses = []  # type: List[Pose]
-    for y_index in range(size[1]):
-        for x_index in range(size[0]):
-            translation = pose.translation + x_index*delta_x + y_index*delta_y
-            poses.append(Pose(translation, rotation))
-    return poses
     
 def create_collision_boxes(poses: List[Pose], vector: np.array, size = (0.09, 0.09)) -> CollisionObject:
     """
@@ -234,7 +202,7 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     register_asyncio_shutdown_handler(loop)
 
     # Get the target place poses
-    poses = get_grid_poses(pose, (xSize, ySize), (xStepSize, yStepSize))
+    poses = example_generate_grid.main(pose, xSize, ySize, xStepSize, yStepSize)
     rotation = pose.quaternion
 
     # Calculate the orthogonal vector of the plane we want to span
@@ -303,7 +271,6 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     finally:
         loop.close()
 
-    input('Press enter to clean up')
     world_view_client.remove_element("generated", "/example_02_palletizing")
 
 if __name__ == '__main__':
