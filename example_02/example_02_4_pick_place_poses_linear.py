@@ -83,7 +83,7 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
 
 if __name__ == '__main__':
     # Called when running this script standalone
-    world_view_folder = "example_pick_place_poses"
+    world_view_folder = "example_02_palletizing/example_pick_place_poses"
 
     move_group = example_utils.get_move_group()
 

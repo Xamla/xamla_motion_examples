@@ -4,6 +4,8 @@ Create boxes for a list of Poses
 
 from typing import List
 
+from pyquaternion import Quaternion
+
 from xamla_motion.data_types import Pose
 from xamla_motion.data_types import CollisionObject, CollisionPrimitive
 
@@ -34,5 +36,6 @@ if __name__ == '__main__':
     rotation = Quaternion(w=0.231852, x=0.33222, y=0.746109, z=0.528387)
     pose = Pose(translation, rotation) 
     collision_object = main([pose], (0.2, 0.2, 0.2))
+    
     
 

@@ -1,6 +1,9 @@
 """ 
 This example takes several poses and a home joint value, to apply 
 a pick and place operation from home to every pose
+
+An alternate version of example_02_4, which calculates the joint_values for
+the place poses using the pre place joint values as corresponding seeds
 """
 from typing import List
 import example_utils
@@ -113,7 +116,7 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues)
 
 if __name__ == '__main__':
     # Called when running this script standalone
-    world_view_folder = "example_pick_place_poses"
+    world_view_folder = "example_02_palletizing/example_pick_place_poses"
 
     move_group = example_utils.get_move_group()
 
