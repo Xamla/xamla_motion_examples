@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xgraph xmlns:xamla="http://www.xamla.com/" schemaVersion="2014-1.0" xmlns="http://schemas.xamla.com/2013/xgraph">
+  <header>
+    <metadata>
+      <created>2018-11-19T11:21:04.6154440+00:00</created>
+      <modified>2018-11-19T11:31:33.0398724+00:00</modified>
+    </metadata>
+    <dependencies />
+    <types />
+  </header>
+  <interface>
+    <output id="output0">
+      <object type="System.Collections.Generic.IList`1[[Xamla.Robotics.Types.Pose, Xamla.Robotics.Types, Version=1.0.6.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+        <default>null</default>
+      </object>
+    </output>
+  </interface>
+  <body viewCenter="0, 0" zoomLevel="1">
+    <module id="Input" display="Expanded" showPreview="false" position="17, 449" type="Xamla.Graph.GraphInputModule" />
+    <module id="Output" display="Expanded" showPreview="false" position="1314, 419" type="Xamla.Graph.GraphOutputModule">
+      <inputs>
+        <inputPin id="output0">
+          <connection from="item1.Outputs.output0" />
+        </inputPin>
+      </inputs>
+    </module>
+    <module id="Begin" display="Expanded" showPreview="false" position="10, 369" type="Xamla.Graph.GraphStartModule" />
+    <module id="End" display="Expanded" showPreview="false" position="1314, 369" type="Xamla.Graph.GraphEndModule">
+      <inputs>
+        <inputPin id="flowEnd">
+          <connection from="item1.Outputs.flowOut" />
+        </inputPin>
+      </inputs>
+    </module>
+    <module id="item1" display="Expanded" showPreview="true" position="646, 383" type="Python3.Python3ScriptFile">
+      <inputs>
+        <inputPin id="flowIn">
+          <connection from="item2.Outputs.flowOut" />
+        </inputPin>
+        <inputPin id="caption">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">null</object>
+        </inputPin>
+        <inputPin id="functionName">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">"main"</object>
+        </inputPin>
+        <inputPin id="outputPinNames">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">""</object>
+        </inputPin>
+        <inputPin id="useMainThread">
+          <object type="System.Boolean, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">true</object>
+        </inputPin>
+        <inputPin id="parserError">
+          <object type="Xamla.Graph.Models.ExceptionModel, Xamla.Graph.Contracts, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null">null</object>
+        </inputPin>
+        <inputPin id="path">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">"example_generate_grid.py"</object>
+        </inputPin>
+        <inputPin id="pose">
+          <connection from="item2.Outputs.pose" />
+        </inputPin>
+        <inputPin id="xSize">
+          <object type="System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">4</object>
+        </inputPin>
+        <inputPin id="ySize">
+          <object type="System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">3</object>
+        </inputPin>
+        <inputPin id="xStepSize">
+          <object type="System.Double, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">0.05</object>
+        </inputPin>
+        <inputPin id="yStepSize">
+          <object type="System.Double, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">0.05</object>
+        </inputPin>
+      </inputs>
+    </module>
+    <module id="item2" display="Expanded" showPreview="true" position="206, 456" type="Rosvita.WorldView.GetPose">
+      <inputs>
+        <inputPin id="flowIn">
+          <connection from="Begin.Outputs.flowStart" />
+        </inputPin>
+        <inputPin id="elementPath">
+          <object type="System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">"example_02_palletizing/GridPose"</object>
+        </inputPin>
+      </inputs>
+      <outputs>
+        <outputPin id="flowOut" />
+        <outputPin id="pose" />
+      </outputs>
+    </module>
+  </body>
+  <compilerSettings debug="false" standardAssemblies="true" />
+  <viewModel>7Fxrb9s4Fv0rhr7MLtajWH4lMbYLtOkDwXTaIMl2FiiKLC3RMXdkUUPRTtyg/30vReotynItuUlqtEgi8vJ1z+HhU3owbhny58bkwbDnyLvFV5gR5H5YLqaYGRPrdNQ1FpgjB3EkjDjhLjYm3tJ1u4aDA5sRnxPqRUE29TginkgrA9CSzykLjMnnL12Do9sgilhhFqQTMow4doyJ0e9ZJ79a1q/W6bVlTfrWpDc0x9ZoOBz+o9eb9HoG1Ig6ZEZKrAfwf2D2Bqcnx/3E3CU29gJV7W9dY0ZcfIE4tNo4mtMFPrpHCxcdXdJgRTgyz6ANjLpHPqP/wzYPZPTNgoqG3mB48l0cHKk/bm4xNBfqfnPLiGPeS39C+wi+O8MeF654MO6NSa9rrOEnlP+V0sV7vMIuONiEYBJ8wHfGZIbcAIun3+PmqSCfMg6BSxefO8qVKAjwYuquL/EMM+zZWIUHHHkOYs7LknjOliJ/4TZGKYdKcoZsnDzSqWjwuTCAPy0bgjzq4Ou1L4zeqZbZc+I6kCcU+GA4JPBdtP6AFsLk3POXXAIElVXp/iPcZ4ap5c/QSrYntv2NeE6UQRzl04BIdoUetI5DFw6Hp+DEYE7vLhgWbo79hGxOVjh+VHWDbN/c++AW8GjXmKPgrQtJiRfEhjMIgEJFZT9QEQt2RNTkpeOgqZvkSJc8HSodilfIXSJRz2sSeiHknaQecVJeSXvbjAJzPsdZn8euyDg9yTUozdaM43K5z7K5n8W9NVPAl29dVcbHsL2aQpLIbCn93palXDDqY8bXacOS8srMciVbdUsWShBWIMtf2aSNBJZm5QzOxeUpPLCGksTW/kks6ZrjsEq9kcSxazLIxKE5IPo70ljmq+Nxf1AL5wfDTyjjQXpoXeQhkF9hTQIVhZ1rWiRYAgKTydMah+6TbAEGKxz9kmconkP1wAaK4smIGLZagtDLN5twvLCijmUmRtnmD3Gh+arYTPvD0Q6GBJ94r2H4lsZRpUIvfAyzhURL4BVz18S7VVlerQOoiikNuh31eMHICkY6GCEZfk+m3c4nOYi/GJo98a/bOVu6fMnwCw8voWFut3OxnMLw+xteX9M/sffi2Mb2ycg5nmJ0fHx6Ihoi6qO6H43q4yMGIeC0eLqAHcIpS2YeMwQlfQLOxrMR8TPhOXQuhhd0lWY+eAVyTYdUYZGhoBaL0WkWi9Ac+mUJEptUVRWoldVh07KqCqyhq6MddfUVvg1dUi2rVxwxjapmo/KiKqdWg3FjkirZkVLUPxDhL711zXlBXU2N3JJBJQrMQTDeUVHDbLWCetzMxEAWomXwSU3ZBgx8SHeJA+jkpSKcDNS7qLAA+LwAgBDhftTvY5Nct+8XmvJ9EqwG6oIApzuHsOl20iHhEgVYHSQSDCsJ06ojwaJOWdlVddhOdB++7SC5wqthl64kkJk2y1EJZf0vU2zQ3Y2CKEuvoYendbuLRg/feM5GNQSbci1MR+iml09PC6VLMnDIoJzrc4vSrXUQMtWqoPMIp5XxvsoWmvaxOFHPziwTo6wHBuODrO0oa+U8Tg8nZbQe5NbMO0wjRWnaEbi4cthxDilKqyGYtTceNIK5AOvO38q33Pz13/NierHmc+oNTPX7KtymfEtK5pVhjE5Ox8OxVNOTQV5NJeqPVUzD3l4qAUXm7bpUl8qikdTBY1ypNyip/Y2SOip64CCpGUlVyKU1NdoKr56kWxsm6YPcslUvqt0KAr5079A6qMFA2bcb3yqyka/YUuKAQjXMxDznjOKctaVNoyvOIGxvm0ZBWFwlK40rsHChdA9f43tR9203kDZwtBIjRVItMCdNsPS1bNCPo+ls6YV2ISo1uZpLk/PL9EBYHWHD+ZCxm6xuxCsS10qQ0HOQWBrtHog2aiY4RfYWUuVcU1xNHvgb8Xc37tbBK7NvrwfJfg78XQb4dyjhes4wKqw+dfTNJ8o5prhia4m9ryh1MfL2Rt8plFdN3rM5tv98Re8LtJXwJcQNObkVc2sgpYi7AR78HHgLGASYvWGMFvYVdKzNJsmdixaP/5vmbHppJZzoBuabexv7kVPdNldf2ZKqORzbfiL4LlxANzzl3Yid4nElYLV3vR43i/m8Pn1D25wbmtoieIYzhQZ4qkMnJmgZJP1mmKmu4fygWyY+DUrn9smulbLIbVkVT4Pb0dFLOqWc2IEpQgPzAioT6Wc2Kiuf4++TzwvZ1qbvlmzinwaDhH9lEAyH++RfS8J4f0W+1t4LiIxzfmifikoLzz0+6O9NGYkorVoYoULqGnaek73d5qAVsChKarAYPwNOrrfh5LrcD3vbSf15OFkBi+KkBotGNk9/uE5y7G+nlUmCnD/2tmn6mgK38N7IOXMp4uNhNT3fCiMdQc2dZbMSpVg6tdA0tFX6g+VzS6qu9f7Y2/7oT0fVDSjFiqqFpvau6MbbKJl7R8VtrHp3mvd7I7SZGzyHc/7vOOdv7OJaxX3Q7k5s2vbuSKMvF7QnkWfUdVWDzHfidhWxzfP3JOD/tT5/3s9i/cuXvSl02LJ/ihb8a/8bAo2++tPMvWfN4F3sZfVeE3g4bFECI1bpWCUYmduiLV3siVKWzyt/JmC0tyRW2fgycFq/znKAqfIywCqJK4NnLzc22oLoGZx4r9LRZQDt4UpC4/A898PdjSNSy+fxB8mrB5Che89BI4aNH0C31LOe7nFfec+pd8xXgkHpid9oP53lqZ8pKCiG5V2hhSPHAxCVQAzKgWjhnK0tIJ7J9vAqjh3p+kZrx0wHaHaDpsVjFT00+rct32GuRs/MW5XRB9L+oMx1xNTTzBuqtyp171P2e/J9yuFo/PTep+yXYdMv+j+3Svmu9yn7uvcpR/W+rfX436ds9OsPh7OWxt6p3PbDJ0/0bTXs4gX2+IVm5dQvkdxskpxXmvpuwjNc6xp3Yrgo2+Orz9eNcCnSVmJU+23gWofafe2h9qjeVwgfw2eOtn2D+iC0zR1qb//pgEdzqN3MnebDtfIWrpVvebW/ufPjkiGzWHrd6z6HAbJ0P7jXv/GR62JOvkKWR+8YcRT7yhaVLc9xaiws4Q+1MJSKUvsbPZnlqPTmHLt+6D71zKIPW/+bubE4gRvkh73Vs1xEqSeqxutYMWsvbiurY1xi4ACsqoIO6ohO15kxuujwOe7EeXUcai+FZ01ju5pHS8UsMKnCr6EYFdkRe/sdTsOiw4oQT1eNzlvqQv/pCHEJOgEW7IUpeGe67vxy9ItpCAGO/RVVQilKrnSG/1riQCTe3PhvghP/BwAA//8DAA==</viewModel>
+</xgraph>
