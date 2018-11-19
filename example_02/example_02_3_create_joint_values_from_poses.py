@@ -19,9 +19,6 @@ def main(poses: List[Pose],
     """ 
     Calculates joint values from poses and a seed
     
-    Since we want the robot arm to go back and forth from the seed configuration 
-    to the poses, we use the "seed" joint value as a const seed for every pose to 
-    minimize the distance for the joints to make.
     Calling  inverse_kinematics_many with "const_seed = True" lets us exclusively
     using the "seed" joint values as seed. 
 
@@ -38,6 +35,7 @@ def main(poses: List[Pose],
     List[JointValues]
         A list of joint values for every pose
     """
+    
     cartesian_path = CartesianPath(poses)
     ik_results = end_effector.inverse_kinematics_many(cartesian_path, 
                                                     collision_check = True, 
@@ -48,7 +46,6 @@ def main(poses: List[Pose],
         raise Exception("The inverse kinematics operation could not be applied on all the positions.")
     # joint_path now contains the result of the ik-operation
     return ik_results.path  
-
 
 if __name__ == '__main__':
     # Called when running this script standalone

@@ -9,8 +9,8 @@ from typing import List
 import example_utils
 
 from xamla_motion.world_view_client import WorldViewClient
-from xamla_motion.data_types import JointValues, Pose, CartesianPath, JointPath
-from xamla_motion.motion_client import MoveGroup, EndEffector
+from xamla_motion.data_types import JointValues, Pose, JointPath
+from xamla_motion.motion_client import MoveGroup
 
 import asyncio
 from xamla_motion.utility import register_asyncio_shutdown_handler 
@@ -66,7 +66,6 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues)
         The joint values, to which the robot returns after place
     """
 
-
     loop = asyncio.get_event_loop()
     # Register the loop handler to be shutdown appropriately
     register_asyncio_shutdown_handler(loop)
@@ -110,9 +109,6 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues)
             loop.run_until_complete(place(pre_place_jvs[i], place_jvs[i]))
     finally:
         loop.close()
-
-
-
 
 if __name__ == '__main__':
     # Called when running this script standalone

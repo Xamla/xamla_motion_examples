@@ -6,13 +6,11 @@ from typing import List
 import example_utils
 
 from xamla_motion.world_view_client import WorldViewClient
-from xamla_motion.data_types import JointValues, Pose, CartesianPath, JointPath
-from xamla_motion.motion_client import MoveGroup, EndEffector
+from xamla_motion.data_types import JointValues, Pose, JointPath
+from xamla_motion.motion_client import MoveGroup
 
 import asyncio
 from xamla_motion.utility import register_asyncio_shutdown_handler 
-
-
 
 def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues, move_group : MoveGroup) :
     """
@@ -77,9 +75,6 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
             loop.run_until_complete(place(pre_place_jvs[i], poses[i]))
     finally:
         loop.close()
-
-
-
 
 if __name__ == '__main__':
     # Called when running this script standalone
