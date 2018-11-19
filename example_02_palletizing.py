@@ -4,14 +4,13 @@ This example shows how the robot can pick and place for a grid of poses
 
 First, a grid of place and pre place poses is calculated out of a single 
 pose in world view, which describes an edge and the orientation of the grid.
-
+The manipulation of this pose results in a different grid, so one can see if 
+and which solution is found for the operation.
 
 Joint values are calculated by using inverse  kinematics for the place and 
 pre place poses. These robot configuration are saved in world view.
 
 Then, the robot applies a pick and place for all the poses of the grid. 
-
-
 """
 from typing import List, Tuple
 
@@ -61,7 +60,6 @@ def get_grid_poses(pose: Pose, size: Tuple[int, int], step: Tuple[float, float])
     ------  
     List[Pose]
         A list of generated poses
-
     """
 
     # The point defines the rotation and the begining of the grid
@@ -80,9 +78,11 @@ def get_grid_poses(pose: Pose, size: Tuple[int, int], step: Tuple[float, float])
     
 def create_collision_boxes(poses: List[Pose], vector: np.array, size = (0.09, 0.09)) -> CollisionObject:
     """
-    Creates a bunch of boxes located relative to corresponding poses with an offset defined by vector 
+    Creates a bunch of boxes located relative to corresponding poses with an 
+    offset defined by vector 
 
-    This is mostly a visualization aid to locate the poses, but serves also as an obstacle the robot must plan for
+    This is mostly a visualization aid to locate the poses, but serves also as 
+    an obstacle the robot must plan for
 
     Parameters
     ----------
@@ -97,15 +97,13 @@ def create_collision_boxes(poses: List[Pose], vector: np.array, size = (0.09, 0.
     ------  
     CollisionObject
         The grid of boxes as a CollisionObject instance
-
-
     """
+
     func = lambda pose : CollisionPrimitive.create_box(size[0], size[1], 
                                                         0.01, 
                                                         Pose(pose.translation + vector, 
                                                         pose.quaternion))
     return CollisionObject(list(map( func , poses)))
-
 
 def calculate_pre_place_joint_values(pre_place_poses: List[Pose], 
                                     jv_home: JointValues, 
@@ -137,8 +135,8 @@ def calculate_pre_place_joint_values(pre_place_poses: List[Pose],
     ------  
     List[JointValues]
         A list of joint values for every pose
-
     """
+
     end_effector = move_group.get_end_effector()
     ik_results = end_effector.inverse_kinematics_many(CartesianPath(pre_place_poses), 
                                                     collision_check = True, 
@@ -199,41 +197,40 @@ def calculate_place_joint_values(poses: List[Pose],
 
 def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     """
-        The parameter for this function describes the size of the grid.
-        To manipulate orientation and position, one can alter the Pose named "GridPose" 
-        in the folder "example_02_palletizing" of the world view.
+    The parameter for this function describes the size of the grid.
+    To manipulate orientation and position, one can alter the Pose named "GridPose" 
+    in the folder "example_02_palletizing" of the world view.
 
-        Parameters
-        ----------
-        xSize : int
-            Number of elements of the grid in x-direction
-        ySize : int
-            Number of elements of the grid in y-direction
-        xStepSize : float
-            The distance between the poses in x-direction
-        yStepSize : float
-            The distance between the poses in y-direction
-
+    Parameters
+    ----------
+    xSize : int
+        Number of elements of the grid in x-direction
+    ySize : int
+        Number of elements of the grid in y-direction
+    xStepSize : float
+        The distance between the poses in x-direction
+    yStepSize : float
+        The distance between the poses in y-direction
     """
 
-    # create move group instance targeting the right arm of the robot
+    # Create move group instance targeting the right arm of the robot
     move_group = example_utils.get_move_group()
 
-    # get the gripper attached at the right arm
+    # Get the gripper attached at the right arm
     wsg_gripper = example_utils.get_gripper(move_group)
 
-    # create a instance of WorldViewClient to get access to rosvita world view
+    # Create a instance of WorldViewClient to get access to rosvita world view
     world_view_client = WorldViewClient()
 
     # Generate the folders used by this example in world vew
     generate_folders(world_view_client)
 
-    # get the pose of the position which defines the location and rotation of the grid
+    # Get the pose of the position which defines the location and rotation of the grid
     pose = world_view_client.get_pose("GridPose","example_02_palletizing")
     jv_home = world_view_client.get_joint_values("Home","example_02_palletizing")
 
     loop = asyncio.get_event_loop()
-    # register the loop handler to be shutdown appropriately
+    # Register the loop handler to be shutdown appropriately
     register_asyncio_shutdown_handler(loop)
 
     # Get the target place poses
@@ -261,7 +258,8 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     func = lambda pose : Pose(pose.translation + (orthogonal * (-0.1)), pose.quaternion) 
     pre_place_poses = list(map( func , poses))
 
-    # Now that we have all the poses we want to visit, we should find the corresponding joint values
+    # Now that we have all the poses we want to visit, we should find the 
+    # corresponding joint values
     pre_place_jvs = calculate_pre_place_joint_values(pre_place_poses, 
                                                 jv_home, move_group, 
                                                 world_view_client) 
