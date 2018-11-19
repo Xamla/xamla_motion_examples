@@ -22,10 +22,10 @@ from xamla_motion.data_types import JointValues, Pose, CartesianPath, JointPath
 from xamla_motion.data_types import CollisionObject, CollisionPrimitive
 
 import example_utils 
-import example_generate_grid
-import example_create_collision_boxes
-import example_create_joint_values_from_poses
-import example_pick_place_poses_linear
+import example_02_1_generate_grid
+import example_02_2_create_collision_boxes
+import example_02_3_create_joint_values_from_poses
+import example_02_4_pick_place_poses_linear
 
 def generate_folders(world_view_client: WorldViewClient) -> None:
     """ 
@@ -79,7 +79,7 @@ def calculate_pre_place_joint_values(pre_place_poses: List[Pose],
     """
     end_effector = move_group.get_end_effector()
     try:
-        pre_place_jvs = example_create_joint_values_from_poses.main(pre_place_poses,
+        pre_place_jvs = example_02_3_create_joint_values_from_poses.main(pre_place_poses,
                                                     jv_home,
                                                     end_effector)
     except Exception as e:
@@ -131,7 +131,7 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
 
 
     # Get the target place poses
-    poses = example_generate_grid.main(pose, xSize, ySize, xStepSize, yStepSize)
+    poses = example_02_1_generate_grid.main(pose, xSize, ySize, xStepSize, yStepSize)
     rotation = pose.quaternion
 
     # Calculate the orthogonal vector of the plane we want to span
@@ -143,7 +143,7 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     # we want to visit
     getBoxPose = lambda pose : Pose(pose.translation + (orthogonal * (0.12)), pose.quaternion) 
     boxPoses = list(map(getBoxPose, poses))
-    boxes = example_create_collision_boxes.main(boxPoses, (xStepSize*0.9, yStepSize*0.9, 0.01))
+    boxes = example_02_2_create_collision_boxes.main(boxPoses, (xStepSize*0.9, yStepSize*0.9, 0.01))
     world_view_client.add_collision_object("collision_matrix", 
                                     "/{}/generated/collision_objects".format(world_view_folder), 
                                     boxes)
@@ -163,7 +163,7 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
                                                 world_view_client,
                                                 world_view_folder) 
 
-    example_pick_place_poses_linear.main(poses, pre_place_jvs, jv_home, move_group)
+    example_02_4_pick_place_poses_linear.main(poses, pre_place_jvs, jv_home, move_group)
 
     world_view_client.remove_element("generated", world_view_folder)
 

@@ -24,7 +24,7 @@ def main(loopCount: int):
     world_view_client = WorldViewClient()
 
     # get the example joint values from world view
-    jv_home = world_view_client.get_joint_values("Home","")
+    jv_home = world_view_client.get_joint_values("Home","example_01_pick_place")
     jv_prePick = world_view_client.get_joint_values("01_PrePick","example_01_pick_place")
     jv_pick = world_view_client.get_joint_values("02_Pick","example_01_pick_place")
     jv_prePlace = world_view_client.get_joint_values("03_PrePlace","example_01_pick_place")
@@ -37,7 +37,8 @@ def main(loopCount: int):
     async def move_supervised(joint_values: JointValues, velocity_scaling=1):
         """Opens a window in rosvita to let the user supervise the motion to joint values """
         stepped_client = move_group.move_joints_supervised(joint_values, 
-                                                        velocity_scaling = velocity_scaling)
+                                                        velocity_scaling = velocity_scaling,
+                                                        collision_check = True)
         robot_chat_stepped_motion = RobotChatSteppedMotion(robot_chat,
                                                         stepped_client,
                                                         move_group.name)
