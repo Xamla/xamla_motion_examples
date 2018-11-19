@@ -7,7 +7,6 @@ import numpy as np
 
 from pyquaternion import Quaternion
 
-
 from xamla_motion.data_types import  Pose
 
 def main(pose: Pose, xSize: int, ySize: int, xStepSize: float , yStepSize: float) -> List[Pose]:

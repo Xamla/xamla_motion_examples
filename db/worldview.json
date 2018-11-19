@@ -313,6 +313,194 @@
           "visible": true
         }
       ]
+    },
+    {
+      "type": "Folder",
+      "id": "Folder_example$5fpick$5fplace$5fposes",
+      "tags": [],
+      "visible": true,
+      "enabled": true,
+      "children": [
+        {
+          "type": "Pose",
+          "id": "Pose_Pose$5f1",
+          "tags": [],
+          "value": {
+            "frame": "world",
+            "translation": [
+              0.65617495775222778,
+              -0.7249787449836731,
+              1.1127393245697021
+            ],
+            "rotation": [
+              4.2797851165232714E-06,
+              0.88700968027114868,
+              -0.46175083518028259,
+              1.4565047194992076E-06
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        },
+        {
+          "type": "Pose",
+          "id": "Pose_Pose$5f2",
+          "tags": [],
+          "value": {
+            "frame": "world",
+            "translation": [
+              0.75932002067565918,
+              -0.45792141556739807,
+              1.184949517250061
+            ],
+            "rotation": [
+              0.2588219940662384,
+              0.96592503786087036,
+              -1.6567024658797891E-06,
+              3.7975996747263707E-06
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        },
+        {
+          "type": "Pose",
+          "id": "Pose_Pose$5f3",
+          "tags": [],
+          "value": {
+            "frame": "world",
+            "translation": [
+              0.70197594165802,
+              -0.75724416971206665,
+              0.94880479574203491
+            ],
+            "rotation": [
+              0.37361735105514526,
+              0.90197610855102539,
+              -0.082829020917415619,
+              0.19997137784957886
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        },
+        {
+          "type": "JointValues",
+          "id": "JointValues_JointValues$5f1",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              -0.28274435556719524,
+              -0.48659325453579066,
+              1.2868402020436047,
+              1.5034189550537107,
+              -0.99411472847933169,
+              -1.3599182081805821,
+              -0.9821037661384453,
+              -2.8914178613775712
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        },
+        {
+          "type": "JointValues",
+          "id": "JointValues_JointValues$5f2",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              0.028097968264750018,
+              -0.74424213601304978,
+              1.0114792425341346,
+              1.259505338552668,
+              -0.9378276155846994,
+              -0.60993233312288053,
+              -1.4341934581295404,
+              -2.6956236461542491
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        },
+        {
+          "type": "JointValues",
+          "id": "JointValues_JointValues$5f3",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              -0.11836688522512806,
+              -0.37412367792564405,
+              0.79017277720763313,
+              1.3280015418310929,
+              -0.85535280581996553,
+              -0.75363569214068549,
+              -0.67479232283216461,
+              -2.73640790638186
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        },
+        {
+          "type": "JointValues",
+          "id": "JointValues_Home",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              -0.36205263636670287,
+              -0.34816771349319342,
+              1.1307711737248105,
+              0.84257604227855154,
+              -1.1056202974242797,
+              -0.9171596379034801,
+              -1.1516467092634279,
+              -3.0985999107359374
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        }
+      ]
     }
   ]
 }

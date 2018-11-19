@@ -27,6 +27,7 @@ from xamla_motion.utility import register_asyncio_shutdown_handler
 import example_utils 
 import example_generate_grid
 import example_create_collision_boxes
+import example_create_joint_values_from_poses
 
 def generate_folders(world_view_client: WorldViewClient) -> None:
     """ 
@@ -77,19 +78,15 @@ def calculate_pre_place_joint_values(pre_place_poses: List[Pose],
     List[JointValues]
         A list of joint values for every pose
     """
-
     end_effector = move_group.get_end_effector()
-    ik_results = end_effector.inverse_kinematics_many(CartesianPath(pre_place_poses), 
-                                                    collision_check = True, 
-                                                    seed = jv_home, 
-                                                    const_seed = True)
-    # Check if a configuration has been found for every pose
-    if not ik_results.succeeded:
+    try:
+        pre_place_jvs = example_create_joint_values_from_poses.main(pre_place_poses,
+                                                    jv_home,
+                                                    end_effector)
+    except Exception as e:
         print("The inverse kinematics operation could not be applied on all the positions.")
         world_view_client.remove_element("generated", "/example_02_palletizing")
-        raise Exception("The inverse kinematics operation could not be applied on all the positions.")
-    # joint_path now contains the result of the ik-operation
-    pre_place_jvs = ik_results.path  
+        raise e
     # export every calculated joint values to world view to illustrate the result
     for i in range(len(pre_place_jvs)):
         world_view_client.add_joint_values("joint_values_{}".format(str(i).zfill(2)), 
@@ -195,13 +192,15 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     # Now calculate the pre place poses, which hover over the desired place poses
     # Since we want to access every pose in the grid "from above", we apply a 
     # translation orthogonal to the place poses for the pre place poses  
-    func = lambda pose : Pose(pose.translation + (orthogonal * (-0.1)), pose.quaternion) 
+    #func = lambda pose : Pose(pose.translation + (orthogonal * (-0.1)), pose.quaternion) 
+    func = lambda pose : Pose(pose.translation + (pose.quaternion.rotate(np.array([0,0,1])) * (-0.1)), pose.quaternion) 
     pre_place_poses = list(map( func , poses))
 
     # Now that we have all the poses we want to visit, we should find the 
     # corresponding joint values
     pre_place_jvs = calculate_pre_place_joint_values(pre_place_poses, 
-                                                jv_home, move_group, 
+                                                jv_home, 
+                                                move_group, 
                                                 world_view_client) 
     place_jvs = calculate_place_joint_values(poses, 
                                         pre_place_jvs, 
