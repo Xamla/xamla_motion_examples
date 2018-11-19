@@ -36,9 +36,8 @@ def main(loopCount: int):
 
     async def move_supervised(joint_values: JointValues, velocity_scaling=1):
         """Opens a window in rosvita to let the user supervise the motion to joint values """
-        stepped_client = move_group.move_joints_supervised(joint_values, 
-                                                        velocity_scaling = velocity_scaling,
-                                                        collision_check = True)
+        stepped_client = move_group.move_joints_collision_free_supervised(joint_values, 
+                                                        velocity_scaling = velocity_scaling)
         robot_chat_stepped_motion = RobotChatSteppedMotion(robot_chat,
                                                         stepped_client,
                                                         move_group.name)
