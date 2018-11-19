@@ -1,7 +1,8 @@
 """ 
 In this example, joint values are calculated from poses and a seed
 
- The resulting joint values are stored in a "generated" sub folder
+The resulting joint values are stored in a "generated" sub folder 
+when running this script via terminal.
 """
 
 from typing import List

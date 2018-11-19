@@ -21,13 +21,11 @@ from xamla_motion.motion_client import MoveGroup
 from xamla_motion.data_types import JointValues, Pose, CartesianPath, JointPath
 from xamla_motion.data_types import CollisionObject, CollisionPrimitive
 
-import asyncio
-from xamla_motion.utility import register_asyncio_shutdown_handler 
-
 import example_utils 
 import example_generate_grid
 import example_create_collision_boxes
 import example_create_joint_values_from_poses
+import example_pick_place_poses_linear
 
 def generate_folders(world_view_client: WorldViewClient) -> None:
     """ 
@@ -44,13 +42,14 @@ def generate_folders(world_view_client: WorldViewClient) -> None:
     world_view_client.add_folder("collision_objects", "/example_02_palletizing/generated")
     # To show all generated joint values in the world view
     world_view_client.add_folder("pre_place_joint_values", "/example_02_palletizing/generated")
-    world_view_client.add_folder("place_joint_values", "/example_02_palletizing/generated")
+    # world_view_client.add_folder("place_joint_values", "/example_02_palletizing/generated")
     
 
 def calculate_pre_place_joint_values(pre_place_poses: List[Pose], 
                                     jv_home: JointValues, 
                                     move_group: MoveGroup, 
-                                    world_view_client: WorldViewClient) \
+                                    world_view_client: WorldViewClient,
+                                    world_view_folder: str) \
                                 -> List[JointValues]:
     """ 
     Calculates the pre place joint values
@@ -85,53 +84,15 @@ def calculate_pre_place_joint_values(pre_place_poses: List[Pose],
                                                     end_effector)
     except Exception as e:
         print("The inverse kinematics operation could not be applied on all the positions.")
-        world_view_client.remove_element("generated", "/example_02_palletizing")
+        world_view_client.remove_element("generated", world_view_folder)
         raise e
     # export every calculated joint values to world view to illustrate the result
     for i in range(len(pre_place_jvs)):
         world_view_client.add_joint_values("joint_values_{}".format(str(i).zfill(2)), 
-                                "/example_02_palletizing/generated/pre_place_joint_values", 
+                                "/{}/generated/pre_place_joint_values".format(world_view_folder), 
                                 pre_place_jvs[i])
     return pre_place_jvs
 
-def calculate_place_joint_values(poses: List[Pose], 
-                                pre_place_jvs: List[JointValues], 
-                                move_group: MoveGroup, 
-                                world_view_client: WorldViewClient) \
-                            -> List[JointValues]:
-    """ 
-    Calculates the place joint values
-
-    Since we want the robot to move from pre place to place pose, we use the 
-    corresponding pre place joint values as seed for the place joint values.
-
-    Parameters
-    ----------
-    poses : List[Pose]
-        A list of poses for which the joint values should be calculated
-    pre_place_jvs : List[JointValues]
-        The seeds for every pose
-    move_group : MoveGroup
-    world_view_client: WorldViewClient
-
-    Returns
-    ------  
-    List[JointValues]
-        A list of joint values for every pose
-    """
-    end_effector = move_group.get_end_effector()
-    place_jvs = []
-    for i in range(len(pre_place_jvs)):
-        # The i-th pre place joint values are used for the i-th position as seed 
-        joint_values = end_effector.inverse_kinematics(poses[i], 
-                                                collision_check = True, 
-                                                seed = pre_place_jvs[i])
-        place_jvs.append(joint_values)
-        # export every calculated joint values to world view to illustrate the result
-        world_view_client.add_joint_values("joint_values_{}".format(str(i).zfill(2)), 
-                                "/example_02_palletizing/generated/place_joint_values", 
-                                place_jvs[i])
-    return place_jvs
 
 def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     """
@@ -151,6 +112,7 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
         The distance between the poses in y-direction
     """
 
+    world_view_folder = "example_02_palletizing"
     # Create move group instance targeting the right arm of the robot
     move_group = example_utils.get_move_group()
 
@@ -164,12 +126,9 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     generate_folders(world_view_client)
 
     # Get the pose of the position which defines the location and rotation of the grid
-    pose = world_view_client.get_pose("GridPose","example_02_palletizing")
-    jv_home = world_view_client.get_joint_values("Home","example_02_palletizing")
+    pose = world_view_client.get_pose("GridPose", world_view_folder)
+    jv_home = world_view_client.get_joint_values("Home", world_view_folder)
 
-    loop = asyncio.get_event_loop()
-    # Register the loop handler to be shutdown appropriately
-    register_asyncio_shutdown_handler(loop)
 
     # Get the target place poses
     poses = example_generate_grid.main(pose, xSize, ySize, xStepSize, yStepSize)
@@ -186,7 +145,7 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     boxPoses = list(map(getBoxPose, poses))
     boxes = example_create_collision_boxes.main(boxPoses, (xStepSize*0.9, yStepSize*0.9, 0.01))
     world_view_client.add_collision_object("collision_matrix", 
-                                    "/example_02_palletizing/generated/collision_objects", 
+                                    "/{}/generated/collision_objects".format(world_view_folder), 
                                     boxes)
 
     # Now calculate the pre place poses, which hover over the desired place poses
@@ -201,48 +160,12 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     pre_place_jvs = calculate_pre_place_joint_values(pre_place_poses, 
                                                 jv_home, 
                                                 move_group, 
-                                                world_view_client) 
-    place_jvs = calculate_place_joint_values(poses, 
-                                        pre_place_jvs, 
-                                        move_group, 
-                                        world_view_client)
+                                                world_view_client,
+                                                world_view_folder) 
 
-    async def place(jv_pre_place: JointValues, jv_place: JointValues) -> None:
-        """
-        This asynchronous function lets the robot move from home to every place position and 
-        back in a "pick and place" manner 
+    example_pick_place_poses_linear.main(poses, pre_place_jvs, jv_home, move_group)
 
-        Parameters
-        ----------
-        jv_pre_place : JointValues
-            The pre place configuration
-        jv_place : JointValues
-            The place configuration
-
-        """
-        # Creates a joint path over the joint values to the target pose
-        joint_path = JointPath(jv_home.joint_set, [jv_home,jv_pre_place, jv_place ])
-        # Move over the joints to target pose
-        await move_group.move_joints_collision_free(joint_path)
-
-        # do something, e.g. place an object 
-
-        # Creates a joint path over the joint values to the home pose
-        joint_path_back = JointPath(jv_home.joint_set, [jv_place, jv_pre_place, jv_home ])
-        # Move back over the joint path
-        await move_group.move_joints_collision_free(joint_path_back)
-
-    try: 
-        # Move to home position 
-        loop.run_until_complete(move_group.move_joints_collision_free(jv_home))
-        # For every pose we want to address, do a pick and place 
-        for i in range(len(pre_place_jvs)):
-            print("Placing element {}".format(i))
-            loop.run_until_complete(place(pre_place_jvs[i], place_jvs[i]))
-    finally:
-        loop.close()
-
-    world_view_client.remove_element("generated", "/example_02_palletizing")
+    world_view_client.remove_element("generated", world_view_folder)
 
 if __name__ == '__main__':
     main(3, 3, 0.1, 0.1)

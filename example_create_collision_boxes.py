@@ -1,6 +1,7 @@
 """ 
 Create boxes for a list of Poses
 """
+
 from typing import List
 
 from xamla_motion.data_types import Pose

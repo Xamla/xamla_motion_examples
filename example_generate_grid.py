@@ -1,5 +1,6 @@
 """
-Given a pose, generate a grid 
+Given a pose, generate a grid of poses
+The pose describes an edge and the orientation of the grid.
 """
 from typing import List
 

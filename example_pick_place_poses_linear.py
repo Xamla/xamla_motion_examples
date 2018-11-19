@@ -1,5 +1,5 @@
 """ 
-This example takes several poses and a home joint value, to apply 
+This example takes several place poses and pre place joint values and a home joint value, to apply 
 a pick and place operation from home to every pose
 """
 from typing import List
@@ -21,7 +21,7 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
     Parameters
     ----------
     poses : List[Pose]
-        Defines the palce poses to be addressed
+        Defines the place poses to be addressed
     pre_place_jvs : List[JointValues]
         Defines the joint values of the pre place positions
     home : JointValues
@@ -37,6 +37,8 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
         """
         This asynchronous function lets the robot move from home to every place position and 
         back in a "pick and place" manner 
+        The movement from pre place pose to place pose and back is done by moving the end 
+        effector in a linear fashion
 
         Parameters
         ----------
@@ -52,13 +54,15 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
         # Move over the joints to target pose
         await move_group.move_joints_collision_free(joint_path)
         await end_effector.move_poses_collision_free(place, 
-                                                seed = jv_pre_place)
+                                                seed = jv_pre_place,
+                                                velocity_scaling = 0.2)
         
         # do something, e.g. place an object 
 
         pre_place_pose = end_effector.compute_pose(jv_pre_place)
         await end_effector.move_poses_collision_free(pre_place_pose,
-                                                    seed = jv_pre_place)
+                                                    seed = jv_pre_place,
+                                                    velocity_scaling = 0.2)
         # Creates a joint path over the joint values to the home pose
         joint_path_back = JointPath(home.joint_set, [jv_pre_place, home ])
         # Move back over the joint path
