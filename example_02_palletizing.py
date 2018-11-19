@@ -26,6 +26,7 @@ from xamla_motion.utility import register_asyncio_shutdown_handler
 
 import example_utils 
 import example_generate_grid
+import example_create_collision_boxes
 
 def generate_folders(world_view_client: WorldViewClient) -> None:
     """ 
@@ -44,34 +45,6 @@ def generate_folders(world_view_client: WorldViewClient) -> None:
     world_view_client.add_folder("pre_place_joint_values", "/example_02_palletizing/generated")
     world_view_client.add_folder("place_joint_values", "/example_02_palletizing/generated")
     
-def create_collision_boxes(poses: List[Pose], vector: np.array, size = (0.09, 0.09)) -> CollisionObject:
-    """
-    Creates a bunch of boxes located relative to corresponding poses with an 
-    offset defined by vector 
-
-    This is mostly a visualization aid to locate the poses, but serves also as 
-    an obstacle the robot must plan for
-
-    Parameters
-    ----------
-    poses : List[Pose]
-        A list of poses where the boxes should be placed
-    vector : np.array
-        A translation vector to be applied on every box
-    size : Tuple[float, float]
-        Size of the box
-
-    Returns
-    ------  
-    CollisionObject
-        The grid of boxes as a CollisionObject instance
-    """
-
-    func = lambda pose : CollisionPrimitive.create_box(size[0], size[1], 
-                                                        0.01, 
-                                                        Pose(pose.translation + vector, 
-                                                        pose.quaternion))
-    return CollisionObject(list(map( func , poses)))
 
 def calculate_pre_place_joint_values(pre_place_poses: List[Pose], 
                                     jv_home: JointValues, 
@@ -212,10 +185,9 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
 
     # For visualization and possible collisions, add some boxes below the positions 
     # we want to visit
-    boxes = create_collision_boxes(poses , 
-                                (orthogonal * (0.12)), 
-                                (xStepSize*0.9, 
-                                yStepSize*0.9))
+    getBoxPose = lambda pose : Pose(pose.translation + (orthogonal * (0.12)), pose.quaternion) 
+    boxPoses = list(map(getBoxPose, poses))
+    boxes = example_create_collision_boxes.main(boxPoses, (xStepSize*0.9, yStepSize*0.9, 0.01))
     world_view_client.add_collision_object("collision_matrix", 
                                     "/example_02_palletizing/generated/collision_objects", 
                                     boxes)
@@ -250,7 +222,7 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
 
         """
         # Creates a joint path over the joint values to the target pose
-        joint_path = JointPath(jv_home.joint_set, [jv_home,jv_pre_place, jv_place,  ])
+        joint_path = JointPath(jv_home.joint_set, [jv_home,jv_pre_place, jv_place ])
         # Move over the joints to target pose
         await move_group.move_joints_collision_free(joint_path)
 
