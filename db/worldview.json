@@ -4,7 +4,7 @@
       "type": "Folder",
       "id": "Folder_example$5f01$5fpick$5fplace",
       "tags": [],
-      "visible": false,
+      "visible": true,
       "enabled": true,
       "children": [
         {
@@ -158,7 +158,7 @@
       "type": "Folder",
       "id": "Folder_example$5f02$5fpalletizing",
       "tags": [],
-      "visible": false,
+      "visible": true,
       "enabled": true,
       "children": [
         {
@@ -547,7 +547,7 @@
                 ]
               },
               "enabled": true,
-              "visible": true
+              "visible": false
             },
             {
               "type": "Pose",
@@ -599,7 +599,7 @@
       "type": "Folder",
       "id": "Folder_example$5f03$5fshifting",
       "tags": [],
-      "visible": false,
+      "visible": true,
       "enabled": true,
       "children": [
         {
@@ -649,7 +649,7 @@
                 ]
               },
               "enabled": true,
-              "visible": true
+              "visible": false
             }
           ]
         },
@@ -657,7 +657,7 @@
           "type": "Folder",
           "id": "Folder_jointValues",
           "tags": [],
-          "visible": true,
+          "visible": false,
           "enabled": true,
           "children": [
             {
@@ -742,27 +742,6 @@
                   0.44041783841747573,
                   0.690978067874638,
                   -1.139730364400749
-                ]
-              },
-              "enabled": true,
-              "visible": true
-            },
-            {
-              "type": "Pose",
-              "id": "Pose_Pose$5f1",
-              "tags": [],
-              "value": {
-                "frame": "world",
-                "translation": [
-                  0.640200138092041,
-                  -0.50755804777145386,
-                  1.0386286973953247
-                ],
-                "rotation": [
-                  0.010762998834252357,
-                  0.999920666217804,
-                  0.0060637174174189568,
-                  0.0024494496174156666
                 ]
               },
               "enabled": true,

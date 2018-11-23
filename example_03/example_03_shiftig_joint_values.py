@@ -58,6 +58,7 @@ def find_shifted_joint_values(joint_values: JointValues, diff_pose: Pose,
     ServiceException
         Raised when the inverse kinematics operation was not successfull
     """
+
     # Get the pose of the end effetcor
     end_effector = move_group.get_end_effector()
 
@@ -136,4 +137,4 @@ if __name__ == '__main__':
                                     joint_values)
     input("Press enter to clean up")
     world_view_client.remove_element("generated", world_view_folder)
-
+    
