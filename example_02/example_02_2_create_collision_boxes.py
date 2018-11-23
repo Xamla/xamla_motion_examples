@@ -32,7 +32,6 @@ def main(poses: List[Pose],  size = (0.09, 0.09, 0.01)) -> CollisionObject:
     createBoxOfPose = lambda pose : CollisionPrimitive.create_box(size[0], size[1], size[2],  pose)
     return CollisionObject(list(map( createBoxOfPose , poses)))
 
-
 if __name__ == '__main__':
     # Called when running this script standalone
     world_view_folder = "example_02_palletizing/example_create_collision_boxes"
