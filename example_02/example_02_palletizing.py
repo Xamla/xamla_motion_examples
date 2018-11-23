@@ -1,17 +1,22 @@
 """
-This example shows how the robot can pick and place for a grid of poses
-
+This example shows how the robot can pick and place for a grid of poses.
 
 First, a grid of place and pre place poses is calculated out of a single 
-pose in world view, which describes an edge and the orientation of the grid.
+pose in world view, which describes a corner and the orientation of the grid.
 The manipulation of this pose results in a different grid, so one can see if 
 and which solution is found for the operation.
 
-Joint values are calculated by using inverse  kinematics for the place and 
-pre place poses. These robot configuration are saved in world view.
+Some collision boxes are added just below the place poses.
+
+Joint values are calculated by using inverse  kinematics for the pre place 
+poses. These robot configuration are saved in world view.
 
 Then, the robot applies a pick and place for all the poses of the grid. 
+
+All theses steps are implemented in their own module, which also serve as 
+stand alone examples. 
 """
+
 from typing import List, Tuple
 
 import numpy as np
@@ -21,11 +26,19 @@ from xamla_motion.motion_client import MoveGroup
 from xamla_motion.data_types import JointValues, Pose, CartesianPath, JointPath
 from xamla_motion.data_types import CollisionObject, CollisionPrimitive
 
+# This guard alows the script to be called stand alone, adding example_utils from project folder
+import sys
+import os
+# add parent folder to sys.path, to include example utils when running alone
+if "__file__" in locals():
+    sys.path.append( os.path.join(os.path.dirname(__file__), '..'))
 import example_utils 
-import example_02_1_generate_grid
-import example_02_2_create_collision_boxes
-import example_02_3_create_joint_values_from_poses
-import example_02_4_pick_place_poses_linear
+
+import example_utils 
+from example_02 import example_02_1_generate_grid
+from example_02 import  example_02_2_create_collision_boxes
+from example_02 import  example_02_3_create_joint_values_from_poses
+from example_02 import  example_02_4_pick_place_poses_linear
 
 def generate_folders(world_view_client: WorldViewClient) -> None:
     """ 
@@ -79,7 +92,8 @@ def calculate_pre_place_joint_values(pre_place_poses: List[Pose],
     """
     end_effector = move_group.get_end_effector()
     try:
-        pre_place_jvs = example_02_3_create_joint_values_from_poses.main(pre_place_poses,
+        pre_place_jvs = example_02_3_create_joint_values_from_poses.main(
+                                                    pre_place_poses,
                                                     jv_home,
                                                     end_effector)
     except Exception as e:
@@ -168,4 +182,5 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
     world_view_client.remove_element("generated", world_view_folder)
 
 if __name__ == '__main__':
-    main(3, 3, 0.1, 0.1)
+    # Alter the grid size by calling main with different parameters
+    main(2, 2, 0.1, 0.1)

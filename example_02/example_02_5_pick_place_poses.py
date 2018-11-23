@@ -6,7 +6,6 @@ An alternate version of example_02_4, which calculates the joint_values for
 the place poses using the pre place joint values as corresponding seeds
 """
 from typing import List
-import example_utils
 
 from xamla_motion.world_view_client import WorldViewClient
 from xamla_motion.data_types import JointValues, Pose, JointPath
@@ -15,6 +14,13 @@ from xamla_motion.motion_client import MoveGroup
 import asyncio
 from xamla_motion.utility import register_asyncio_shutdown_handler 
 
+# This guard alows the script to be called stand alone, adding example_utils from project folder
+import sys
+import os
+# add parent folder to sys.path, to include example utils when running alone
+if "__file__" in locals():
+    sys.path.append( os.path.join(os.path.dirname(__file__), '..'))
+import example_utils 
 
 def calculate_place_joint_values(poses: List[Pose], 
                                 pre_place_jvs: List[JointValues], 
@@ -59,7 +65,7 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues)
     Parameters
     ----------
     poses : List[Pose]
-        Defines the palce poses to be addressed
+        Defines the place poses to be addressed
     pre_place_jvs : List[JointValues]
         Defines the joint values of the pre place positions
     home : JointValues
@@ -131,5 +137,3 @@ if __name__ == '__main__':
     poses = [pose_1, pose_2, pose_3]
     joint_values = [joint_values_1, joint_values_2, joint_values_3]
     main(poses, joint_values, home)
-
-

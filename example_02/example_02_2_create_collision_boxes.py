@@ -10,8 +10,6 @@ from xamla_motion.world_view_client import WorldViewClient
 from xamla_motion.data_types import Pose
 from xamla_motion.data_types import CollisionObject, CollisionPrimitive
 
-import example_utils
-
 def main(poses: List[Pose],  size = (0.09, 0.09, 0.01)) -> CollisionObject:
     """
     Creates a bunch of boxes located relative to corresponding poses with an
@@ -35,8 +33,6 @@ def main(poses: List[Pose],  size = (0.09, 0.09, 0.01)) -> CollisionObject:
 if __name__ == '__main__':
     # Called when running this script standalone
     world_view_folder = "example_02_palletizing/example_create_collision_boxes"
-
-    move_group = example_utils.get_move_group()
 
     world_view_client = WorldViewClient()
 
