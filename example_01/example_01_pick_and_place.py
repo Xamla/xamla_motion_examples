@@ -8,10 +8,6 @@ from xamla_motion.robot_chat_client import RobotChatClient, RobotChatSteppedMoti
 
 from xamla_motion.utility import register_asyncio_shutdown_handler 
 
-# This guard alows the script to be called stand alone, adding example_utils from project folder
-import sys
-import os
-
 import example_utils 
 
 def main(loopCount: int):

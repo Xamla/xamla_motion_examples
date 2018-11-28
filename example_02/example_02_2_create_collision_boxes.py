@@ -39,7 +39,6 @@ if __name__ == '__main__':
 
     world_view_client = WorldViewClient()
 
-
     # Read poses from world view 
     posesMap = world_view_client.query_poses(world_view_folder)
     poses = list(posesMap.values())

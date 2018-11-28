@@ -750,6 +750,187 @@
           ]
         }
       ]
+    },
+    {
+      "type": "Folder",
+      "id": "Folder_example$5f04$5fcollision$5fobjects",
+      "tags": [],
+      "visible": true,
+      "enabled": true,
+      "children": [
+        {
+          "type": "Folder",
+          "id": "Folder_poses",
+          "tags": [],
+          "visible": true,
+          "enabled": true,
+          "children": [
+            {
+              "type": "Pose",
+              "id": "Pose_Pose$5f1",
+              "tags": [],
+              "value": {
+                "frame": "world",
+                "translation": [
+                  0.60000002384185791,
+                  0.0,
+                  0.89999997615814209
+                ],
+                "rotation": [
+                  -0.70707798004150391,
+                  0.70707517862319946,
+                  0.0066845719702541828,
+                  0.0063830376602709293
+                ]
+              },
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "type": "Pose",
+              "id": "Pose_Pose$5f2",
+              "tags": [],
+              "value": {
+                "frame": "world",
+                "translation": [
+                  0.699999988079071,
+                  0.0,
+                  0.89999997615814209
+                ],
+                "rotation": [
+                  -0.70707798004150391,
+                  0.70707517862319946,
+                  0.0066845719702541828,
+                  0.0063830376602709293
+                ]
+              },
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "type": "Pose",
+              "id": "Pose_Pose$5f3",
+              "tags": [],
+              "value": {
+                "frame": "world",
+                "translation": [
+                  0.800000011920929,
+                  0.0,
+                  0.89999997615814209
+                ],
+                "rotation": [
+                  -0.70707798004150391,
+                  0.70707517862319946,
+                  0.0066845719702541828,
+                  0.0063830376602709293
+                ]
+              },
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "type": "Pose",
+              "id": "Pose_Pose$5f4",
+              "tags": [],
+              "value": {
+                "frame": "world",
+                "translation": [
+                  0.89999997615814209,
+                  0.0,
+                  0.89999997615814209
+                ],
+                "rotation": [
+                  -0.70707798004150391,
+                  0.70707517862319946,
+                  0.0066845719702541828,
+                  0.0063830376602709293
+                ]
+              },
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "type": "Pose",
+              "id": "Pose_Pose$5f5",
+              "tags": [],
+              "value": {
+                "frame": "world",
+                "translation": [
+                  1.0,
+                  0.0,
+                  0.89999997615814209
+                ],
+                "rotation": [
+                  -0.70707798004150391,
+                  0.70707517862319946,
+                  0.0066845719702541828,
+                  0.0063830376602709293
+                ]
+              },
+              "enabled": true,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "type": "JointValues",
+          "id": "JointValues_Start",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              -0.35282268799857713,
+              -0.26628827211069417,
+              1.1301085898164314,
+              0.86070690955936058,
+              -1.0986768826213236,
+              -0.93569541223768127,
+              -1.0668720961555636,
+              -3.092844592911566
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        },
+        {
+          "type": "JointValues",
+          "id": "JointValues_End",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              0.589073859384937,
+              -0.20709782432706308,
+              1.7565106869228473,
+              0.89379981862842428,
+              -0.77901966662380273,
+              -0.69479070907739926,
+              -1.1365774716220765,
+              -1.8643607992666698
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        }
+      ]
     }
   ]
 }

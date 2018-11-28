@@ -26,10 +26,6 @@ from xamla_motion.motion_client import MoveGroup
 from xamla_motion.data_types import JointValues, Pose, CartesianPath, JointPath
 from xamla_motion.data_types import CollisionObject, CollisionPrimitive
 
-# This guard alows the script to be called stand alone, adding example_utils from project folder
-import sys
-import os
-
 import example_utils 
 from example_02 import example_02_1_generate_grid
 from example_02 import  example_02_2_create_collision_boxes

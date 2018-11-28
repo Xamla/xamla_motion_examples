@@ -19,12 +19,6 @@ from xamla_motion.data_types import JointValues, Pose
 
 from xamla_motion.xamla_motion_exceptions.exceptions import ServiceException
 
-# This guard alows the script to be called stand alone, adding example_utils from project folder
-import sys
-import os
-# add parent folder to sys.path, to include example utils when running alone
-if "__file__" in locals():
-    sys.path.append( os.path.join(os.path.dirname(__file__), '..'))
 import example_utils 
 
 def find_shifted_joint_values(joint_values: JointValues, diff_pose: Pose, 
@@ -145,7 +139,6 @@ if __name__ == '__main__':
         None
     world_view_client.add_folder("generated", world_view_folder)
     for i in range(len(shifted_joint_values_list)):
-
         joint_values = shifted_joint_values_list[i]
         # Test if not "None"
         if joint_values:

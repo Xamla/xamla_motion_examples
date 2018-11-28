@@ -12,10 +12,6 @@ from xamla_motion.world_view_client import WorldViewClient
 from xamla_motion.data_types import JointValues, Pose, CartesianPath
 from xamla_motion.motion_client import EndEffector
 
-# This guard alows the script to be called stand alone, adding example_utils from project folder
-import sys
-import os
-
 import example_utils 
 
 def main(poses: List[Pose], 
@@ -79,6 +75,11 @@ if __name__ == '__main__':
     poses = list(poses_map.values())
     joint_values = main(poses, seed, end_effector)
     # Save the generated joint value in world view
+    try:
+        # delete folder if it already exists
+        world_view_client.remove_element("generated", world_view_folder)
+    except Exception as e:
+        None
     world_view_client.add_folder("generated", world_view_folder)
     for i in range(len(joint_values)):
         world_view_client.add_joint_values(new_names[i], 

@@ -14,12 +14,6 @@ from xamla_motion.motion_client import MoveGroup
 import asyncio
 from xamla_motion.utility import register_asyncio_shutdown_handler 
 
-# This guard alows the script to be called stand alone, adding example_utils from project folder
-import sys
-import os
-# add parent folder to sys.path, to include example utils when running alone
-if "__file__" in locals():
-    sys.path.append( os.path.join(os.path.dirname(__file__), '..'))
 import example_utils 
 
 def calculate_place_joint_values(poses: List[Pose], 
