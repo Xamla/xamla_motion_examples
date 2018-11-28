@@ -40,8 +40,8 @@ if __name__ == '__main__':
     world_view_client = WorldViewClient()
 
     # Read poses from world view 
-    posesMap = world_view_client.query_poses(world_view_folder)
-    poses = list(posesMap.values())
+    poses_dict = world_view_client.query_poses(world_view_folder)
+    poses = list(poses_dict.values())
     boxes = main(poses, (0.2, 0.2, 0.2))
     # Save the generated collision boxes in world view
     try:

@@ -108,11 +108,11 @@ if __name__ == '__main__':
     world_view_client = WorldViewClient()
 
     # Read joint values from world view 
-    joint_values_list_map = world_view_client.query_joint_values(
+    joint_values_dict = world_view_client.query_joint_values(
                               "{}/jointValues".format(world_view_folder))
-    joint_values_list = list(joint_values_list_map.values())
+    joint_values_list = list(joint_values_dict.values())
     # Read names too to associate the joint values to the poses
-    names = list(map( lambda posix_path: posix_path.name, list(joint_values_list_map.keys())))
+    names = list(map( lambda posix_path: posix_path.name, list(joint_values_dict.keys())))
     # Create no names for joint values
     new_names = list(map( lambda name: "shifted_joint_values_of_{}".format(name), names))
 

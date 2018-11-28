@@ -66,13 +66,13 @@ if __name__ == '__main__':
     seed = world_view_client.get_joint_values("Seed", world_view_folder)
 
     # Read poses from world view 
-    poses_map = world_view_client.query_poses(world_view_folder)
+    poses_dict = world_view_client.query_poses(world_view_folder)
     # Read names too to associate the joint values to the poses
-    names = list(map( lambda posix_path: posix_path.name, list(poses_map.keys())))
+    names = list(map( lambda posix_path: posix_path.name, list(poses_dict.keys())))
     # Create no names for joint values
     new_names = list(map( lambda name: "joint_values_of_{}".format(name), names))
     
-    poses = list(poses_map.values())
+    poses = list(poses_dict.values())
     joint_values = main(poses, seed, end_effector)
     # Save the generated joint value in world view
     try:
