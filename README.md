@@ -57,3 +57,13 @@ Every end effector pose is transformed this way. Inverse kinematics is used to g
 If the inverse kinematics operation yields no result, the corresponding joint values are skipped.
 
 The resulting joint values are stored in `example_03_shifting/generated/`.
+
+## example_04_collision_objects
+
+This example shows how the robot can move while evading Collision Objects
+
+First collision objects are generated from poses read from world view.
+The arm of the robot moves back and forth between two joint values configuration.
+For every movement, a different collision object is added to world view and taken into account when planning the movement.
+
+ 
