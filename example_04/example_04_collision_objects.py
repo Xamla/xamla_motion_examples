@@ -2,13 +2,12 @@
 This example generates some collision objects at poses read from world view.
 Furthermore, collision free movement is show while (de)activating some of the 
 obstacles.
-
 """
 import asyncio
 
 from xamla_motion.world_view_client import WorldViewClient
 from xamla_motion.motion_client import MoveGroup
-from xamla_motion.data_types import CollisionObject, CollisionPrimitive
+from xamla_motion.data_types import JointValues, CollisionObject, CollisionPrimitive
 
 from xamla_motion.utility import register_asyncio_shutdown_handler 
 
@@ -17,7 +16,8 @@ from xamla_motion.xamla_motion_exceptions.exceptions import ArgumentError
 import example_utils 
 
 def add_generated_folder(world_view_client: WorldViewClient, world_view_folder: str) -> None:
-    """ Adds a generated folder to world view, deletes content if existand"""
+    """ Adds a folder to world view, deletes content if existand"""
+
     try:
         # delete folder if it already exists
         world_view_client.remove_element("generated", world_view_folder)
@@ -26,15 +26,28 @@ def add_generated_folder(world_view_client: WorldViewClient, world_view_folder: 
     world_view_client.add_folder("generated", world_view_folder)
 
 def collision_object_exists(name: str, path: str, world_view_client: WorldViewClient) -> bool:
-        """ 
-        Since adding elements to world view is asynchronous to our python script,
-        we (busy) wait until it is there, to avoid ignoring the collision object
-        """
-        try:
-            coll_obj = world_view_client.get_collision_object(name, path)
-            return True
-        except ArgumentError as e:
-            return False
+    """ 
+    Checks if a collision object exists 
+
+    Parameters
+    ----------
+    name : str
+        Name of the collision object
+    path : str
+        Path to the collision object
+    world_view_client : WorldViewClient
+
+    Returns
+    ------  
+    bool
+        True if object exist, False otherwise
+    """
+
+    try:
+        coll_obj = world_view_client.get_collision_object(name, path)
+        return True
+    except ArgumentError as e:
+        return False
 
 def main( ) :
     world_view_folder = "example_04_collision_objects"
@@ -73,14 +86,19 @@ def main( ) :
         coll_obj = CollisionObject([box])
         collision_objects[name] = coll_obj
 
-    async def move_back_and_forth(jv_start, jv_end):
+    async def move_back_and_forth(jv_start: JointValues, jv_end: JointValues):
         """ 
         Moves back and forth between jv_start and jv_end, evading collision objects
 
-        
+        Parameters
+        ----------
+        jv_start : JointValues
+            Start configuration
+        jv_end : JointValues
+            End configuration
         """
         
-        print("Move to start position")
+        print("Moving to start position")
         # First, move to start joint values
         await move_group.move_joints_collision_free(jv_start, velocity_scaling=0.5)
 
@@ -95,6 +113,8 @@ def main( ) :
                             "/{}/generated".format(world_view_folder), 
                             coll_obj)
 
+            # Since adding elements to world view is asynchronous to our python script,
+            # we (busy) wait until it is there, to avoid ignoring the collision object
             while not collision_object_exists(name, "/{}/generated".format(world_view_folder), world_view_client):
                 print("Does not exist yet")
 
