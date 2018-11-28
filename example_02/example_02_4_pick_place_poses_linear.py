@@ -78,7 +78,7 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
         loop.run_until_complete(move_group.move_joints_collision_free(home))
         # For every pose we want to address, do a pick and place 
         for i in range(len(pre_place_jvs)):
-            print("Placing element {}".format(i))
+            print("Placing element {}".format(i+1))
             loop.run_until_complete(place(pre_place_jvs[i], poses[i]))
     finally:
         loop.close()

@@ -15,9 +15,7 @@ from xamla_motion.motion_client import EndEffector
 # This guard alows the script to be called stand alone, adding example_utils from project folder
 import sys
 import os
-# add parent folder to sys.path, to include example utils when running alone
-if "__file__" in locals():
-    sys.path.append( os.path.join(os.path.dirname(__file__), '..'))
+
 import example_utils 
 
 def main(poses: List[Pose], 
@@ -72,12 +70,18 @@ if __name__ == '__main__':
     seed = world_view_client.get_joint_values("Seed", world_view_folder)
 
     # Read poses from world view 
-    poses = world_view_client.query_poses(world_view_folder)
+    poses_map = world_view_client.query_poses(world_view_folder)
+    # Read names too to associate the joint values to the poses
+    names = list(map( lambda posix_path: posix_path.name, list(poses_map.keys())))
+    # Create no names for joint values
+    new_names = list(map( lambda name: "joint_values_of_{}".format(name), names))
+    
+    poses = list(poses_map.values())
     joint_values = main(poses, seed, end_effector)
     # Save the generated joint value in world view
     world_view_client.add_folder("generated", world_view_folder)
     for i in range(len(joint_values)):
-        world_view_client.add_joint_values("joint_values_{}".format(str(i).zfill(2)), 
+        world_view_client.add_joint_values(new_names[i], 
                             "{}/generated".format(world_view_folder), 
                             joint_values[i])
     input("Press enter to clean up")

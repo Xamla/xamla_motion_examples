@@ -10,3 +10,9 @@ def get_gripper(move_group: MoveGroup) -> WeissWsgGripper:
     # create instance of wsg gripper by name
     properties = WeissWsgGripperProperties('wsg50')
     return  WeissWsgGripper(properties, move_group.motion_service)
+import moveit_msgs.msg as moveit_msgs
+
+from xamlamoveit_msgs.srv import *
+
+
+

@@ -102,6 +102,8 @@ def main( joint_values_list: List[JointValues], diff_pose: Pose) -> List[JointVa
         except ServiceException as e:
             # print(e)
             print("Could not shift joint values.".format(joint_values))
+            # append None so we can test if this failed or not
+            shifted_jvs_list.append(None)
 
     return shifted_jvs_list
    
@@ -112,8 +114,15 @@ if __name__ == '__main__':
     world_view_client = WorldViewClient()
 
     # Read joint values from world view 
-    joint_values_list = world_view_client.query_joint_values(
+    joint_values_list_map = world_view_client.query_joint_values(
                               "{}/jointValues".format(world_view_folder))
+    joint_values_list = list(joint_values_list_map.values())
+    # Read names too to associate the joint values to the poses
+    names = list(map( lambda posix_path: posix_path.name, list(joint_values_list_map.keys())))
+    # Create no names for joint values
+    new_names = list(map( lambda name: "shifted_joint_values_of_{}".format(name), names))
+
+
     # Read poses from world view 
     reference_pose = world_view_client.get_pose("Reference", 
                               "/{}/poses".format(world_view_folder))
@@ -129,12 +138,21 @@ if __name__ == '__main__':
     shifted_joint_values_list = main(joint_values_list, diff_pose)
     # Save the shifted joint values to world view
     print("Save the shifted joint values to world view")
+    try:
+        # delete folder if it already exists
+        world_view_client.remove_element("generated", world_view_folder)
+    except Exception as e:
+        None
     world_view_client.add_folder("generated", world_view_folder)
     for i in range(len(shifted_joint_values_list)):
+
         joint_values = shifted_joint_values_list[i]
-        world_view_client.add_joint_values("joint_value_{}".format(i), 
-                                    "/{}/generated".format(world_view_folder), 
-                                    joint_values)
+        # Test if not "None"
+        if joint_values:
+            name = new_names[i]
+            world_view_client.add_joint_values(name, 
+                                        "/{}/generated".format(world_view_folder), 
+                                        joint_values)
     input("Press enter to clean up")
     world_view_client.remove_element("generated", world_view_folder)
     
