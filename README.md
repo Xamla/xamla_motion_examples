@@ -66,4 +66,11 @@ First collision objects are generated from poses read from world view.
 The arm of the robot moves back and forth between two joint values configuration.
 For every movement, a different collision object is added to world view and taken into account when planning the movement.
 
- 
+## example_05_sinus_shaking_trajectory
+
+This example shows how to produce sinus shaped motion given a list of poses
+
+The script first creates a list of poses consisting of the current pose of the end effector.
+Then a new CartesianPath is created by applying translation along a given axis following a sinus function.
+Linear movement of this path is then executed.
+Setting the parameter for amplitude, frequence and axis to change the behaviour of the movement.

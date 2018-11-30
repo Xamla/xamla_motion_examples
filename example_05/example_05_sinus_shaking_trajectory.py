@@ -34,7 +34,7 @@ def add_sin_to_trajectory(cartesian_path: CartesianPath,
     Returns
     ------  
     CartesianPath
-        The cartesian_path altered in a sinus shape
+        The cartesian_path altered by a sinus shaped translation
     """
         
     if axis < 0 or axis > 2:
@@ -42,8 +42,9 @@ def add_sin_to_trajectory(cartesian_path: CartesianPath,
         raise ValueError(msg)
 
     def sin_generator(number_of_samples: int, amplitude: float, frequency: float):
-        """This generator calculates values for an index according to a 
-        sinus function defined by the parameters.
+        """
+        This generator calculates values for an index according to a sinus 
+        function defined by the parameters.
         It yields the current index and the corresponding sinus value
             
         Parameters
@@ -69,17 +70,17 @@ def add_sin_to_trajectory(cartesian_path: CartesianPath,
     new_translation = np.asarray([0.0, 0.0, 0.0])
 
     number_of_samples = len(cartesian_path)
+    # For every pose, get the translation value of the sinus shaped movement
     for i, s in sin_generator(number_of_samples, amplitude, frequency):
-        # For every pose, get the translation value of the sinus shaped movement
         # Apply it only to one axis
         new_translation[axis] = s
         # Apply the translation to corresponding pose
-        new_path.append(cartesian_path.points[i].translate(new_translation))
+        new_pose = cartesian_path.points[i].translate(new_translation)
+        new_path.append(new_pose)
     return CartesianPath(new_path)
 
 async def main():
     move_group = example_utils.get_move_group()
-
     end_effector = move_group.get_end_effector()
 
     pose = end_effector.get_current_pose()
