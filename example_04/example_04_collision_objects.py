@@ -88,7 +88,8 @@ def main( ) :
             world_view_client.add_collision_object(name, 
                             "/{}/generated".format(world_view_folder), 
                             coll_obj)
-
+            test = world_view_client.get_collision_object(name, 
+                            "/{}/generated".format(world_view_folder)) 
             # move to end location
             await move_group.move_joints_collision_free(jv_end, velocity_scaling=0.5)
 
