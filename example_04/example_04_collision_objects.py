@@ -25,30 +25,6 @@ def add_generated_folder(world_view_client: WorldViewClient, world_view_folder: 
         None
     world_view_client.add_folder("generated", world_view_folder)
 
-def collision_object_exists(name: str, path: str, world_view_client: WorldViewClient) -> bool:
-    """ 
-    Checks if a collision object exists 
-
-    Parameters
-    ----------
-    name : str
-        Name of the collision object
-    path : str
-        Path to the collision object
-    world_view_client : WorldViewClient
-
-    Returns
-    ------  
-    bool
-        True if object exist, False otherwise
-    """
-
-    try:
-        coll_obj = world_view_client.get_collision_object(name, path)
-        return True
-    except ArgumentError as e:
-        return False
-
 def main( ) :
     world_view_folder = "example_04_collision_objects"
 
@@ -112,11 +88,6 @@ def main( ) :
             world_view_client.add_collision_object(name, 
                             "/{}/generated".format(world_view_folder), 
                             coll_obj)
-
-            # Since adding elements to world view is asynchronous to our python script,
-            # we (busy) wait until it is there, to avoid ignoring the collision object
-            while not collision_object_exists(name, "/{}/generated".format(world_view_folder), world_view_client):
-                print("Does not exist yet")
 
             # move to end location
             await move_group.move_joints_collision_free(jv_end, velocity_scaling=0.5)
