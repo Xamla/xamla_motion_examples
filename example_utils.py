@@ -11,4 +11,11 @@ def get_gripper(move_group: MoveGroup) -> WeissWsgGripper:
     properties = WeissWsgGripperProperties('wsg50')
     return  WeissWsgGripper(properties, move_group.motion_service)
 
+def get_right_move_group() -> MoveGroup:
+    return MoveGroup("/sda10f/sda10f_r2_controller")
+
+def get_left_move_group():
+    return MoveGroup("/sda10f/sda10f_r1_controller")
+
+
 

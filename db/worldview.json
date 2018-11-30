@@ -582,10 +582,10 @@
                   1.0591500997543335
                 ],
                 "rotation": [
-                  -0.58234739303588867,
-                  -0.81291389465332031,
-                  -0.006371830590069294,
-                  0.0014716604491695762
+                  -0.5823473334312439,
+                  -0.81291377544403076,
+                  -0.0063718296587467194,
+                  0.0014716602163389325
                 ]
               },
               "enabled": true,
@@ -748,6 +748,14 @@
               "visible": true
             }
           ]
+        },
+        {
+          "type": "Folder",
+          "id": "Folder_generated",
+          "tags": [],
+          "visible": true,
+          "enabled": true,
+          "children": []
         }
       ]
     },
@@ -925,6 +933,58 @@
               -1.0503263628029438,
               0.71603528824613127,
               0.29945590464810945
+            ]
+          },
+          "enabled": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "type": "Folder",
+      "id": "Folder_example$5f06$5fnull$5fspace",
+      "tags": [],
+      "visible": true,
+      "enabled": true,
+      "children": [
+        {
+          "type": "JointValues",
+          "id": "JointValues_Begin",
+          "tags": [],
+          "value": {
+            "jointNames": [
+              "torso_joint_b1",
+              "arm_left_joint_1_s",
+              "arm_left_joint_2_l",
+              "arm_left_joint_3_e",
+              "arm_left_joint_4_u",
+              "arm_left_joint_5_r",
+              "arm_left_joint_6_b",
+              "arm_left_joint_7_t",
+              "arm_right_joint_1_s",
+              "arm_right_joint_2_l",
+              "arm_right_joint_3_e",
+              "arm_right_joint_4_u",
+              "arm_right_joint_5_r",
+              "arm_right_joint_6_b",
+              "arm_right_joint_7_t"
+            ],
+            "values": [
+              0.50718159949424668,
+              0.15944511866766548,
+              1.2051376068568447,
+              -2.8984562163889951,
+              1.2112384985883631,
+              2.9294178549575416,
+              -0.85354161633528713,
+              2.6656627107181077,
+              -2.8465355597175876,
+              0.65331229840871385,
+              0.50666404207690319,
+              1.9825494813621696,
+              -0.10708280315873643,
+              1.0255669118945774,
+              -0.6889106385812106
             ]
           },
           "enabled": true,
