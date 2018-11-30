@@ -1,3 +1,7 @@
+""" 
+This example shows how to create a creating a sinus-shaking trajectory.
+"""
+
 import numpy as np
 import math
 
