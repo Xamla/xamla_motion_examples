@@ -27,7 +27,6 @@ from xamla_motion.utility import register_asyncio_shutdown_handler
 
 import rospy 
 import actionlib
-
             
 
 def main():
@@ -40,20 +39,26 @@ def main():
 
     move_group_name = "/sda10f/right_arm_torso"
     joggingClient.set_move_group_name(move_group_name)
+    #Begin tracking
     joggingClient.toggle_tracking(True)
 
 
     running = True
     for i in range(1000):    
-        
+        print("{} of {}".format(i, 1000))
         pose = current_pose
 
         delta = [0,0,0]
         pose = pose.translate(delta)
+
         pose = world_view_client.get_pose("Pose_1", world_view_folder)
 
-        joggingClient.send_set_point(pose)
+        #joggingClient.send_set_point(pose)
         time.sleep(0.02)
+        torso_name = "torso_joint_b1"
+        jv = JointValues(JointSet([torso_name]), [-i/1000] ) 
+
+        joggingClient.send_velocities(jv)
 
 
     # Stop tracking
