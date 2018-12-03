@@ -146,7 +146,7 @@ async def main():
                                         right_move_group,
                                         full_body_move_group,
                                         torso_joint_name,
-                                        -0.5)
+                                        0.5)
 
     add_generated_folder(world_view_client, world_view_folder)
     # Save every waypoint to world view for visualization
