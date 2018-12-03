@@ -76,3 +76,8 @@ The script first creates a list of poses consisting of the current pose of the e
 Then a new CartesianPath is created by applying translation along a given axis following a sinus function.
 Linear movement of this path is then executed.
 Setting the parameter for amplitude, frequence and axis to change the behaviour of the movement.
+
+## example_06_null_space
+
+This example shows how to achieve movement of the torso joint of the robot while keeping its end effectors locked at their poses.
+  
