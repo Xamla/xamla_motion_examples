@@ -85,6 +85,6 @@ This [example script](example_06/example_06_null_space.py)  shows how to achieve
 
 This set of examples shows how to use the jogging client using the python interface.
 
-* The [first script](example_07/example_07_3_twist.py) reads continuously a pose from world view and uses jogging to move the EndEffector to that position.
+* The [first script](example_07/example_07_1_follow_pose.py) reads continuously a pose from world view and uses jogging to move the EndEffector to that position.
 * The [second script](example_07/example_07_2_rotate_joint.py) show how a joint can be addressed and moved directly.
 * The [third script](example_07/example_07_3_twist.py) show how a twist can be applied to an end effector.
