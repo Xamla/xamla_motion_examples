@@ -11,7 +11,9 @@ from example_07.twist import Twist
 from geometry_msgs.msg import PoseStamped, TwistStamped
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from xamlamoveit_msgs.msg import ControllerState 
-from xamlamoveit_msgs.srv import SetString, SetFloat 
+from xamlamoveit_msgs.srv import GetSelected, SetString
+from xamlamoveit_msgs.srv import GetFloat, SetFloat 
+from xamlamoveit_msgs.srv import GetFlag, SetFlag 
 
 from std_srvs.srv import SetBool
 
@@ -59,33 +61,34 @@ class JoggingClient(object):
                                             queue_size=1)
 
     def _create_connect_services(self):
-        try:
-            self.__set_move_group_service = rospy.ServiceProxy(
+        
+        # utility function for dry purpose
+        def exc_wrap_call(name, msg_type):
+            try:
+                return rospy.ServiceProxy(name, msg_type)
+            except rospy.ServiceException as exc:
+                raise ServiceException('connection for service with name: ' +
+                                   name +
+                                   ' could not be established') from exc
+
+        self.__toggle_tracking_service = exc_wrap_call(
+                self.__toggle_tracking_service_name, SetBool)
+        self.__get_velocity_scaling_service = exc_wrap_call(
+                self.__get_velocity_scaling_service_name, GetFloat)
+        self.__set_velocity_scaling_service = exc_wrap_call(
+                self.__set_velocity_scaling_service_name, SetFloat)
+        self.__get_move_group_service = exc_wrap_call(
+                self.__get_move_group_service_name,
+                GetSelected)
+        self.__set_move_group_service = exc_wrap_call(
                 self.__set_move_group_service_name,
                 SetString)
-        except rospy.ServiceException as exc:
-            raise ServiceException('connection for service with name: ' +
-                                   self.__set_move_group_service_name +
-                                   ' could not be established') from exc
-
-        try:
-            self.__toggle_tracking_service = rospy.ServiceProxy(
-                self.__toggle_tracking_service_name,
-                SetBool)
-        except rospy.ServiceException as exc:
-            raise ServiceException('connection for service with name: ' +
-                                   self.__toggle_tracking_service_name +
-                                   ' could not be established') from exc
-
-  
-        try:
-            self.__set_velocity_scaling_service = rospy.ServiceProxy(
-                self.__set_velocity_scaling_service_name,
-                SetFloat)
-        except rospy.ServiceException as exc:
-            raise ServiceException('connection for service with name: ' +
-                                   self.__set_velocity_scaling_service_name +
-                                   ' could not be established') from exc 
+        self.__get_flag_service = exc_wrap_call(
+                self.__get_flag_service_name,
+                GetFlag)
+        self.__set_flag_service = exc_wrap_call(
+                self.__set_flag_service_name,
+                SetFlag)
 
     def send_set_point(self, setPoint: Pose):
         pose_msg  = setPoint.to_posestamped_msg() 
@@ -104,36 +107,49 @@ class JoggingClient(object):
         twist_stamped = twist.to_twiststamped_msg()
         self._jogging_twist.publish(twist_stamped)
 
-    def set_velocity_scaling(self, value: float):
+
+    @staticmethod
+    def _exc_wrap_service_call(service_call_func, query_desc, *argv):
+        """ Utility function for a exception handling when calling a service"""
         try:
-            response = self.__set_velocity_scaling_service(value)
+            response = service_call_func(*argv)
         except rospy.ServiceException as exc:
-            raise ServiceException('service call for query'
-                                   ' set velocity scaling'
+            raise ServiceException('service call for query' +
+                                   query_desc +
                                    ' failed, abort') from exc
+        return response
 
+    def get_velocity_scaling(self) -> float:
+        response = self._exc_wrap_service_call(self.__get_velocity_scaling_service, ' get velocity scaling ')
+        return response.data
 
-    def set_move_group_name(self, name: str):
-        try:
-            response = self.__set_move_group_service(name)
-        except rospy.ServiceException as exc:
-            raise ServiceException('service call for query'
-                                   ' set move group'
-                                   ' failed, abort') from exc
-        print(response)
+    def set_velocity_scaling(self, value: float) -> None:
+        response = self._exc_wrap_service_call(self.__set_velocity_scaling_service, 
+                                            ' set velocity scaling',  value)
 
+    def get_move_group_name(self) -> str:
+        response = self._exc_wrap_service_call(self.__get_move_group_service, 
+                                            ' get move group')
+        return response.collection
 
-    def toggle_tracking(self, toggle: bool):
-        try:
-            response = self.__toggle_tracking_service(toggle)
-        except rospy.ServiceException as exc:
-            raise ServiceException('service call for query'
-                                   ' set toggle'
-                                   ' failed, abort') from exc
-        print(response)
+    def set_move_group_name(self, name: str) -> None:
+        response = self._exc_wrap_service_call(self.__set_move_group_service, 
+                                        ' set move group ', name)
 
+    def get_flag(self, name: "str") -> bool:
+        response = self._exc_wrap_service_call(self.__get_flag_service, 
+                                    ' get flag with name  ', name)
+        return response.value
+
+    def set_flag(self, name: str, value: bool) -> None:
+        response = self._exc_wrap_service_call(self.__set_flag_service, 
+                                    ' set flag with name  '.format(name), name, value)
+
+    def toggle_tracking(self, toggle: bool) -> None:
+        response = self._exc_wrap_service_call(self.__toggle_tracking_service, 
+                                    ' toggle tracking ', toggle)
 
     def _handle_jogging_feedback(self, state):
-        # TODO: implement JoggingControllerStatusModel
+        # TODO: implement this properly
         if not state.error_code == 1:
             print("COLLISION OCCURRED") 
