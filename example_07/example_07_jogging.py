@@ -2,6 +2,7 @@
 This example shows how to rotate the torso joint while keeping the end effectors
 at certain poses 
 """
+
 import numpy as np
 import math
 
@@ -9,9 +10,7 @@ import time
 
 import copy
 
-import asyncio
-import signal
-import functools
+
 
 from xamla_motion.world_view_client import WorldViewClient
 
@@ -23,11 +22,7 @@ import example_utils
 
 from example_07.jogging_client import JoggingClient
 
-from xamla_motion.utility import register_asyncio_shutdown_handler 
 
-import rospy 
-import actionlib
-            
 
 def main():
     world_view_folder = ""
@@ -56,10 +51,10 @@ def main():
         #joggingClient.send_set_point(pose)
         time.sleep(0.02)
         torso_name = "torso_joint_b1"
-        jv = JointValues(JointSet([torso_name]), [-i/1000] ) 
+        jv = JointValues(JointSet([torso_name]), [i-500] ) 
 
         joggingClient.send_velocities(jv)
-
+       # joggingClient.set_velocity_scaling(i/1000)
 
     # Stop tracking
     joggingClient.toggle_tracking(False)

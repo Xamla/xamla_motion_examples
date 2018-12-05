@@ -4,7 +4,10 @@ from xamla_motion.gripper_client import WeissWsgGripperProperties, WeissWsgGripp
 """Some utility functions specific to currently used robot and gripper """
 
 def get_move_group() -> MoveGroup:
-    return MoveGroup("/sda10f/right_arm_torso")
+    return MoveGroup(get_move_group_name())
+
+def get_move_group_name() ->str:
+    return  "/sda10f/right_arm_torso"
 
 def get_gripper(move_group: MoveGroup) -> WeissWsgGripper:
     # create instance of wsg gripper by name
