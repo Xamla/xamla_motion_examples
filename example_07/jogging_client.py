@@ -4,8 +4,9 @@ import actionlib
 
 from datetime import timedelta
 
-from xamla_motion.data_types import Pose, JointValues
-
+from xamla_motion.data_types import Pose, JointValues # , Twist
+#TODO: move this to xamla_motion.data_types
+from example_07.twist import Twist
 
 from geometry_msgs.msg import PoseStamped, TwistStamped
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
@@ -99,7 +100,7 @@ class JoggingClient(object):
             points= [point])
         self._jogging_command.publish(trajectory)
 
-    def send_twist(self, twist):
+    def send_twist(self, twist: Twist):
         # TODO: seems not to be implemented yet
         return
 

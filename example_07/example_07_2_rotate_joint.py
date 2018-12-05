@@ -45,7 +45,7 @@ def main():
 
     #Begin tracking
     jogging_client.toggle_tracking(True)
-    N = 1000
+    N = 200
     for i in range(N):    
         print("{} of {}".format(i, N))
         # The value of velocity go from -1 linearly to +1

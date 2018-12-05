@@ -20,7 +20,7 @@ from xamla_motion.motion_client import MoveGroup
 
 import example_utils
 
-from example_07.jogging_client import JoggingClient
+from example_07.jogging_client import JoggingClient, Twist
 
 
 
@@ -37,24 +37,10 @@ def main():
     #Begin tracking
     joggingClient.toggle_tracking(True)
 
-
-    running = True
+    
+    twist = Twist()
     for i in range(1000):    
-        print("{} of {}".format(i, 1000))
-        pose = current_pose
-
-        delta = [0,0,0]
-        pose = pose.translate(delta)
-
-        pose = world_view_client.get_pose("Pose_1", world_view_folder)
-
-        #joggingClient.send_set_point(pose)
-        time.sleep(0.02)
-        torso_name = "torso_joint_b1"
-        jv = JointValues(JointSet([torso_name]), [i-500] ) 
-
-        joggingClient.send_velocities(jv)
-       # joggingClient.set_velocity_scaling(i/1000)
+        None
 
     # Stop tracking
     joggingClient.toggle_tracking(False)
