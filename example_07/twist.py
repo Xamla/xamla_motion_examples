@@ -26,6 +26,16 @@ class Twist(object):
     Twist contains linear velocity in m/s and Angular velocity in rad/s decribed 
     in a specific ROS TF frame
 
+    Methods
+    -------
+    from_twiststamped_msg(msg)
+        Initialize Pose from ROStwiststamped message
+    from_twist_msg(msg, frame_id='')
+        Initialize Pose from ROS pose message
+    to_twiststamped_msg()
+        Creates an instance of the ROS message TwistStamped from Twist
+    to_twist_msg()
+        Creates an instance of the ROS message Twist from Twist
     """
 
     def __init__(self, linear=None, angular=None, frame_id=""):
@@ -216,3 +226,42 @@ class Twist(object):
         return self.__angular
 
 
+
+    def __str__(self):
+        axes = tuple(['x', 'y', 'z'])
+
+        linear_str = '\n'.join(['linear.'+axes[i] + ' : '
+                                     + str(value) for i, value
+                                     in enumerate(self.__linear)])
+        angular_str = '\n'.join(['angular.'+axes[i] + ' : ' + str(value)
+                                    for i, value
+                                    in enumerate(self.__angular)])
+
+        return ('Twist:\n' + linear_str + '\n' + angular_str +
+                '\nframe_id : ' + self.__frame_id)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __eq__(self, other):
+        r_tol = 1.0e-13
+        a_tol = 1.0e-14
+
+        if not isinstance(other, self.__class__):
+            return False
+
+        if id(other) == id(self):
+            return True
+            
+        if not np.allclose(self.__linear, other.linear,
+                           rtol=r_tol, atol=a_tol):
+            return False
+        if not np.allclose(self.__angular, other.angular,
+                           rtol=r_tol, atol=a_tol):
+            return False
+        return True
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+  

@@ -38,7 +38,9 @@ def main():
     joggingClient.toggle_tracking(True)
 
     
-    twist = Twist()
+    twist = Twist([1,2,3], [4,5,6])
+    twist3 = Twist([1,5,3], [4,5,6])
+
     for i in range(1000):    
         None
 
