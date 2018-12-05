@@ -85,6 +85,6 @@ This example shows how to achieve movement of the torso joint of the robot while
 
 This set of examples shows how to use the jogging client using the python interface.
 
-* The first script reads continuously a pose from world view and uses jogging to move the EndEffector to that position (file `example_07/example_07_1_follow_pose.py` ).
-* The second script show how a joint can be addressed and moved directly (file `example_07/example_07_2_rotate_joint.py` ).
-* The third script show how a twist can be applied to an end effector(file `example_07/example_07_3_twist.py` ).
+* The first script reads continuously a pose from world view and uses jogging to move the EndEffector to that position (file [example_07_1_follow_pose.py](example_07/example_07_3_twist.py) ).
+* The second script show how a joint can be addressed and moved directly [example_07_2_rotate_joint.py](example_07/example_07_2_rotate_joint.py).
+* The third script show how a twist can be applied to an end effector [example_07_3_twist.py](example_07/example_07_3_twist.py).
