@@ -10,7 +10,7 @@ from xamla_motion.data_types import Pose, JointValues
 from geometry_msgs.msg import PoseStamped, TwistStamped
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from xamlamoveit_msgs.msg import ControllerState 
-from xamlamoveit_msgs.srv import SetString #, SetFloat TODO: 
+from xamlamoveit_msgs.srv import SetString, SetFloat 
 
 from std_srvs.srv import SetBool
 
@@ -76,16 +76,15 @@ class JoggingClient(object):
                                    self.__toggle_tracking_service_name +
                                    ' could not be established') from exc
 
-  #      try:
-  #          self.__set_velocity_scaling_service = rospy.ServiceProxy(
-  #              self.__set_velocity_scaling_service_name,
-  #              SetFloat)
-  #      except rospy.ServiceException as exc:
-  #          raise ServiceException('connection for service with name: ' +
-  #                                 self.__set_velocity_scaling_service_name +
-  #                                 ' could not be established') from exc 
-
-
+  
+        try:
+            self.__set_velocity_scaling_service = rospy.ServiceProxy(
+                self.__set_velocity_scaling_service_name,
+                SetFloat)
+        except rospy.ServiceException as exc:
+            raise ServiceException('connection for service with name: ' +
+                                   self.__set_velocity_scaling_service_name +
+                                   ' could not be established') from exc 
 
     def send_set_point(self, setPoint: Pose):
         pose_msg  = setPoint.to_posestamped_msg() 
@@ -108,13 +107,13 @@ class JoggingClient(object):
         self._jogging_twist.publish(twist_msg)
 
 
-  #  def set_velocity_scaling(self, value: float):
-  #      try:
-  #          response = self.__set_velocity_scaling_service(value)
-  #      except rospy.ServiceException as exc:
-  #          raise ServiceException('service call for query'
-  #                                 ' set velocity scaling'
-  #                                 ' failed, abort') from exc
+    def set_velocity_scaling(self, value: float):
+        try:
+            response = self.__set_velocity_scaling_service(value)
+        except rospy.ServiceException as exc:
+            raise ServiceException('service call for query'
+                                   ' set velocity scaling'
+                                   ' failed, abort') from exc
 
 
     def set_move_group_name(self, name: str):
