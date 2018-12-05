@@ -28,16 +28,16 @@ class JoggingClient(object):
     __jogging_twist_topic = "/xamlaJointJogging/jogging_twist"
     __jogging_feedback_topic = "/xamlaJointJogging/feedback"
 
-    __toggle_tracking_service_name = "/xamlaJointJogging/start_stop_tracking"
-    __get_move_group_service_name = "/xamlaJointJogging/get_movegroup_name"
-    __set_move_group_service_name = "/xamlaJointJogging/set_movegroup_name"
-    __get_endeffector_service_name = "/xamlaJointJogging/get_endeffector_name"
-    __set_endeffector_service_name = "/xamlaJointJogging/set_endeffector_name"
-    __status_service_name = "xamlaJointJogging/status"
-    __get_velocity_scaling_service_name = "/xamlaJointJogging/get_velocity_scaling"
-    __set_velocity_scaling_service_name = "/xamlaJointJogging/set_velocity_scaling"
-    __get_flag_service_name= "xamlaJointJogging/get_flag"
-    __set_flag_service_name= "xamlaJointJogging/set_flag"
+    __toggle_tracking_service_id = "/xamlaJointJogging/start_stop_tracking"
+    __get_move_group_name_service_id = "/xamlaJointJogging/get_movegroup_name"
+    __set_move_group_name_service_id = "/xamlaJointJogging/set_movegroup_name"
+    __get_endeffector_name_service_id = "/xamlaJointJogging/get_endeffector_name"
+    __set_endeffector_name_service_id = "/xamlaJointJogging/set_endeffector_name"
+    __status_service_id = "xamlaJointJogging/status"
+    __get_velocity_scaling_service_id = "/xamlaJointJogging/get_velocity_scaling"
+    __set_velocity_scaling_service_id = "/xamlaJointJogging/set_velocity_scaling"
+    __get_flag_service_id= "xamlaJointJogging/get_flag"
+    __set_flag_service_id= "xamlaJointJogging/set_flag"
 
     def __init__(self):
         self.__ros_node_steward = ROSNodeSteward()
@@ -72,23 +72,22 @@ class JoggingClient(object):
                                    ' could not be established') from exc
 
         self.__toggle_tracking_service = exc_wrap_call(
-                self.__toggle_tracking_service_name, SetBool)
+                self.__toggle_tracking_service_id, SetBool)
         self.__get_velocity_scaling_service = exc_wrap_call(
-                self.__get_velocity_scaling_service_name, GetFloat)
+                self.__get_velocity_scaling_service_id, GetFloat)
         self.__set_velocity_scaling_service = exc_wrap_call(
-                self.__set_velocity_scaling_service_name, SetFloat)
-        self.__get_move_group_service = exc_wrap_call(
-                self.__get_move_group_service_name,
-                GetSelected)
-        self.__set_move_group_service = exc_wrap_call(
-                self.__set_move_group_service_name,
-                SetString)
-        self.__get_flag_service = exc_wrap_call(
-                self.__get_flag_service_name,
-                GetFlag)
-        self.__set_flag_service = exc_wrap_call(
-                self.__set_flag_service_name,
-                SetFlag)
+                self.__set_velocity_scaling_service_id, SetFloat)
+        self.__get_move_group_name_service = exc_wrap_call(
+                self.__get_move_group_name_service_id,GetSelected)
+        self.__set_move_group_name_service = exc_wrap_call(
+            self.__set_move_group_name_service_id, SetString)
+            
+        self.__get_endeffector_name_service = exc_wrap_call(
+            self.__get_endeffector_name_service_id,GetSelected)
+        self.__set_endeffector_name_service = exc_wrap_call(
+            self.__set_endeffector_name_service_id, SetString)
+        self.__get_flag_service = exc_wrap_call(self.__get_flag_service_id, GetFlag)
+        self.__set_flag_service = exc_wrap_call(self.__set_flag_service_id,SetFlag)
 
     def send_set_point(self, setPoint: Pose):
         pose_msg  = setPoint.to_posestamped_msg() 
@@ -128,26 +127,43 @@ class JoggingClient(object):
                                             ' set velocity scaling',  value)
 
     def get_move_group_name(self) -> str:
-        response = self._exc_wrap_service_call(self.__get_move_group_service, 
+        response = self._exc_wrap_service_call(self.__get_move_group_name_service, 
                                             ' get move group')
+        response.selected
         return response.collection
 
     def set_move_group_name(self, name: str) -> None:
-        response = self._exc_wrap_service_call(self.__set_move_group_service, 
-                                        ' set move group ', name)
+        response = self._exc_wrap_service_call(self.__set_move_group_name_service, 
+                                        ' set move group with name {} '.format(name), name)
+
+    def get_endeffector_name(self) -> str:
+        response = self._exc_wrap_service_call(self.__get_endeffector_name_service, 
+                                            ' get endeffector')
+        response.selected
+        return response.collection
+
+    def set_endeffector_name(self, name: str) -> None:
+        response = self._exc_wrap_service_call(self.__set_endeffector_name_service, 
+                                        ' set endeffector with name {} '.format(name), name)
 
     def get_flag(self, name: "str") -> bool:
         response = self._exc_wrap_service_call(self.__get_flag_service, 
-                                    ' get flag with name  ', name)
+                                    ' get flag with name {} '.format(name), name)
         return response.value
 
     def set_flag(self, name: str, value: bool) -> None:
         response = self._exc_wrap_service_call(self.__set_flag_service, 
-                                    ' set flag with name  '.format(name), name, value)
+                                    ' set flag with name {} '.format(name), name, value)
 
     def toggle_tracking(self, toggle: bool) -> None:
         response = self._exc_wrap_service_call(self.__toggle_tracking_service, 
                                     ' toggle tracking ', toggle)
+
+    def start(self):
+        self.toggle_tracking(True)
+
+    def stop(self):
+        self.toggle_tracking(False)
 
     def _handle_jogging_feedback(self, state):
         # TODO: implement this properly
