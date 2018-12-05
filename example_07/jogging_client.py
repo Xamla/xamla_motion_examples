@@ -9,6 +9,7 @@ from xamla_motion.data_types import Pose, JointValues
 
 from geometry_msgs.msg import PoseStamped, TwistStamped
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
+from xamlamoveit_msgs.msg import ControllerState 
 from xamlamoveit_msgs.srv import SetString #, SetFloat TODO: 
 
 from std_srvs.srv import SetBool
@@ -24,10 +25,16 @@ class JoggingClient(object):
     __jogging_twist_topic = "/xamlaJointJogging/jogging_twist"
     __jogging_feedback_topic = "/xamlaJointJogging/feedback"
 
-    __set_move_group_service_name = "/xamlaJointJogging/set_movegroup_name"
     __toggle_tracking_service_name = "/xamlaJointJogging/start_stop_tracking"
+    __get_move_group_service_name = "/xamlaJointJogging/get_movegroup_name"
+    __set_move_group_service_name = "/xamlaJointJogging/set_movegroup_name"
+    __get_endeffector_service_name = "/xamlaJointJogging/get_endeffector_name"
+    __set_endeffector_service_name = "/xamlaJointJogging/set_endeffector_name"
+    __status_service_name = "xamlaJointJogging/status"
+    __get_velocity_scaling_service_name = "/xamlaJointJogging/get_velocity_scaling"
     __set_velocity_scaling_service_name = "/xamlaJointJogging/set_velocity_scaling"
-
+    __get_flag_service_name= "xamlaJointJogging/get_flag"
+    __set_flag_service_name= "xamlaJointJogging/set_flag"
 
     def __init__(self):
         self.__ros_node_steward = ROSNodeSteward()
@@ -45,6 +52,10 @@ class JoggingClient(object):
         self._jogging_twist = rospy.Publisher(self.__jogging_twist_topic, 
                                             TwistStamped, 
                                             queue_size=5)
+        self.__feedback_sub = rospy.Subscriber(self.__jogging_feedback_topic,
+                                            ControllerState,
+                                            callback=self._handle_jogging_feedback,
+                                            queue_size=1)
 
     def _create_connect_services(self):
         try:
@@ -73,6 +84,8 @@ class JoggingClient(object):
   #          raise ServiceException('connection for service with name: ' +
   #                                 self.__set_velocity_scaling_service_name +
   #                                 ' could not be established') from exc 
+
+
 
     def send_set_point(self, setPoint: Pose):
         pose_msg  = setPoint.to_posestamped_msg() 
@@ -122,3 +135,9 @@ class JoggingClient(object):
                                    ' set toggle'
                                    ' failed, abort') from exc
         print(response)
+
+
+    def _handle_jogging_feedback(self, state):
+        # TODO: implement JoggingControllerStatusModel
+        if not state.error_code == 1:
+            print("COLLISION OCCURRED") 
