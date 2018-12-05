@@ -196,9 +196,9 @@ class Twist(object):
         twist.linear.y = self.__linear[1]
         twist.linear.z = self.__linear[2]
 
-        twist.angular.w = self.__angular[0]
-        twist.angular.x = self.__angular[1]
-        twist.angular.y = self.__angular[2]
+        twist.angular.x = self.__angular[0]
+        twist.angular.y = self.__angular[1]
+        twist.angular.z = self.__angular[2]
         return twist
 
     @property
@@ -252,7 +252,7 @@ class Twist(object):
 
         if id(other) == id(self):
             return True
-            
+
         if not np.allclose(self.__linear, other.linear,
                            rtol=r_tol, atol=a_tol):
             return False

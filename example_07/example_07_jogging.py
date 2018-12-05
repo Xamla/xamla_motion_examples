@@ -26,26 +26,35 @@ from example_07.jogging_client import JoggingClient, Twist
 
 def main():
     world_view_folder = ""
-    joggingClient = JoggingClient()
+    jogging_client = JoggingClient()
 
     world_view_client = WorldViewClient()
     move_group = example_utils.get_move_group()
     current_pose = move_group.get_end_effector().compute_pose(move_group.get_current_joint_positions())
 
     move_group_name = "/sda10f/right_arm_torso"
-    joggingClient.set_move_group_name(move_group_name)
+    jogging_client.set_move_group_name(move_group_name)
     #Begin tracking
-    joggingClient.toggle_tracking(True)
+    jogging_client.toggle_tracking(True)
 
-    
-    twist = Twist([1,2,3], [4,5,6])
-    twist3 = Twist([1,5,3], [4,5,6])
+    # Go back and forth in x direction (linear velocity)
+    forth_twist = Twist(linear=[0.5,0,0], angular=[0,0,0])
+    back_twist = Twist(linear=[-0.5,0,0], angular=[0,0,0])
 
-    for i in range(1000):    
-        None
+    N=100
+    for i in range(N):    
+        print("Call {} of {}".format(i+1, N))
+        jogging_client.send_twist(forth_twist)
+        time.sleep(0.02)
+    for i in range(N):    
+        print("Call {} of {}".format(i+1, N))
+        jogging_client.send_twist(back_twist)
+        time.sleep(0.02)
 
+
+    twist2 = Twist([0,0,0], [4,5,6])
     # Stop tracking
-    joggingClient.toggle_tracking(False)
+    jogging_client.toggle_tracking(False)
 
 
 if __name__ == '__main__':

@@ -101,12 +101,8 @@ class JoggingClient(object):
         self._jogging_command.publish(trajectory)
 
     def send_twist(self, twist: Twist):
-        # TODO: seems not to be implemented yet
-        return
-
-        twist_msg = twist.to_twist_msg
-        self._jogging_twist.publish(twist_msg)
-
+        twist_stamped = twist.to_twiststamped_msg()
+        self._jogging_twist.publish(twist_stamped)
 
     def set_velocity_scaling(self, value: float):
         try:

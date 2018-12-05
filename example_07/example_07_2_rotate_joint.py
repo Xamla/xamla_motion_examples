@@ -38,7 +38,6 @@ def rotate(velocity: float, joint_name: str, jogging_client: JoggingClient) -> N
 
 def main():
     torso_joint_name = example_utils.get_torso_joint_name()
-
     #move_group = example_utils.get_move_group()
     jogging_client = JoggingClient()
     jogging_client.set_move_group_name(example_utils.get_move_group_name())
@@ -46,13 +45,17 @@ def main():
     #Begin tracking
     jogging_client.toggle_tracking(True)
     N = 200
+    frequency = 50
     for i in range(N):    
-        print("{} of {}".format(i, N))
-        # The value of velocity go from -1 linearly to +1
-        # This describes a slowing down rotation to one side, and an accelerating one to the other
         velocity = (i - N/2) *2 /N
+        if (i+1) % 10 == 0:     
+            print("Call {} of {}. Velocity {} ".format(i+1, N, velocity))
+        # The value of velocity go from -1 linearly to +1
+        # This describes a slowing down rotation to one side, followed by 
+        # accelerating rotation to the other side
+
         rotate(velocity=velocity, joint_name=torso_joint_name, jogging_client=jogging_client) 
-        time.sleep(0.02)
+        time.sleep(1/frequency)
 
     # Stop tracking
     jogging_client.toggle_tracking(False)

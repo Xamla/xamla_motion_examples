@@ -12,7 +12,6 @@ import example_utils
 from example_07.jogging_client import JoggingClient
 
 
-
 def track_point(time_amount: float, 
                 frequency: float,  
                 point_name: str,
@@ -36,8 +35,9 @@ def track_point(time_amount: float,
     # Calculate the number of calls to jogging client based on frequency and time
     N = int(time_amount*frequency)
     print(N)
-    for i in range(N):    
-        print("Call {} of {}".format(i+1, N))
+    for i in range(N):  
+        if (i+1) % 10 == 0:     
+            print("Call {} of {}".format(i+1, N))
         # Read the current Pose from WorldView
         pose = get_pose()
         jogging_client.send_set_point(pose)
