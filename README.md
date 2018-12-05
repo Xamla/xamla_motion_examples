@@ -6,7 +6,7 @@ For some examples, a corresponding directory can be found in the Rosvita WorldVi
 
 ## Example 01: Pick and place
 
-The first example shows a simple pick and place operation.
+The first [example script](example_01/example_01_pick_and_place.py) shows a simple pick and place operation.
 It should show several aspects:
 
 * reading JointValues from the Rosvita WorldView
@@ -22,15 +22,15 @@ The movement to the start joint values is supervised, the rest of the movement i
 This example shows how the robot can do pick-and-place operations for a set of poses.
 
 Since the example does a lot of things, it is subdivided into several simple ones which can be run individually.
-Running the file `example_02/example_02_palletizing.py` puts everything together.
+Running the file [example_02_palletizing.py](example_02/example_02_palletizing.py) puts everything together.
 The features are:
 
-* Given a pose and some parameter defining the size, calculate a grid of poses with translation and rotation corresponding to the pose (file `example_02/example_02_1_generate_grid.py` )
-* Generate some CollisionObjects at a list of poses (file `example_02/example_02_2_create_collision_boxes.py` )
-* Using inverse kinematics, get corresponding JointValues for a list of poses (file `example_02/example_02_3_create_joint_values_from_poses.py` )
-* Do a pick and place operation from the pick JointValues to every Pose, using `move_joints_collision_free` for movement between pick and preplace and linear movement between preplace and place poses (file `example_02/example_02_4_pick_place_poses_linear.py`, file `example_02/example_02_5_pick_place_poses.py` for a non linear version).
+* Given a pose and some parameter defining the size, calculate a grid of poses with translation and rotation corresponding to the pose [example_02_1_generate_grid.py](example_02/example_02_1_generate_grid.py)
+* Generate some CollisionObjects at a list of poses [example_02_2_create_collision_boxes.py](example_02/example_02_2_create_collision_boxes.py)
+* Using inverse kinematics, get corresponding JointValues for a list of poses [example_02_3_create_joint_values_from_poses.py] (example_02/example_02_3_create_joint_values_from_poses.py)
+* Do a pick and place operation from the pick JointValues to every Pose, using `move_joints_collision_free` for movement between pick and preplace and linear movement between preplace and place poses [example_02_4_pick_place_poses_linear.py](example_02/example_02_4_pick_place_poses_linear.py) ( [alternative linear version](example_02/example_02_5_pick_place_poses.py) ).
 
-The file `example_02/example_02_palletizing.py`  runs the subexamples 1-4 to do the following:
+The script [example_02_palletizing.py](example_02/example_02_palletizing.py)  runs the subexamples 1-4 to do the following:
 
 * Calculating a grid of place poses using a single pose (named `GridPose`) in WorldView for orientation and translation
 * Showing some cubes below the poses to show where they are and as a CollisionObject to be avoided.
@@ -48,7 +48,7 @@ Every example has a main function with type annotation, which should make includ
 
 ## Example 03: Shifting
 
-This example shows how to shift JointValues in cartesian space.
+This [example script](example_03/example_03_shiftig_joint_values.py) shows how to shift JointValues in cartesian space.
 
 Joint values can be added and changed in `example_03_shifting/jointValues/` in WorldView.
 
@@ -62,29 +62,29 @@ The resulting joint values are stored in `example_03_shifting/generated/`.
 
 ## Example 04: Collision objects
 
-This example shows how the robot can move while evading CollisionObjects
+This [example script](example_04/example_04_collision_objects.py) shows how the robot can move while evading `CollisionObjects`.
 
-First CollisionObjects are generated from poses read from WorldView.
+First `CollisionObject`s are generated from poses read from `WorldView`.
 The arm of the robot moves back and forth between two joint values configuration.
-For every movement, a different CollisionObject is added to WorldView and taken into account when planning the movement.
+For every movement, a different `CollisionObject` is added to `WorldView` and taken into account when planning the movement.
 
 ## Example 05: Sinus shaking trajectory
 
-This example shows how to produce sinus shaped motion given a list of poses
+This [example script](example_05/example_05_sinus_shaking_trajectory.py) shows how to produce sinus shaped motion given a list of poses
 
 The script first creates a list of poses consisting of the current pose of the end effector.
-Then a new CartesianPath is created by applying translation along a given axis following a sinus function.
+Then a new `CartesianPath` is created by applying translation along a given axis following a sinus function.
 Linear movement of this path is then executed.
 Setting the parameter for amplitude, frequence and axis to change the behaviour of the movement.
 
 ## Example 06: Null space movement
 
-This example shows how to achieve movement of the torso joint of the robot while keeping its end effectors locked at their poses.
+This [example script](example_06/example_06_null_space.py)  shows how to achieve movement of the torso joint of the robot while keeping its end effectors locked at their poses.
 
 ## Example 07: Jogging
 
 This set of examples shows how to use the jogging client using the python interface.
 
-* The first script reads continuously a pose from world view and uses jogging to move the EndEffector to that position (file [example_07_1_follow_pose.py](example_07/example_07_3_twist.py) ).
+* The first script reads continuously a pose from world view and uses jogging to move the EndEffector to that position [example_07_1_follow_pose.py](example_07/example_07_3_twist.py).
 * The second script show how a joint can be addressed and moved directly [example_07_2_rotate_joint.py](example_07/example_07_2_rotate_joint.py).
 * The third script show how a twist can be applied to an end effector [example_07_3_twist.py](example_07/example_07_3_twist.py).
