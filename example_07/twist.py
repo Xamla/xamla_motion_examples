@@ -225,8 +225,6 @@ class Twist(object):
         """
         return self.__angular
 
-
-
     def __str__(self):
         axes = tuple(['x', 'y', 'z'])
 

@@ -9,6 +9,7 @@ from xamla_motion.world_view_client import WorldViewClient
 
 import example_utils
 from example_07.jogging_client import JoggingClient, Twist
+from example_07.example_07_jogging_feedback import callback_function as feedback_function
 
 def apply_twist(time_amount: float, 
                 frequency: float,  
@@ -48,8 +49,15 @@ def main():
 
     move_group_name = "/sda10f/right_arm_torso"
     jogging_client.set_move_group_name(move_group_name)
+
+    # register feedback function, to get alerted when an error occurs
+    jogging_client.register(feedback_function)
+
     #Begin tracking
     jogging_client.toggle_tracking(True)
+
+
+
 
     # Go back and forth in x direction (linear velocity)
     forth_trans_twist = Twist(linear=[0.5,0,0], angular=[0,0,0])
@@ -71,7 +79,8 @@ def main():
 
     # Stop tracking
     jogging_client.toggle_tracking(False)
-
+    # Unregister the feedback function
+    jogging_client.unregister(feedback_function)
 
 if __name__ == '__main__':
     main()

@@ -11,6 +11,7 @@ from xamla_motion.data_types import JointValues, JointSet
 
 import example_utils
 from example_07.jogging_client import JoggingClient
+from example_07.example_07_jogging_feedback import callback_function as feedback_function
 
 def rotate(velocity: float, joint_name: str, jogging_client: JoggingClient) -> None:
     """ 
@@ -42,6 +43,10 @@ def main():
     jogging_client = JoggingClient()
     jogging_client.set_move_group_name(example_utils.get_move_group_name())
 
+    # register feedback function, to get alerted when an error occurs
+    jogging_client.register(feedback_function)
+
+
     reset_velocity_scaling =  jogging_client.get_velocity_scaling()
 
 
@@ -63,6 +68,8 @@ def main():
 
     # Stop tracking
     jogging_client.toggle_tracking(False)
+    # Unregister the feedback function
+    jogging_client.unregister(feedback_function)
 
 if __name__ == '__main__':
     main()

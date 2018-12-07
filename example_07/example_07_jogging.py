@@ -24,8 +24,12 @@ from example_07.jogging_client import JoggingClient, Twist
 
 
 
+def callback(state):
+    print("     works")
+    print(state)
+
 def main():
-    world_view_folder = ""
+    world_view_folder = "example_07_jogging"
     jogging_client = JoggingClient()
 
     world_view_client = WorldViewClient()
@@ -35,26 +39,38 @@ def main():
     move_group_name = "/sda10f/right_arm_torso"
     jogging_client.set_move_group_name(move_group_name)
     #Begin tracking
-    jogging_client.toggle_tracking(True)
+    jogging_client.start()
+    point_name = "TrackingPose"
+    # Write pose to World View, so the tracking begins with the current end effector pose
+    world_view_client.update_pose( point_name,  world_view_folder, current_pose)
+    
 
-    # Go back and forth in x direction (linear velocity)
-    forth_twist = Twist(linear=[0.5,0,0], angular=[0,0,0])
-    back_twist = Twist(linear=[-0.5,0,0], angular=[0,0,0])
-
-    N=100
-    for i in range(N):    
-        print("Call {} of {}".format(i+1, N))
-        jogging_client.send_twist(forth_twist)
-        time.sleep(0.02)
-    for i in range(N):    
-        print("Call {} of {}".format(i+1, N))
-        jogging_client.send_twist(back_twist)
-        time.sleep(0.02)
-
-
-    twist2 = Twist([0,0,0], [4,5,6])
+    get_pose = lambda : world_view_client.get_pose(point_name, world_view_folder)
+    # Calculate the number of calls to jogging client based on frequency and time
+    N = 200
+    for i in range(N):
+        if (i+1) % 10 == 0:     
+            print("Call {} of {}.".format(i+1, N))
+        pose = get_pose()
+        jogging_client.send_set_point(pose)
+        time.sleep(1/50)
+    jogging_client.register(callback)
+    N = 200
+    for i in range(N):
+        if (i+1) % 10 == 0:     
+            print("Call {} of {}.".format(i+1, N))
+        pose = get_pose()
+        jogging_client.send_set_point(pose)
+        time.sleep(1/50)
+    jogging_client.unregister(callback)
+    for i in range(N):
+        if (i+1) % 10 == 0:     
+            print("Call {} of {}.".format(i+1, N))
+        pose = get_pose()
+        jogging_client.send_set_point(pose)
+        time.sleep(1/50)
     # Stop tracking
-    jogging_client.toggle_tracking(False)
+    jogging_client.stop()
 
 
 if __name__ == '__main__':

@@ -1,3 +1,4 @@
+import enum
 
 import rospy
 import actionlib
@@ -20,8 +21,88 @@ from std_srvs.srv import SetBool
 from xamla_motion.utility import ROSNodeSteward
 from xamla_motion.xamla_motion_exceptions.exceptions import ServiceException
 
+@enum.unique
+class JoggingErrorCode(enum.Enum):
+    OK = 1
+    INVALID_IK = -1
+    SELF_COLLISION = -2
+    SCENE_COLLISION = -3
+    FRAME_TRANSFORM_FAILURE = -4
+    IK_JUMP_DETECTED = -5
+    CLOSE_TO_SINGULARITY = -6
+    JOINT_LIMITS_VIOLATED = -7
+    INVALID_LINK_NAME = -8
+    TASK_SPACE_JUMP_DETECTED = -9
 
-class JoggingClient(object):
+
+class JoggingClientFeedbackState():
+    """ A class representing the current jogging client state """
+
+    def __init__(self, joint_distance = None,
+                    cartesian_distance = None,
+                    error_code = None,
+                    converged = None,
+                    self_collision_check_enabled = None,
+                    joint_limits_check_enabled = None,
+                    scene_collision_check_enabled = None
+                ):
+        # init all member variables
+        self.joint_distance = joint_distance
+        self.cartesian_distance = cartesian_distance
+        self.error_code = error_code
+        self.converged = converged
+        self.self_collision_check_enabled = self_collision_check_enabled
+        self.joint_limits_check_enabled = joint_limits_check_enabled
+        self.scene_collision_check_enabled = scene_collision_check_enabled
+
+    def __str__(self):
+        ret_string = "JoggingClientFeedbackState: \n"
+        ret_string += "joint_distance: {}\n".format(self.joint_distance) 
+        ret_string += "cartesian_distance: {}\n".format(self.cartesian_distance) 
+        ret_string += "error_code: {}\n".format(self.error_code) 
+        ret_string += "converged: {}\n".format(self.converged) 
+        ret_string += "self_collision_check_enabled: {}\n".format(self.self_collision_check_enabled) 
+        ret_string += "joint_limits_check_enabled: {}\n".format(self.joint_limits_check_enabled) 
+        ret_string += "scene_collision_check_enabled: {}\n".format(self.scene_collision_check_enabled) 
+        return ret_string
+
+
+class JoggingClientFeedbackEvent(object):
+    """
+    A simple observer which registers callback functions
+    TODO: Could be improved
+    """
+
+    def __init__(self):
+        self._subscribers = set()
+
+    def register(self, callback_function):
+        """
+        call_back function takes a JoggingState Object
+        """
+        self._subscribers.add(callback_function)
+
+    def unregister(self, callback_function):
+        self._subscribers.discard(callback_function)
+
+
+    def dispatch(self, state):
+        for callback_function in self._subscribers:
+            # ignore subscribers for which the call_back function crashes
+            try:
+                callback_function(state)
+            except Exception as e:
+                print("Ignoring callback function {}".format(callback_function))
+                print(e)
+
+
+class JoggingClient(JoggingClientFeedbackEvent):
+    """ 
+    A jogging client
+
+    TODO: Could argue that the feedback event should rather be used by composition
+    """
+
 
     __setpoint_topic = "/xamlaJointJogging/jogging_setpoint"
     __jogging_command_topic = "/xamlaJointJogging/jogging_command"
@@ -39,13 +120,15 @@ class JoggingClient(object):
     __get_flag_service_id= "xamlaJointJogging/get_flag"
     __set_flag_service_id= "xamlaJointJogging/set_flag"
 
+
     def __init__(self):
+        super(JoggingClient, self).__init__()
         self.__ros_node_steward = ROSNodeSteward()
-        self._create_connect_topics()
-        self._create_connect_services()
+        self._jogging_event = JoggingClientFeedbackEvent
+        self._init_topics()
+        self._init_services()
 
-
-    def _create_connect_topics(self):
+    def _init_topics(self):
         self._set_point = rospy.Publisher(self.__setpoint_topic, 
                                         PoseStamped,
                                         queue_size=5)
@@ -60,7 +143,7 @@ class JoggingClient(object):
                                             callback=self._handle_jogging_feedback,
                                             queue_size=1)
 
-    def _create_connect_services(self):
+    def _init_services(self):
         
         # utility function for dry purpose
         def exc_wrap_call(name, msg_type):
@@ -165,7 +248,16 @@ class JoggingClient(object):
     def stop(self):
         self.toggle_tracking(False)
 
-    def _handle_jogging_feedback(self, state):
-        # TODO: implement this properly
-        if not state.error_code == 1:
-            print("COLLISION OCCURRED") 
+    def _handle_jogging_feedback(self, state: ControllerState):
+        jogging_state = JoggingClientFeedbackState(
+            joint_distance = state.joint_distance,
+            cartesian_distance = state.cartesian_distance,
+            error_code =  JoggingErrorCode(int(state.error_code)),
+            converged = state.converged,
+            self_collision_check_enabled = state.self_collision_check_enabled,
+            joint_limits_check_enabled = state.joint_limits_check_enabled,
+            scene_collision_check_enabled = state.scene_collision_check_enabled)
+        self.dispatch(jogging_state)
+
+
+
