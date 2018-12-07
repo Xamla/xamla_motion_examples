@@ -38,7 +38,9 @@ class Twist(object):
         Creates an instance of the ROS message Twist from Twist
     """
 
-    def __init__(self, linear=None, angular=None, frame_id=""):
+    def __init__(self, linear: np.array=np.array([0.0,0.0,0.0]), 
+                    angular: np.array=np.array([0.0,0.0,0.0]), 
+                    frame_id=""):
         """
         Initialization of the twist class
 
@@ -55,20 +57,14 @@ class Twist(object):
         ------
         Twist
             An instance of class Twist
-         Raises
+
+        Raises
         ------
-        TypeError : type mismatch
+        TypeError
             If linear or angular vector could not be converted to a numpy 
             array of shape (3,) with d type floating  
             If frame_id is not of type str
-        
         """
-        # Check for None
-        if not linear:
-            self._linear = np.array([0.0,0.0,0.0])
-        if not angular:
-            self._angular = np.array([0.0,0.0,0.0])
-
         try:
             self.__linear = np.fromiter(linear, float)
             if self.__linear.shape[0] != 3:
@@ -91,14 +87,14 @@ class Twist(object):
 
 
     @classmethod
-    def from_twiststamped_msg(cls, msg):
+    def from_twiststamped_msg(cls, msg: geometry_msgs.TwistStamped):
         """
         Initialize Pose from ROS twiststamped message
 
         Parameters
         ----------
-        msg : TwistStamped from ROS geometry_msgs
-            TwistStamped message 
+        msg : geometry_msgs.TwistStamped 
+            TwistStamped message from ROS geometry_msgs
 
         Returns
         -------
@@ -108,7 +104,7 @@ class Twist(object):
         Raises
         ------
         TypeError
-            If msg is not of type TwistStamped
+            If msg is not of type geometry_msgs.TwistStamped
         """
         if not isinstance(msg, geometry_msgs.TwistStamped):
             raise TypeError('msg is not of expected type TwistStamped')
@@ -121,14 +117,14 @@ class Twist(object):
         return cls.from_twist_msg(msg.twist, frame_id)
 
     @classmethod
-    def from_twist_msg(cls, msg, frame_id = ""):
+    def from_twist_msg(cls, msg: geometry_msgs.Twist, frame_id = ""):
         """
         Initialize Pose from ROS twist message
 
         Parameters
         ----------
-        msg : Twist from ROS geometry_msgs
-            Twist message 
+        msg : geometry_msgs.Twist
+            Twist message  from ROS geometry_msgs
 
         Returns
         -------
@@ -138,13 +134,12 @@ class Twist(object):
         Raises
         ------
         TypeError
-            If msg is not of type Twist
+            If msg is not of type geometry_msgs.Twist
         """
         if not isinstance(msg, geometry_msgs.Twist):
             raise TypeError('msg is not of expected type Twist')
 
         twist_msg = msg.twist
-        
         twist = cls.from_twist_msg
 
         linear = np.fromiter([msg.linear.x,
@@ -163,14 +158,13 @@ class Twist(object):
             raise TypeError('frame_id is not of expected type str')
         return cls(linear, angular, frame_id)
 
-
-
-    def to_twiststamped_msg(self):
+    def to_twiststamped_msg(self) -> geometry_msgs.TwistStamped:
         """
         Creates an instance of the ROS message TwistStamped
 
         Returns
         ------
+        geometry_msgs.TwistStamped
             Instance of ROS message TwistStamped (seq and time are not set)
             docs.ros.org/kinetic/api/geometry_msgs/html/msg/TwistStamped.html
         """
@@ -180,12 +174,13 @@ class Twist(object):
 
         return twist_stamped
 
-    def to_twist_msg(self):
+    def to_twist_msg(self) -> geometry_msgs.Twist:
         """
         Creates an instance of the ROS message Twist
 
         Returns
         ------
+        geometry_msgs.Twist
             Instance of ROS message Twist
             docs.ros.org/kinetic/api/geometry_msgs/html/msg/Twist.html
         """
@@ -199,10 +194,11 @@ class Twist(object):
         twist.angular.x = self.__angular[0]
         twist.angular.y = self.__angular[1]
         twist.angular.z = self.__angular[2]
+
         return twist
 
     @property
-    def frame_id(self):
+    def frame_id(self) -> str:
         """
         frame_id : str (readonly)
             Id of the coordinate system / frame
@@ -210,17 +206,17 @@ class Twist(object):
         return self.__frame_id
 
     @property
-    def linear(self):
+    def linear(self) -> np.array:
         """
-        translation : numpy.array((3,) dtype=floating) (readonly)
+        translation : np.array((3,) dtype=floating) (readonly)
             numpy row array of size 3 which describes the linear velocity
         """
         return self.__linear
 
     @property
-    def angular(self):
+    def angular(self) -> np.array:
         """
-        translation : numpy.array((3,) dtype=floating) (readonly)
+        translation : np.array((3,) dtype=floating) (readonly)
             numpy row array of size 3 which describes the angular velocity
         """
         return self.__angular
