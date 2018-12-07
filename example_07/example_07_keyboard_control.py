@@ -54,7 +54,7 @@ class JoggingInterface(object):
         self._forward = False 
         self._twist = Twist()
         self._zero_twist = Twist()
-
+        self._sending = False
 
     def thread_start(self):
         print("Start thread")
@@ -108,9 +108,15 @@ class JoggingInterface(object):
     def _on_tick(self):
 #        print(self._twist)
         if not self._twist == self._zero_twist:
-            print("lets twist again")
+            self._sending = True
             self._jogging_client.send_twist(self._twist)
-
+            print("lets twist again")
+        else:
+            if self._sending:
+                print("one last time") 
+                # Send one last time to stop operation
+                self._sending = False
+                self._jogging_client.send_twist(self._twist)
 
 class KeyboardListener(object):
     """ 
@@ -146,8 +152,6 @@ class KeyboardListener(object):
         if key == keyboard.Key.esc:
             # Stop listener
             return False
-
-
 
     def start(self):
         # Collect events until released
