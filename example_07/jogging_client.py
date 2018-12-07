@@ -1,5 +1,4 @@
-
-# motion_client.py
+# jogging_client.py
 #
 # Copyright (c) 2018, Xamla and/or its affiliates. All rights reserved.
 #
