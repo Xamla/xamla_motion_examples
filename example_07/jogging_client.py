@@ -148,8 +148,8 @@ class JoggingClientFeedbackEvent(object):
     """
     A simple observer which registers callback functions
     TODO: Could be improved by accepting object instead of functions, or using an external library altogether
-    
-        Methods
+
+    Methods
     -------
     register(callback_function)
         Registers a callback function to be called when state updates
