@@ -6,9 +6,6 @@ To use this example, you have to install pynput and python3-tk inside the docker
 After starting rosvita, enter 
     $sudo pip install pynput
     $sudo apt install python3-tk
-
-Then this script should be able to run. 
-
 """
 
 import numpy as np
@@ -98,13 +95,13 @@ class JoggingKeyboardInterface(object):
         self._sending = False
         self._pose_counter = 1
 
-    def thread_start(self):
+    def thread_start(self) -> None:
         """
         This function starts the ticker thread and the keyboard listener thread.
         The start function of the KeyboardListener instance returns when it is stopped, 
         hence when pressing the "escape" key.  
-
         """
+
         print("Start thread")
         self.show_help()
         add_generated_folder(self._world_view_client, self._world_view_folder)
@@ -118,7 +115,7 @@ class JoggingKeyboardInterface(object):
         self._world_view_client.remove_element("generated", self._world_view_folder)
 
     @synchronized
-    def update_linear(self, index: int , value: float):
+    def update_linear(self, index: int , value: float) -> None:
         """
         Updates the linear component of the twist, one entry at a time 
         
@@ -133,7 +130,7 @@ class JoggingKeyboardInterface(object):
         self._linear[index] = value
 
     @synchronized
-    def update_angular(self, index, value):
+    def update_angular(self, index, value) -> None:
         """
         Updates the angular component of the twist, one entry at a time 
         
@@ -147,22 +144,37 @@ class JoggingKeyboardInterface(object):
 
         self._angular[index] = value
 
-    def change_frame(self):
+    def change_frame(self) -> None:
+        """ 
+        Changes the current frame to the next one
+        """
         self._current_frame = self._get_next_frame()
         print("Changed current frame to {}".format(self._current_frame))
 
-    def save_pose(self):
-        print("Save current pose to world view client")
+    def save_pose(self) -> None:
+        """
+        Saves the current pose of the end effector to world view in a folder generated folder.
+        """
+        
         pose_id = "pose_{}".format(self._pose_counter) 
+        print("Save current Pose {} to world view client".format(pose_id))
         pose = self._current_pose()
         self._world_view_client.add_pose(pose_id, 
             "{}/generated/".format(self._world_view_folder), 
             pose)
         self._pose_counter += 1
 
-    def update_velocity_scaling(self, value):
+    def update_velocity_scaling(self, delta: float):
+        """
+        Updates the velocity scaling
+        Parameters
+        ----------
+        delta : float
+            The change applied to the velocity scaling 
+        """
+
         current_velocity =  self._jogging_client.get_velocity_scaling()
-        current_velocity += value 
+        current_velocity += delta 
         current_velocity = max(0.0, min(1.0, current_velocity))
         try:
             self._jogging_client.set_velocity_scaling(current_velocity)
@@ -170,10 +182,14 @@ class JoggingKeyboardInterface(object):
         except ServiceException as e:
             print("Could not adjust velocity scaling, since service unreachable.")
 
-    def show_help(self):
-        print("-----------------------------------------")
+    def show_help(self) -> None:
+        """
+        Prints help
+        """
+
+        print("----------------------------------------------")
         print("Move in x direction     :  a,d ")
-        print("Move in y direction     :  2,8 ")
+        print("Move in y direction     :  page_up,page_down ")
         print("Move in z direction     :  x,y")
         print("Roll around x-axis      :  up,down")
         print("Roll around y-axis      :  q,e ")
@@ -183,7 +199,7 @@ class JoggingKeyboardInterface(object):
         print("Show this help          :  h ")
         print("Store current pose      :  enter")
         print("Stop keyboard listener  :  escape ")
-        print("-----------------------------------------")
+        print("----------------------------------------------")
 
     def _get_next_frame(self):
         """Just toggle between world and gripper frame""" 
@@ -193,15 +209,28 @@ class JoggingKeyboardInterface(object):
             return "world" 
 
     def _current_pose(self) -> Pose:
+        """
+        Returns the current pose of the end effector
+        """
+
         joint_values = self._move_group.get_current_joint_positions()
         return self._move_group.get_end_effector().compute_pose(joint_values)
 
     def _current_twist(self) -> Twist:
+        """
+        Based on current state, create a Twist instance
+        """
+
         return Twist(linear = self._linear,
             angular = self._angular, 
             frame_id = self._current_frame)
 
-    def _on_tick(self):
+    def _on_tick(self) -> None:
+        """
+        Called by the Ticker instance in a certain frequency, to see if calls to 
+        the jogging have to be made
+        """
+
         current_twist = self._current_twist()
         if not current_twist == Twist():
             self._sending = True
@@ -215,20 +244,21 @@ class JoggingKeyboardInterface(object):
 class KeyboardListener(object):
     """ 
     A class that listens to some keys an calls functions of a JoggingKeyboardInterface
-    instance and when they are pressed.
-    
+    instance when they are pressed.
+
+    This dictionary self._key_bindings binds the pushing and releasing of a key 
+    to a function.
+    These functions are all called with a parameter "pressed", which indicate
+    the current state of the key(True: pressed, False: released).
+    Depending on the "pressed" state, the function binded to the key is called 
+    either with different parameters (wrapped by self._call_always), only when 
+    pressed (wrapped by self._call_when_pressed) or when released (wrapped by 
+    self._call_when_released).
     """
 
-    # Dependency injection 
     def __init__(self, jogging_interface):
         self._jogging_interface = jogging_interface
-        # This dictionary binds the pushing and releasing of a key to a function 
-        # These functions are all called with a parameter "pressed", which indicate
-        # the current state of the key(True: pressed, False: released).
-        # Depending on the "pressed" state, the function binded to the key is called 
-        # either with different parameters (wrapped by self._call_always), only when 
-        # pressed (wrapped by self._call_when_pressed) or when released (wrapped by 
-        # self._call_when_released)
+
         self._key_bindings = {
             "w" : self._call_always(    # move in z direction
                 func=self._jogging_interface.update_linear, 
@@ -254,19 +284,19 @@ class KeyboardListener(object):
                 func=self._jogging_interface.update_linear, 
                 args_pressed=(0, -1), 
                 args_released=(0, 0)),
-            "2" : self._call_always(    # move in y direction
+            "page_down" : self._call_always(    # move in y direction
                 func=self._jogging_interface.update_linear,
                  args_pressed=(1, 1), 
                  args_released=(1, 0)),
-            "8" : self._call_always(    # move in -y direction
+            "page_up" : self._call_always(    # move in -y direction
                 func=self._jogging_interface.update_linear, 
                 args_pressed=(1, -1), 
                 args_released=(1, 0)),
-            "up" : self._call_always(    # roll around x axis
+            "down" : self._call_always(    # roll around x axis
                 func=self._jogging_interface.update_angular,
                  args_pressed=(0, 32), 
                  args_released=(0, 0)),
-            "down" : self._call_always(    # roll around x axis
+            "up" : self._call_always(    # roll around x axis
                 func=self._jogging_interface.update_angular, 
                 args_pressed=(0, -32), 
                 args_released=(0, 0)),
@@ -346,17 +376,21 @@ class KeyboardListener(object):
             key_val = "left"
         elif key == keyboard.Key.enter:
             key_val = "enter"
+        elif key == keyboard.Key.page_up:
+            key_val = "page_up"
+        elif key == keyboard.Key.page_down:
+            key_val = "page_down"
         elif key == keyboard.Key.esc:
             print("Stop keyboard control")
-            # Returning False to the keyboard listener stop the thread
+            # Returning False to the keyboard.Listener instance stops the thread
             return False
         if key_val and key_val in self._key_bindings.keys():
             self._key_bindings[key_val](pressed)
 
     def start(self):
         """
-        Starts the keyboard listener
-        This function returns when the listener thread finishes or crashes.
+        Starts the keyboard listener.
+        This function returns when the listener thread finishes.
         """
 
         # Collect events until released
