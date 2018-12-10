@@ -174,43 +174,81 @@ class KeyboardListener(object):
     def __init__(self, jogging_interface):
         self._jogging_interface = jogging_interface
         # This dictionary binds the pushing and releasing of a key to a function 
-        # # of the jogging client, defining for example which axis should be 
-        # updated when pressed (value == 1) or released (value == 0)
+        # These functions are all called with a parameter "pressed", which indicate
+        # the current state of the key(True: pressed, False: released)
+        # Depending on this state, the function binded to the key is called with 
+        # differentparameters (wrapped by self._call_always), only when pressed 
+        # (wrapped by self._call_when_pressed) or when released (wrapped by 
+        # self._call_when_released)
         self._key_bindings = {
-            "w" : lambda value : self._jogging_interface.update_linear(2, value),
-            "s" : lambda value : self._jogging_interface.update_linear(2, -value),
-            "e" : lambda value : self._jogging_interface.update_angular(1, value*32),
-            "q" : lambda value : self._jogging_interface.update_angular(1, -value*32),
-            "d" : lambda value : self._jogging_interface.update_linear(0, value),
-            "a" : lambda value : self._jogging_interface.update_linear(0, -value),
-            "m" : lambda value : self._jogging_interface.change_world_frame() if value == 0 else None,
-            "+" : lambda value : self._jogging_interface.update_velocity_scaling(value/32) if value == 1 else None,
-            "-" : lambda value : self._jogging_interface.update_velocity_scaling(-value/32) if value == 1 else None,
-            "enter" : lambda value : self._jogging_interface.save_pose() if value == 0 else None
+            "w" : self._call_always(
+                func=self._jogging_interface.update_linear, 
+                args_pressed=(2, 1), 
+                args_released=(2, 0)), 
+            "s" : self._call_always(
+                func=self._jogging_interface.update_linear, 
+                args_pressed=(2, -1), 
+                args_released=(2, 0)),
+            "e" : self._call_always(
+                func=self._jogging_interface.update_angular, 
+                args_pressed=(1, 32), 
+                args_released=(1, 0)),
+            "q" : self._call_always(
+                func=self._jogging_interface.update_angular,
+                args_pressed=(1, -32), 
+                args_released=(1, 0)),
+            "d" : self._call_always(
+                func=self._jogging_interface.update_linear,
+                 args_pressed=(0, 1), 
+                 args_released=(0, 0)),
+            "a" : self._call_always(
+                func=self._jogging_interface.update_linear, 
+                args_pressed=(0, -1), 
+                args_released=(0, 0)),
+            "m" : self._call_when_released(
+                func=self._jogging_interface.change_world_frame),
+            "+" : self._call_when_pressed(
+                func=self._jogging_interface.update_velocity_scaling, 
+                args_pressed=(1/32,)),
+            "-" : self._call_when_pressed(
+                func=self._jogging_interface.update_velocity_scaling, 
+                args_pressed=(-1/32,)),
+            "enter" : self._call_when_released(
+                func=self._jogging_interface.save_pose)
         }
 
-   # def _call_when_pressed(self, func, value):
-   #     return lambda pressed : func()
-   # 
-   # def _call_when_released(self, func):
-   #     None
+    def _call_when_pressed(self, func, args_pressed=()):
+        """ wraps a given function by calling it with the arguments when key has been pressed"""
+        return lambda pressed : func(*args_pressed) if pressed else None
+    
+    def _call_when_released(self, func, args_released=()):
+        return lambda pressed : func(*args_released)  if not pressed else None
+
+    def _call_always(self, func, args_pressed, args_released=()):
+        return lambda pressed : func(*args_pressed) if pressed else func(*args_released)
 
     def on_press(self, key):
+        """
+        This function is called when a button is pressed
+        """
         try:      
             key_val = key.char
             if key_val in self._key_bindings.keys():
                 # Call the function
-                self._key_bindings[key_val](1)
+                self._key_bindings[key_val](True)
 
         except AttributeError:
             None
 
     def on_release(self,  key):
+        """
+        This function is called when a button is released
+        """
         try:        
             key_val = key.char
             if key_val in self._key_bindings.keys():
                 # Call the function
-                self._key_bindings[key_val](0)
+                self._key_bindings[key_val](False)
         except AttributeError:
             None
         if key == keyboard.Key.esc:
@@ -218,7 +256,7 @@ class KeyboardListener(object):
             print("Stop keyboard control")
             return False
         if key == keyboard.Key.enter:
-            self._key_bindings["enter"](0)
+            self._key_bindings["enter"](False)
 
     def start(self):
         # Collect events until released
