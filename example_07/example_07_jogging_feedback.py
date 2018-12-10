@@ -13,6 +13,6 @@ def callback_function(state: JoggingClientFeedbackState):
 
     # only print the error code when it is not OK
     if not state.error_code ==  JoggingErrorCode.OK:
-        print("Joggin Error occurred: {}".format(state.error_code))
+        print("Jogging Error occurred: {}".format(state.error_code))
 
 
