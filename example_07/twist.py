@@ -147,10 +147,10 @@ class Twist(object):
                                 msg.linear.z],
                                 float)
 
-        angular =  np.fromiter([msg.angular.w,
-                                msg.angular.x,
+        angular =  np.fromiter([msg.angular.x,
                                 msg.angular.y,
-                                msg.angular.z])
+                                msg.angular.z],
+                                float)
 
         frame_id = msg.header.frame_id
 
