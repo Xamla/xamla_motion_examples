@@ -1,17 +1,20 @@
 """
 This example, we combine the keyboard listener of pynput with some basic jogging.
 
+To use this example, you have to install pynput and python3-tk inside the docker container.
 
+After starting rosvita, enter 
+    $sudo pip install pynput
+    $sudo apt install python3-tk
 
+Then this script should be able to run. 
 
 """
 
 import numpy as np
 import math
 
-
-from threading import Timer, Event
-from threading import Thread, Lock
+from threading import Timer, Event, Thread, Lock
 import time 
 
 from pynput import keyboard
@@ -38,15 +41,15 @@ def add_generated_folder(world_view_client: WorldViewClient, world_view_folder: 
         None
     world_view_client.add_folder("generated", world_view_folder)
 
-# Simple decorator to apply atomic access to function 
 def synchronized(function):
+    """Simple decorator to add atomic access to function """
     def wrapper(self, *args, **kwargs):
         with self._mutex:
             return function(self, *args, **kwargs)
     return wrapper
 
 class Ticker(Thread):
-    """ Repeats a callback in a given frequency when active"""
+    """Repeats a callback in a given frequency when active"""
 
     def __init__(self, frequency: float, callback, stop_event):
         Thread.__init__(self) 
@@ -61,7 +64,7 @@ class Ticker(Thread):
         while not self._stop_event.wait(1/self._frequency):
             self._callback()
 
-class JoggingInterface(object):
+class JoggingKeyboardInterface(object):
     """     
     This class manages the input of a KeyListener instance and the calls to the 
     jogging client .
@@ -69,10 +72,8 @@ class JoggingInterface(object):
     For that, two threads are started. 
     One is the key listener of pynput, which keeps track of the key pressed and released. 
     The other is a ticker thread, which manages the calls to the jogging client by calling 
-    the _on_tick function, which calls the functions of the jogging client
-
-
-
+    the _on_tick function in a certain frequency, which calls the functions of the jogging 
+    client.
     """
 
     def __init__(self, jogging_client: JoggingClient, 
@@ -117,13 +118,33 @@ class JoggingInterface(object):
         self._world_view_client.remove_element("generated", self._world_view_folder)
 
     @synchronized
-    def update_linear(self, index, value):
-        """Update the linear component of the twist, one entry at a time 
+    def update_linear(self, index: int , value: float):
         """
+        Updates the linear component of the twist, one entry at a time 
+        
+        Parameters
+        ----------
+        index : int
+            The index of the axis, where x=0, y=1, z=2
+        value : float
+            The value to be set.
+        """
+
         self._linear[index] = value
 
     @synchronized
     def update_angular(self, index, value):
+        """
+        Updates the angular component of the twist, one entry at a time 
+        
+        Parameters
+        ----------
+        index : int
+            The index of the axis, where x=0, y=1, z=2
+        value : float
+            The value to be set.
+        """
+
         self._angular[index] = value
 
     def change_frame(self):
@@ -150,15 +171,19 @@ class JoggingInterface(object):
             print("Could not adjust velocity scaling, since service unreachable.")
 
     def show_help(self):
+        print("-----------------------------------------")
         print("Move in x direction     :  a,d ")
         print("Move in y direction     :  2,8 ")
         print("Move in z direction     :  x,y")
         print("Roll around x-axis      :  up,down")
         print("Roll around y-axis      :  q,e ")
         print("Roll around z-axis      :  right,left ")
+        print("Change velocity scaling :  +,- ")
         print("Toggle world frame      :  m ")
         print("Show this help          :  h ")
-        print("Change velocity scaling :  +,- ")
+        print("Store current pose      :  enter")
+        print("Stop keyboard listener  :  escape ")
+        print("-----------------------------------------")
 
     def _get_next_frame(self):
         """Just toggle between world and gripper frame""" 
@@ -189,10 +214,9 @@ class JoggingInterface(object):
 
 class KeyboardListener(object):
     """ 
-    A class that listens to some keys an do calls to an interface when they are pressed.
+    A class that listens to some keys an calls functions of a JoggingKeyboardInterface
+    instance and when they are pressed.
     
-    Keeps track of keys being pressed and released, so that keeping pressed a key 
-    does only call the appropriate function once, as do releasing it.
     """
 
     # Dependency injection 
@@ -200,10 +224,10 @@ class KeyboardListener(object):
         self._jogging_interface = jogging_interface
         # This dictionary binds the pushing and releasing of a key to a function 
         # These functions are all called with a parameter "pressed", which indicate
-        # the current state of the key(True: pressed, False: released)
-        # Depending on this state, the function binded to the key is called with 
-        # differentparameters (wrapped by self._call_always), only when pressed 
-        # (wrapped by self._call_when_pressed) or when released (wrapped by 
+        # the current state of the key(True: pressed, False: released).
+        # Depending on the "pressed" state, the function binded to the key is called 
+        # either with different parameters (wrapped by self._call_always), only when 
+        # pressed (wrapped by self._call_when_pressed) or when released (wrapped by 
         # self._call_when_released)
         self._key_bindings = {
             "w" : self._call_always(    # move in z direction
@@ -269,13 +293,22 @@ class KeyboardListener(object):
         }
 
     def _call_when_pressed(self, func, args_pressed=()):
-        """ wraps a given function by calling it with the arguments when key has been pressed"""
+        """ 
+        wraps a given function by calling it with the arguments when key has been pressed
+        """
         return lambda pressed : func(*args_pressed) if pressed else None
     
     def _call_when_released(self, func, args_released=()):
+        """ 
+        wraps a given function by calling it with the arguments when key has been pressed
+        """
         return lambda pressed : func(*args_released)  if not pressed else None
 
     def _call_always(self, func, args_pressed, args_released=()):
+        """ 
+        wraps a given function by calling it with the args_pressed when pressed is true, 
+        and with args_released when pressed is false. 
+        """
         return lambda pressed : func(*args_pressed) if pressed else func(*args_released)
 
     def on_press(self, key):
@@ -290,7 +323,13 @@ class KeyboardListener(object):
         """
         return self._handle_key(key, False)
 
-    def _handle_key(self, key: str, pressed: bool):
+    def _handle_key(self, key, pressed: bool):
+        """ 
+        This function handles the pressing or releasing of a key
+
+        For the key, the appropriate function mapped by self._key_bindings is called
+        """
+
         key_val = None
         try:      
             key_val = key.char
@@ -317,7 +356,7 @@ class KeyboardListener(object):
     def start(self):
         """
         Starts the keyboard listener
-        This function keeps busy until the listener thread finishes or crashes.
+        This function returns when the listener thread finishes or crashes.
         """
 
         # Collect events until released
@@ -338,13 +377,13 @@ def main():
     move_group_name = "/sda10f/right_arm_torso"
     jogging_client.set_move_group_name(move_group_name)
     
-
     # register feedback function, to get alerted when an error occurs
     jogging_client.register(feedback_function)
+
     #Begin tracking
     jogging_client.start()
 
-    interface = JoggingInterface(jogging_client, move_group, world_view_client)
+    interface = JoggingKeyboardInterface(jogging_client, move_group, world_view_client)
 
     interface.thread_start()
 
