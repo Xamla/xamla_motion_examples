@@ -6,37 +6,24 @@ at certain poses
 import numpy as np
 import math
 
-import time 
-
-import copy
-
-from xamla_motion.world_view_client import WorldViewClient
-
-from xamla_motion.data_types import Pose, JointSet, JointValues, JointPath
-from xamla_motion.motion_client import MoveGroup
-
-import example_utils
-
-from example_07.jogging_client import JoggingClient, Twist
-
-#from example_07.example_07_keyboard_control import JoggingInterface
-from example_07.example_07_jogging_feedback import callback_function as feedback_function
-
-
 
 from threading import Timer, Event
 from threading import Thread, Lock
-import time
+import time 
 
-import numpy as np
 from pynput import keyboard
 
 from xamla_motion.data_types import Pose
 from xamla_motion.motion_client import MoveGroup
 from xamla_motion.world_view_client import WorldViewClient
 
+import example_utils
+from example_07.example_07_jogging_feedback import callback_function as feedback_function
+
 from example_07.jogging_client import JoggingClient
 from example_07.twist import Twist
+
+from xamla_motion.xamla_motion_exceptions.exceptions import ServiceException
 
 def add_generated_folder(world_view_client: WorldViewClient, world_view_folder: str) -> None:
     """ Adds a folder to world view, deletes content if existand"""
@@ -117,8 +104,7 @@ class JoggingInterface(object):
     def update_linear(self, index, value):
         """Update the linear component of the twist, one entry at a time 
         
-        
-        
+    
         """
         self._linear[index] = value
 
@@ -137,15 +123,17 @@ class JoggingInterface(object):
         self._world_view_client.add_pose(pose_id, 
             "{}/generated/".format(self._world_view_folder), 
             pose)
-        self._pose_counter += self._pose_counter
+        self._pose_counter += 1
 
-
-
-    def increase_velocity(self):
-        None
-
-    def decrease_velocity(self):
-        None
+    def update_velocity_scaling(self, value):
+        current_velocity =  self._jogging_client.get_velocity_scaling()
+        current_velocity += value 
+        current_velocity = max(0.0, min(1.0, current_velocity))
+        try:
+            self._jogging_client.set_velocity_scaling(current_velocity)
+            print("Velocity scaling: {}".format(self._jogging_client.get_velocity_scaling()))
+        except ServiceException as e:
+            print("Could not adjust velocity scaling, since service unreachable.")
 
     def _get_next_frame(self):
         """Just toggle between world and gripper frame""" 
@@ -191,15 +179,21 @@ class KeyboardListener(object):
         self._key_bindings = {
             "w" : lambda value : self._jogging_interface.update_linear(2, value),
             "s" : lambda value : self._jogging_interface.update_linear(2, -value),
-            "e" : lambda value : self._jogging_interface.update_angular(1, value*10),
-            "q" : lambda value : self._jogging_interface.update_angular(1, -value*10),
+            "e" : lambda value : self._jogging_interface.update_angular(1, value*32),
+            "q" : lambda value : self._jogging_interface.update_angular(1, -value*32),
             "d" : lambda value : self._jogging_interface.update_linear(0, value),
             "a" : lambda value : self._jogging_interface.update_linear(0, -value),
             "m" : lambda value : self._jogging_interface.change_world_frame() if value == 0 else None,
-            "+" : lambda value : self._jogging_interface.increase_velocity() if value == 1 else None,
-            "-" : lambda value : self._jogging_interface.decrease_velocity() if value == 1 else None,
+            "+" : lambda value : self._jogging_interface.update_velocity_scaling(value/32) if value == 1 else None,
+            "-" : lambda value : self._jogging_interface.update_velocity_scaling(-value/32) if value == 1 else None,
             "enter" : lambda value : self._jogging_interface.save_pose() if value == 0 else None
         }
+
+   # def _call_when_pressed(self, func, value):
+   #     return lambda pressed : func()
+   # 
+   # def _call_when_released(self, func):
+   #     None
 
     def on_press(self, key):
         try:      
