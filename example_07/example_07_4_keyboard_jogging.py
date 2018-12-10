@@ -45,6 +45,7 @@ def synchronized(function):
             return function(self, *args, **kwargs)
     return wrapper
 
+
 class Ticker(Thread):
     """Repeats a callback in a given frequency when active"""
 
@@ -60,6 +61,7 @@ class Ticker(Thread):
 
         while not self._stop_event.wait(1/self._frequency):
             self._callback()
+
 
 class JoggingKeyboardInterface(object):
     """     
@@ -130,7 +132,7 @@ class JoggingKeyboardInterface(object):
         self._linear[index] = value
 
     @synchronized
-    def update_angular(self, index, value) -> None:
+    def update_angular(self, index: int, value: float) -> None:
         """
         Updates the angular component of the twist, one entry at a time 
         
@@ -148,6 +150,7 @@ class JoggingKeyboardInterface(object):
         """ 
         Changes the current frame to the next one
         """
+
         self._current_frame = self._get_next_frame()
         print("Changed current frame to {}".format(self._current_frame))
 
@@ -164,7 +167,7 @@ class JoggingKeyboardInterface(object):
             pose)
         self._pose_counter += 1
 
-    def update_velocity_scaling(self, delta: float):
+    def update_velocity_scaling(self, delta: float) -> None:
         """
         Updates the velocity scaling
         Parameters
@@ -201,8 +204,9 @@ class JoggingKeyboardInterface(object):
         print("Stop keyboard listener  :  escape ")
         print("----------------------------------------------")
 
-    def _get_next_frame(self):
+    def _get_next_frame(self) -> str:
         """Just toggle between world and gripper frame""" 
+
         if self._current_frame == "world":
             return "_gripper_right_tool0"
         else:
@@ -228,18 +232,18 @@ class JoggingKeyboardInterface(object):
     def _on_tick(self) -> None:
         """
         Called by the Ticker instance in a certain frequency, to see if calls to 
-        the jogging have to be made
+        the jogging client have to be made.
         """
 
         current_twist = self._current_twist()
         if not current_twist == Twist():
             self._sending = True
             self._jogging_client.send_twist(current_twist)
-        else:
-            if self._sending: 
-                # Send one last time to stop operation
-                self._sending = False
-                self._jogging_client.send_twist(current_twist)
+        elif self._sending: 
+            # Send one last time to stop operation
+            self._sending = False
+            self._jogging_client.send_twist(current_twist)
+
 
 class KeyboardListener(object):
     """ 
@@ -413,19 +417,16 @@ def main():
     
     # register feedback function, to get alerted when an error occurs
     jogging_client.register(feedback_function)
-
     #Begin tracking
     jogging_client.start()
 
     interface = JoggingKeyboardInterface(jogging_client, move_group, world_view_client)
-
     interface.thread_start()
 
     # Stop tracking
     jogging_client.stop()
     # Unregister the feedback function
     jogging_client.unregister(feedback_function)
-
 
 if __name__ == '__main__':
     main()
