@@ -61,7 +61,6 @@ def main():
     point_name = "TrackingPose"
     # Write pose to World View, so the tracking begins with the current end effector pose
     world_view_client.update_pose( point_name,  world_view_folder, current_pose)
-    
 
     get_pose = lambda : world_view_client.get_pose(point_name, world_view_folder)
 

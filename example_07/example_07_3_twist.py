@@ -56,9 +56,6 @@ def main():
     #Begin tracking
     jogging_client.toggle_tracking(True)
 
-
-
-
     # Go back and forth in x direction (linear velocity)
     forth_trans_twist = Twist(linear=[0.5,0,0], angular=[0,0,0])
     back_trans_twist = Twist(linear=[-0.5,0,0], angular=[0,0,0])

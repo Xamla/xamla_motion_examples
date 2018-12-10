@@ -46,9 +46,7 @@ def main():
     # register feedback function, to get alerted when an error occurs
     jogging_client.register(feedback_function)
 
-
     reset_velocity_scaling =  jogging_client.get_velocity_scaling()
-
 
     #Begin tracking
     jogging_client.toggle_tracking(True)
