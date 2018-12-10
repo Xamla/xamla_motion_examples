@@ -94,5 +94,8 @@ This set of examples shows how to use the jogging client using the python interf
 
     There are two dependencies needed not included in the current Docker image.
     Please install pynput and python3-tk from the rosvita terminal:
-        sudo pip install pynput
-        sudo apt install python3-tk
+       
+    ```
+    sudo pip install pynput
+    sudo apt install python3-tk
+    ```
