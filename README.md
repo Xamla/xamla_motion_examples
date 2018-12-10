@@ -89,10 +89,10 @@ This set of examples shows how to use the jogging client using the python interf
 * The [second script](example_07/example_07_2_rotate_joint.py) show how a joint can be addressed and moved directly.
 * The [third script](example_07/example_07_3_twist.py) show how a twist can be applied to an end effector.
 * The [fourth script](example_07/example_07_4_keyboard_jogging.py) uses pynput to allow jogging via keys and saving poses by pressing enter. 
-For the key binding, press "h" after starting the script.
-To stop the listener thread, press "escape".
+    For the key binding, press "h" after starting the script.
+    To stop the listener thread, press "escape".
 
-There are two dependencies needed not included in the current Docker image.
-Please install pynput and python3-tk from the rosvita terminal:
-    sudo pip install pynput
-    sudo apt install python3-tk
+    There are two dependencies needed not included in the current Docker image.
+    Please install pynput and python3-tk from the rosvita terminal:
+        sudo pip install pynput
+        sudo apt install python3-tk
