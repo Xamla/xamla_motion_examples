@@ -10,7 +10,7 @@ import time
 from xamla_motion.data_types import JointValues, JointSet
 
 import example_utils
-from example_07.jogging_client import JoggingClient
+from xamla_motion.jogging_client import JoggingClient
 from example_07.example_07_jogging_feedback import callback_function as feedback_function
 
 def rotate(velocity: float, joint_name: str, jogging_client: JoggingClient) -> None:

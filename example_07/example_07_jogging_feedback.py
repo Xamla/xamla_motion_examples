@@ -2,7 +2,7 @@
 This module contain some utility functions to get and format jogging feedback
 """
 
-from example_07.jogging_client import JoggingClient, JoggingClientFeedbackState, JoggingErrorCode
+from xamla_motion.jogging_client import JoggingClient, JoggingClientFeedbackState, JoggingErrorCode
 
 def callback_function(state: JoggingClientFeedbackState):
     """

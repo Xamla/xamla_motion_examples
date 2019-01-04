@@ -16,15 +16,13 @@ import time
 
 from pynput import keyboard
 
-from xamla_motion.data_types import Pose
+from xamla_motion.data_types import Pose, Twist
 from xamla_motion.motion_client import MoveGroup
 from xamla_motion.world_view_client import WorldViewClient
+from xamla_motion.jogging_client import JoggingClient
 
 import example_utils
 from example_07.example_07_jogging_feedback import callback_function as feedback_function
-
-from example_07.jogging_client import JoggingClient
-from example_07.twist import Twist
 
 from xamla_motion.xamla_motion_exceptions.exceptions import ServiceException
 

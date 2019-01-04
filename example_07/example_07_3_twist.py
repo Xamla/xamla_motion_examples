@@ -8,7 +8,8 @@ import time
 from xamla_motion.world_view_client import WorldViewClient
 
 import example_utils
-from example_07.jogging_client import JoggingClient, Twist
+from xamla_motion.jogging_client import JoggingClient
+from xamla_motion.data_types import  Twist
 from example_07.example_07_jogging_feedback import callback_function as feedback_function
 
 def apply_twist(time_amount: float, 

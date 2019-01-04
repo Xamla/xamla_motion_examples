@@ -9,7 +9,7 @@ import time
 from xamla_motion.world_view_client import WorldViewClient
 
 import example_utils
-from example_07.jogging_client import JoggingClient
+from xamla_motion.jogging_client import JoggingClient
 from example_07.example_07_jogging_feedback import callback_function as feedback_function
 
 def track_point(time_amount: float, 
