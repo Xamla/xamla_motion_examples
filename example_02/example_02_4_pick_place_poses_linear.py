@@ -38,6 +38,8 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
         back in a "pick and place" manner 
         The movement from pre place pose to place pose and back is done by moving the end 
         effector in a linear fashion
+        The movement is planned an executed on the fly. Alternatively, one could store the 
+        plans made for every movement to avoid replanning every time.
 
         Parameters
         ----------
@@ -51,25 +53,25 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
         # Creates a joint path over the joint values to the target pose
         joint_path = JointPath(home.joint_set, [home, jv_pre_place ])
         # Move over the joints to target pose
-        await move_group.move_joints_collision_free(joint_path)
-        await end_effector.move_poses_collision_free(place, 
+        await move_group.move_joints_collision_free(joint_path).plan().execute_async()
+        await end_effector.move_cartesian_collision_free(place, 
                                                 seed = jv_pre_place,
-                                                velocity_scaling = 0.2)
+                                                velocity_scaling = 0.2).plan().execute_async()
         
         # do something, e.g. place an object 
 
         pre_place_pose = end_effector.compute_pose(jv_pre_place)
-        await end_effector.move_poses_collision_free(pre_place_pose,
+        await end_effector.move_cartesian_collision_free(pre_place_pose,
                                                     seed = jv_pre_place,
-                                                    velocity_scaling = 0.2)
+                                                    velocity_scaling = 0.2).plan().execute_async()
         # Creates a joint path over the joint values to the home pose
         joint_path_back = JointPath(home.joint_set, [jv_pre_place, home ])
         # Move back over the joint path
-        await move_group.move_joints_collision_free(joint_path_back)
+        await move_group.move_joints_collision_free(joint_path_back).plan().execute_async()
 
     try: 
         # Move to home position 
-        loop.run_until_complete(move_group.move_joints_collision_free(home))
+        loop.run_until_complete(move_group.move_joints_collision_free(home).plan().execute_async())
         # For every pose we want to address, do a pick and place 
         for i in range(len(pre_place_jvs)):
             print("Placing element {}".format(i+1))
