@@ -33,16 +33,6 @@ controller_list:
       - arm_left_joint_5_r
       - arm_left_joint_6_b
       - arm_left_joint_7_t
-  - name: fake_/sda10f/right_arm_torso_controller
-    joints:
-      - torso_joint_b1
-      - arm_right_joint_1_s
-      - arm_right_joint_2_l
-      - arm_right_joint_3_e
-      - arm_right_joint_4_u
-      - arm_right_joint_5_r
-      - arm_right_joint_6_b
-      - arm_right_joint_7_t
   - name: fake_/sda10f_controller
     joints:
       - torso_joint_b1
@@ -53,6 +43,16 @@ controller_list:
       - arm_left_joint_5_r
       - arm_left_joint_6_b
       - arm_left_joint_7_t
+      - arm_right_joint_1_s
+      - arm_right_joint_2_l
+      - arm_right_joint_3_e
+      - arm_right_joint_4_u
+      - arm_right_joint_5_r
+      - arm_right_joint_6_b
+      - arm_right_joint_7_t
+  - name: fake_/sda10f/right_arm_torso_controller
+    joints:
+      - torso_joint_b1
       - arm_right_joint_1_s
       - arm_right_joint_2_l
       - arm_right_joint_3_e

@@ -62,15 +62,6 @@ planner_configs:
     - RRTConnect
   projection_evaluator: joints(torso_joint_b1,arm_left_joint_1_s)
   longest_valid_segment_fraction: 0.001
-/sda10f/right_arm_torso:
-  default_planner_config: RRTConnect
-  planner_configs:
-    - PRMstar
-    - RRTstar
-    - SPARStwo
-    - RRTConnect
-  projection_evaluator: joints(torso_joint_b1,arm_right_joint_1_s)
-  longest_valid_segment_fraction: 0.001
 /sda10f:
   default_planner_config: RRTConnect
   planner_configs:
@@ -79,6 +70,15 @@ planner_configs:
     - SPARStwo
     - RRTConnect
   projection_evaluator: joints(torso_joint_b1,arm_left_joint_1_s)
+  longest_valid_segment_fraction: 0.001
+/sda10f/right_arm_torso:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - PRMstar
+    - RRTstar
+    - SPARStwo
+    - RRTConnect
+  projection_evaluator: joints(torso_joint_b1,arm_right_joint_1_s)
   longest_valid_segment_fraction: 0.001
 /sda10f/both_arms:
   default_planner_config: RRTConnect
