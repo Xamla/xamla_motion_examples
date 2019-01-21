@@ -76,7 +76,7 @@ def main( ) :
         
         print("Moving to start position")
         # First, move to start joint values
-        await move_group.move_joints_collision_free(jv_start, velocity_scaling=0.5)
+        await move_group.move_joints_collision_free(jv_start, velocity_scaling=0.5).plan().execute_async()
 
         # Now activate one collision object and observe how the robot finds a way
         # TODO: Update code when python api support activating/deactivating of collision objects
@@ -91,7 +91,7 @@ def main( ) :
             test = world_view_client.get_collision_object(name, 
                             "/{}/generated".format(world_view_folder)) 
             # move to end location
-            await move_group.move_joints_collision_free(jv_end, velocity_scaling=0.5)
+            await move_group.move_joints_collision_free(jv_end, velocity_scaling=0.5).plan().execute_async()
 
             # Remove element from world view
             world_view_client.remove_element(name, 
