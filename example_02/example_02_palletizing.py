@@ -30,7 +30,7 @@ import example_utils
 from example_02 import example_02_1_generate_grid
 from example_02 import  example_02_2_create_collision_boxes
 from example_02 import  example_02_3_create_joint_values_from_poses
-from example_02 import  example_02_4_pick_place_poses_linear
+from example_02 import  example_02_4_pick_place_poses
 
 def generate_folders(world_view_client: WorldViewClient) -> None:
     """ 
@@ -169,7 +169,7 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
                                                 world_view_client,
                                                 world_view_folder) 
 
-    example_02_4_pick_place_poses_linear.main(poses, pre_place_jvs, jv_home, move_group)
+    example_02_4_pick_place_poses.main(poses, pre_place_jvs, jv_home, move_group)
 
     world_view_client.remove_element("generated", world_view_folder)
 

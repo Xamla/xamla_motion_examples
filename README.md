@@ -28,7 +28,7 @@ The features are:
 * Given a pose and some parameter defining the size, calculate a grid of poses with translation and rotation corresponding to the pose [example_02_1_generate_grid.py](example_02/example_02_1_generate_grid.py)
 * Generate some CollisionObjects at a list of poses [example_02_2_create_collision_boxes.py](example_02/example_02_2_create_collision_boxes.py)
 * Using inverse kinematics, get corresponding JointValues for a list of poses [example_02_3_create_joint_values_from_poses.py] (example_02/example_02_3_create_joint_values_from_poses.py)
-* Do a pick and place operation from the pick JointValues to every Pose, using `move_joints_collision_free` for movement between pick and preplace and linear movement between preplace and place poses [example_02_4_pick_place_poses_linear.py](example_02/example_02_4_pick_place_poses_linear.py) ( [alternative linear version](example_02/example_02_5_pick_place_poses.py) ).
+* Do a pick and place operation from the pick JointValues to every Pose, using `move_joints_collision_free` for movement between pick and preplace and linear movement in cartesian space between preplace and place poses [example_02_4_pick_place_poses.py](example_02/example_02_4_pick_place_poses.py) ( see [this](example_02/example_02_5_pick_place_poses_alt_version.py) for an alternative version calling inverse kinematics explicitly for every target place pose and moving between pre place and place using collision free joint value moving, which might be preferable).
 
 The script [example_02_palletizing.py](example_02/example_02_palletizing.py)  runs the subexamples 1-4 to do the following:
 

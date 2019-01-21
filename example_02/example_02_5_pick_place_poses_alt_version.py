@@ -1,6 +1,13 @@
 """ 
-This example takes several place poses and pre place joint values and a home joint value, to apply 
+This example takes several poses and a home joint value, to apply 
 a pick and place operation from home to every pose
+
+An alternate version of example_02_4, which calculates the joint_values for
+the place poses using the pre place joint values as corresponding seeds instead
+of calling end_effector.move_cartesian_linear.
+The difference is that in this example we move are using 
+MoveJointsCollisionFreeOperation instead of MoveCartesianLinearOperation.
+
 """
 from typing import List
 
@@ -13,7 +20,43 @@ from xamla_motion.utility import register_asyncio_shutdown_handler
 
 import example_utils 
 
-def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues, move_group : MoveGroup) :
+def calculate_place_joint_values(poses: List[Pose], 
+                                pre_place_jvs: List[JointValues], 
+                                move_group: MoveGroup, 
+                                world_view_client: WorldViewClient) \
+                            -> List[JointValues]:
+    """ 
+    Calculates the place joint values
+
+    Since we want the robot to move from pre place to place pose, we use the 
+    corresponding pre place joint values as seed for the place joint values.
+
+    Parameters
+    ----------
+    poses : List[Pose]
+        A list of poses for which the joint values should be calculated
+    pre_place_jvs : List[JointValues]
+        The seeds for every pose
+    move_group : MoveGroup
+    world_view_client: WorldViewClient
+
+    Returns
+    ------  
+    List[JointValues]
+        A list of joint values for every pose
+    """
+    end_effector = move_group.get_end_effector()
+    place_jvs = []
+    for i in range(len(pre_place_jvs)):
+        # The i-th pre place joint values are used for the i-th position as seed 
+        joint_values = end_effector.inverse_kinematics(poses[i], 
+                                                collision_check = True, 
+                                                seed = pre_place_jvs[i])
+        place_jvs.append(joint_values)
+    return place_jvs
+
+
+def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues) :
     """
     This function does a pick and place motion to every pose 
 
@@ -25,21 +68,21 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
         Defines the joint values of the pre place positions
     home : JointValues
         The joint values, to which the robot returns after place
-    move_group : MoveGroup
     """
 
     loop = asyncio.get_event_loop()
     # Register the loop handler to be shutdown appropriately
     register_asyncio_shutdown_handler(loop)
 
-    async def place(jv_pre_place: JointValues, place: Pose) -> None:
+    place_jvs = calculate_place_joint_values(poses, 
+                                        pre_place_jvs, 
+                                        move_group, 
+                                        world_view_client)
+
+    async def place(jv_pre_place: JointValues, jv_place: JointValues) -> None:
         """
         This asynchronous function lets the robot move from home to every place position and 
         back in a "pick and place" manner 
-        The movement from pre place pose to place pose and back is done by moving the end 
-        effector in a linear fashion
-        The movement is planned an executed on the fly. Alternatively, one could store the 
-        plans made for every movement to avoid replanning every time.
 
         Parameters
         ----------
@@ -49,23 +92,15 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
             The place configuration
 
         """
-        end_effector = move_group.get_end_effector() 
         # Creates a joint path over the joint values to the target pose
-        joint_path = JointPath(home.joint_set, [home, jv_pre_place ])
+        joint_path = JointPath(home.joint_set, [home,jv_pre_place, jv_place ])
         # Move over the joints to target pose
         await move_group.move_joints_collision_free(joint_path).plan().execute_async()
-        await end_effector.move_cartesian_collision_free(place, 
-                                                seed = jv_pre_place,
-                                                velocity_scaling = 0.2).plan().execute_async()
-        
+
         # do something, e.g. place an object 
 
-        pre_place_pose = end_effector.compute_pose(jv_pre_place)
-        await end_effector.move_cartesian_collision_free(pre_place_pose,
-                                                    seed = jv_pre_place,
-                                                    velocity_scaling = 0.2).plan().execute_async()
         # Creates a joint path over the joint values to the home pose
-        joint_path_back = JointPath(home.joint_set, [jv_pre_place, home ])
+        joint_path_back = JointPath(home.joint_set, [jv_place, jv_pre_place, home ])
         # Move back over the joint path
         await move_group.move_joints_collision_free(joint_path_back).plan().execute_async()
 
@@ -75,7 +110,7 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
         # For every pose we want to address, do a pick and place 
         for i in range(len(pre_place_jvs)):
             print("Placing element {}".format(i+1))
-            loop.run_until_complete(place(pre_place_jvs[i], poses[i]))
+            loop.run_until_complete(place(pre_place_jvs[i], place_jvs[i]))
     finally:
         loop.close()
 
@@ -96,8 +131,7 @@ if __name__ == '__main__':
     joint_values_2 = world_view_client.get_joint_values("JointValues_2", world_view_folder)
     joint_values_3 = world_view_client.get_joint_values("JointValues_3", world_view_folder)
     home = world_view_client.get_joint_values("Home", world_view_folder)
+    end_effector = example_utils.get_move_group().get_end_effector()
     poses = [pose_1, pose_2, pose_3]
     joint_values = [joint_values_1, joint_values_2, joint_values_3]
-    main(poses, joint_values, home, move_group)
-
-
+    main(poses, joint_values, home)

@@ -43,11 +43,13 @@ if __name__ == '__main__':
     boxes = main(poses, (0.2, 0.2, 0.2))
     # Save the generated collision boxes in world view
     try:
+        world_view_client.add_folder('test', '')
         # delete folder if it already exists
         world_view_client.remove_element("generated", world_view_folder)
     except Exception as e:
         None
     world_view_client.add_folder("generated", world_view_folder)
+    print("Add boxes")
     world_view_client.add_collision_object("collision_matrix", 
                                 "/{}/generated".format(world_view_folder), 
                                 boxes)
