@@ -95,18 +95,18 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues)
         # Creates a joint path over the joint values to the target pose
         joint_path = JointPath(home.joint_set, [home,jv_pre_place, jv_place ])
         # Move over the joints to target pose
-        await move_group.move_joints_collision_free(joint_path).plan().execute_async()
+        await move_group.move_joints_collision_free(joint_path)
 
         # do something, e.g. place an object 
 
         # Creates a joint path over the joint values to the home pose
         joint_path_back = JointPath(home.joint_set, [jv_place, jv_pre_place, home ])
         # Move back over the joint path
-        await move_group.move_joints_collision_free(joint_path_back).plan().execute_async()
+        await move_group.move_joints_collision_free(joint_path_back)
 
     try: 
         # Move to home position 
-        loop.run_until_complete(move_group.move_joints_collision_free(home).plan().execute_async())
+        loop.run_until_complete(move_group.move_joints_collision_free(home))
         # For every pose we want to address, do a pick and place 
         for i in range(len(pre_place_jvs)):
             print("Placing element {}".format(i+1))

@@ -13,14 +13,12 @@ from xamla_motion.data_types import CollisionObject, CollisionPrimitive
 def main(poses: List[Pose],  size = (0.09, 0.09, 0.01)) -> CollisionObject:
     """
     Creates a bunch of boxes located relative to corresponding poses with an
-
     Parameters
     ----------
     poses : List[Pose]
         A list of poses where the boxes should be placed
     size : Tuple[float, float, float]
         Size of the box
-
     Returns
     ------  
     CollisionObject
@@ -43,13 +41,11 @@ if __name__ == '__main__':
     boxes = main(poses, (0.2, 0.2, 0.2))
     # Save the generated collision boxes in world view
     try:
-        world_view_client.add_folder('test', '')
         # delete folder if it already exists
         world_view_client.remove_element("generated", world_view_folder)
     except Exception as e:
         None
     world_view_client.add_folder("generated", world_view_folder)
-    print("Add boxes")
     world_view_client.add_collision_object("collision_matrix", 
                                 "/{}/generated".format(world_view_folder), 
                                 boxes)

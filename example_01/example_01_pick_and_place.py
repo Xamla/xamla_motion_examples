@@ -30,45 +30,16 @@ def main(loopCount: int):
     jv_prePlace = world_view_client.get_joint_values("03_PrePlace","example_01_pick_place")
     jv_place = world_view_client.get_joint_values("04_Place","example_01_pick_place") 
 
-    # Plan all the movement beforehand, so that they needn't be calculated anew all the time
-    prepick_to_pick_plan = move_group.move_joints(jv_pick, velocity_scaling=0.04)\
-        .with_start(jv_prePick).plan() 
-    pick_to_prepick_plan = move_group.move_joints(jv_prePick, velocity_scaling=1)\
-        .with_start(jv_pick).plan() 
-    prepick_to_preplace_plan = move_group.move_joints(jv_prePlace, velocity_scaling=1)\
-        .with_start(jv_prePick).plan() 
-    preplace_to_place_plan = move_group.move_joints(jv_place, velocity_scaling=0.04)\
-        .with_start(jv_prePlace).plan() 
-    place_to_preplace_plan = move_group.move_joints(jv_prePlace, velocity_scaling=0.04)\
-        .with_start(jv_place).plan()  
-    preplace_to_prepick_plan = move_group.move_joints(jv_prePick, velocity_scaling=0.5)\
-        .with_start(jv_prePlace).plan() 
-
     loop = asyncio.get_event_loop()
     # register the loop handler to be shutdown appropriately
     register_asyncio_shutdown_handler(loop)
 
-    async def run_supervised(stepped_motion_client):
-        print('start supervised execution')
-
-        task_next = asyncio.ensure_future(next(stepped_motion_client))
-
-        await stepped_motion_client.action_done_future
-        task_next.cancel()
-
-        print('finished supervised execution')
-
     async def move_supervised(joint_values: JointValues, velocity_scaling=1):
         """Opens a window in rosvita to let the user supervise the motion to joint values """
-        move_joints = move_group.move_joints(joint_values)
-        # Set velocity scaling
-        move_joints = move_joints.with_velocity_scaling(velocity_scaling)
-        # Plan 
-        move_joints_plan = move_joints.plan()
-        # Get a stepped motion client from move joints 
-        stepped_motion_client = move_joints_plan.execute_supervised()
+        stepped_client = move_group.move_joints_collision_free_supervised(joint_values, 
+                                                        velocity_scaling = velocity_scaling)
         robot_chat_stepped_motion = RobotChatSteppedMotion(robot_chat,
-                                                        stepped_motion_client,
+                                                        stepped_client,
                                                         move_group.name)
         await robot_chat_stepped_motion.handle_stepwise_motions()
 
@@ -82,46 +53,40 @@ def main(loopCount: int):
     async def go_to_prepick():
         print("Go to prepick position and open gripper")
         # Allows parallel adjustment of the gripper and movement of the end effector
-        # Go to prepick from current configuration
-        t1 = move_group.move_joints(jv_prePick, velocity_scaling=0.5).plan().execute_async()
+        t1 = move_group.move_joints(jv_prePick, velocity_scaling=0.5)
         t2 = wsg_gripper.grasp(0.02, 1, 0.05 )
         await asyncio.gather(t1, t2)
 
     async def pick_up():
-        """Simple example of a "picking up" motion. Use precalculated plans."""
+        """Simple example of a "picking up" motion """
         print("Pick up")
-        await prepick_to_pick_plan.execute_async()
+        await move_group.move_joints(jv_pick, velocity_scaling=0.04)
         await wsg_gripper.grasp(0.002, 0.1, 0.05)
-        await pick_to_prepick_plan.execute_async()
+        await move_group.move_joints(jv_prePick)
 
     async def go_to_preplace():
         print("Go to preplace position")
-        #  Use precalculated plans
-        await prepick_to_preplace_plan.execute_async()   
+        await move_group.move_joints(jv_prePlace)   
 
     async def place():
-        """Simple example of a "placing" motion.  Use precalculated plans."""
+        """Simple example of a "placing" motion """
         print("Place")
-        await preplace_to_place_plan.execute_async()
+        await move_group.move_joints(jv_place, velocity_scaling=0.04)
         await wsg_gripper.grasp(0.04, 1, 0.05)
-        await place_to_preplace_plan.execute_async()  
+        await move_group.move_joints(jv_prePlace)  
 
     async def pick_and_place():
-        """Actions to be repeated in loop."""
+        """Actions to be repeated in loop"""
         await go_to_prepick()
         await pick_up()
         await go_to_preplace()
         await place()
 
     try:
-        # Home the gripper and move to home joint values
+        # plan a trajectory to the begin pose
         loop.run_until_complete(prepare_gripper())
         for i in range(loopCount):
-            loop.run_until_complete(pick_and_place())     
-        # Go to home configuration
-        loop.run_until_complete(
-            move_group.move_joints(jv_home).plan().execute_async()
-            )
+            loop.run_until_complete(pick_and_place())      
     finally:
         loop.close()
 
