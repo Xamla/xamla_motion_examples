@@ -31,17 +31,17 @@ def main(loopCount: int):
     jv_place = world_view_client.get_joint_values("04_Place","example_01_pick_place") 
 
     # Plan all the movement beforehand, so that they needn't be calculated anew all the time
-    prepick_to_pick_plan = move_group.move_joints(jv_pick, velocity_scaling=0.04)\
+    prepick_to_pick_plan = move_group.move_joints_operation(jv_pick, velocity_scaling=0.04)\
         .with_start(jv_prePick).plan() 
-    pick_to_prepick_plan = move_group.move_joints(jv_prePick, velocity_scaling=1)\
+    pick_to_prepick_plan = move_group.move_joints_operation(jv_prePick, velocity_scaling=1)\
         .with_start(jv_pick).plan() 
-    prepick_to_preplace_plan = move_group.move_joints(jv_prePlace, velocity_scaling=1)\
+    prepick_to_preplace_plan = move_group.move_joints_operation(jv_prePlace, velocity_scaling=1)\
         .with_start(jv_prePick).plan() 
-    preplace_to_place_plan = move_group.move_joints(jv_place, velocity_scaling=0.04)\
+    preplace_to_place_plan = move_group.move_joints_operation(jv_place, velocity_scaling=0.04)\
         .with_start(jv_prePlace).plan() 
-    place_to_preplace_plan = move_group.move_joints(jv_prePlace, velocity_scaling=0.04)\
+    place_to_preplace_plan = move_group.move_joints_operation(jv_prePlace, velocity_scaling=0.04)\
         .with_start(jv_place).plan()  
-    preplace_to_prepick_plan = move_group.move_joints(jv_prePick, velocity_scaling=0.5)\
+    preplace_to_prepick_plan = move_group.move_joints_operation(jv_prePick, velocity_scaling=0.5)\
         .with_start(jv_prePlace).plan() 
 
     loop = asyncio.get_event_loop()
@@ -60,7 +60,7 @@ def main(loopCount: int):
 
     async def move_supervised(joint_values: JointValues, velocity_scaling=1):
         """Opens a window in rosvita to let the user supervise the motion to joint values """
-        move_joints = move_group.move_joints(joint_values)
+        move_joints = move_group.move_joints_operation(joint_values)
         # Set velocity scaling
         move_joints = move_joints.with_velocity_scaling(velocity_scaling)
         # Plan 
@@ -83,7 +83,7 @@ def main(loopCount: int):
         print("Go to prepick position and open gripper")
         # Allows parallel adjustment of the gripper and movement of the end effector
         # Go to prepick from current configuration
-        t1 = move_group.move_joints(jv_prePick, velocity_scaling=0.5).plan().execute_async()
+        t1 = move_group.move_joints_operation(jv_prePick, velocity_scaling=0.5).plan().execute_async()
         t2 = wsg_gripper.grasp(0.02, 1, 0.05 )
         await asyncio.gather(t1, t2)
 
@@ -120,7 +120,7 @@ def main(loopCount: int):
             loop.run_until_complete(pick_and_place())     
         # Go to home configuration
         loop.run_until_complete(
-            move_group.move_joints(jv_home).plan().execute_async()
+            move_group.move_joints_operation(jv_home).plan().execute_async()
             )
     finally:
         loop.close()
