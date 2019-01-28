@@ -102,7 +102,7 @@ async def main():
     # over the path on the z axis  
     target = add_sin_to_trajectory(target, amplitude=0.002, frequency=1/100, axis=2)
     # Move the end effector according to the now sinus shaped path
-    await end_effector.move_cartesian_linear(target, max_deviation=0.05).plan().execute_async()
+    await end_effector.move_poses_linear(target, max_deviation=0.05)
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()

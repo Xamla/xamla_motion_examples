@@ -139,7 +139,7 @@ async def main():
     begin_jvs = world_view_client.get_joint_values("Begin", world_view_folder)
 
     print("Go to begin configuration ")
-    await full_body_move_group.move_joints_collision_free(begin_jvs).plan().execute_async()
+    await full_body_move_group.move_joints_collision_free(begin_jvs)
 
     # Calculate the list of JointValues describing the movement 
     waypoints = plan_null_space_torso_move(left_move_group,
@@ -162,10 +162,10 @@ async def main():
     for i in range(2):
         # Go forth ...
         joint_path = JointPath(waypoints[0].joint_set, waypoints)
-        await full_body_move_group.move_joints(joint_path, velocity_scaling=0.4).plan().execute_async()
+        await full_body_move_group.move_joints(joint_path, velocity_scaling=0.4)
         # ... and back
         reversed_joint_path = JointPath(waypoints[0].joint_set, list(reversed(waypoints)))
-        await full_body_move_group.move_joints(reversed_joint_path, velocity_scaling=0.4).plan().execute_async()
+        await full_body_move_group.move_joints(reversed_joint_path, velocity_scaling=0.4)
 
     # clean up
     world_view_client.remove_element("generated", world_view_folder)
