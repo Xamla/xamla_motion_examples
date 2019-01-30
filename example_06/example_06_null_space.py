@@ -23,6 +23,7 @@ from xamla_motion.utility import register_asyncio_shutdown_handler
 
 import example_utils
 
+from xamla_motion import Cache
 
 def plan_null_space_torso_move(
             left_move_group: MoveGroup, 
@@ -113,7 +114,7 @@ def plan_null_space_torso_move(
 
 
 def add_generated_folder(world_view_client: WorldViewClient, world_view_folder: str) -> None:
-    """ Adds a folder to world view, deletes content if existand"""
+    """ Adds a folder to world view, deletes content if existent"""
 
     try:
         # delete folder if it already exists
@@ -141,12 +142,22 @@ async def main():
     print("Go to begin configuration ")
     await full_body_move_group.move_joints_collision_free(begin_jvs)
 
+
+    cache = Cache("I am in a", "example_06")
+    cache.load()
+    waypoints = cache.get("waypoints")
     # Calculate the list of JointValues describing the movement 
-    waypoints = plan_null_space_torso_move(left_move_group,
+    if waypoints == None:
+        waypoints = plan_null_space_torso_move(left_move_group,
                                         right_move_group,
                                         full_body_move_group,
                                         torso_joint_name,
                                         0.5)
+        print("Saved waypoints to file") 
+        cache.add("waypoints", waypoints)
+        cache.dump()
+    else:
+        print("Loaded waypoints from file.") 
 
     add_generated_folder(world_view_client, world_view_folder)
     # Save every waypoint to world view for visualization
