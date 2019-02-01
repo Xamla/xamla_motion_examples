@@ -180,7 +180,7 @@ async def main():
 
 
     joint_path = JointPath(waypoints[0].joint_set, waypoints)
-    await full_body_move_group.move_joints(joint_path, velocity_scaling=1)
+    await full_body_move_group.move_joints(joint_path, velocity_scaling=0.4)
     # ... and back
     reversed_joint_path = JointPath(waypoints[0].joint_set, list(reversed(waypoints)))
     await full_body_move_group.move_joints(reversed_joint_path, velocity_scaling=0.4)
