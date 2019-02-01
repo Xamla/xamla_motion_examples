@@ -8,6 +8,8 @@ After starting rosvita, enter
     $sudo apt install python3-tk
 """
 
+import termios, sys
+
 import numpy as np
 import math
 
@@ -409,7 +411,6 @@ class KeyboardListener(object):
             on_release=self.on_release) as listener:
                 listener.join()
 
-
 def main():
     world_view_folder = "example_07_jogging"
     jogging_client = JoggingClient()
@@ -423,16 +424,32 @@ def main():
     
     # register feedback function, to get alerted when an error occurs
     jogging_client.register(feedback_function)
-    #Begin tracking
+    # Begin tracking
     jogging_client.start()
+   
+    # Do not allow anything to be printed on the console when navigating
+    fd = sys.stdin.fileno()
+    # Store old attributes
+    old_attr = termios.tcgetattr(fd)
+    new_attr = termios.tcgetattr(fd)
+    # This disable echo
+    new_attr[3] = new_attr[3] & ~termios.ECHO
+    termios.tcsetattr(fd, termios.TCSADRAIN, new_attr)
+    try:
+        interface = JoggingKeyboardInterface(jogging_client, move_group, world_view_client)
+        interface.thread_start()
+    except Exception as e:
+        print(e)
+    finally:
 
-    interface = JoggingKeyboardInterface(jogging_client, move_group, world_view_client)
-    interface.thread_start()
-
-    # Stop tracking
-    jogging_client.stop()
-    # Unregister the feedback function
-    jogging_client.unregister(feedback_function)
+        # Allow characters to be entered again
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_attr)
+        # Flush characters entered  
+        termios.tcflush(sys.stdin, termios.TCIOFLUSH)
+        # Stop tracking python3
+        jogging_client.stop()
+        # Unregister the feedback function
+        jogging_client.unregister(feedback_function)
 
 if __name__ == '__main__':
     main()
