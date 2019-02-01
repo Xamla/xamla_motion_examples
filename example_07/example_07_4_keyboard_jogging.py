@@ -294,6 +294,14 @@ class KeyboardListener(object):
                 func=self._jogging_interface.update_linear, 
                 args_pressed=(1, -1), 
                 args_released=(1, 0)),
+            "x" : self._call_always(    # move in x direction
+                func=self._jogging_interface.update_linear,
+                 args_pressed=(2, 1), 
+                 args_released=(0, 0)),
+            "y" : self._call_always(    # move in -x direction
+                func=self._jogging_interface.update_linear, 
+                args_pressed=(2, -1), 
+                args_released=(0, 0)),
             "down" : self._call_always(    # roll around x axis
                 func=self._jogging_interface.update_angular,
                  args_pressed=(0, 32), 
