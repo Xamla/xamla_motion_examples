@@ -110,3 +110,18 @@ This set of examples shows how to use the jogging client using the python interf
     sudo example_07/install_dependencies.sh 
     ```
 
+## Example 08: Trajectory Cache
+
+This example show how to use the Trajectory Cache to cache a set of trajectories.
+Also, basic serialization is shown by using the Cache.
+
+With the Trajectory Cache one can precalculate a set of trajectories.
+At this moment, it supports:
+
+* one-to-one: caching a single trajectory defined by two poses
+* one-to-many: caching a set of trajectories, which all start at a fixed pose and end in poses defined by a set of poses (defined by a SampleVolume). 
+* many-to-one: caching a set of trajectories, which start at poses defined by a set of poses (defined by a SampleVolume) and end in a fixed pose.
+
+The TrajectoryCache instance, once the trajectories have been calculated, offers  quick access to them.
+If for example a one-to-many scenario has been pre-calculated, a random pose which lies in the boundaries of the SampleVolume used for the precalculation can be chosen, and the TrajectoryCache will return the most probable trajectory for that pose without recalculating it.
+Furthermore, this allows for a more robust workflow, since the trajectories can be asserted to not violate any boundaries beforehand.
