@@ -3,7 +3,6 @@ Helper functions to create a SampleBox instance
 
 """
 
-
 from pyquaternion import Quaternion
 import numpy as np
 
@@ -15,7 +14,7 @@ def get_sample_box(mid_point: Pose) -> SampleBox:
     This function creates a sample box.
     A sample box contains a set of translation vectors and
     a set of quaternions.
-    Create_trajectory_cache, when called with the box either as target (one to many)
+    create_trajectory_cache, when called with the box either as target (one to many)
     or as source (many to on), tries to get trajectories to/from every pose which 
     can be created out of all possible combination of rotation and translation
     defined by the sample box.
