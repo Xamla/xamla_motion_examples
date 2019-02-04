@@ -105,3 +105,8 @@ This set of examples shows how to use the jogging client using the python interf
     sudo pip install pynput
     sudo apt install python3-tk
     ```
+    Or use the install script 
+    ```
+    sudo example_07/install_dependencies.sh 
+    ```
+
