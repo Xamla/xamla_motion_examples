@@ -107,6 +107,8 @@ This set of examples shows how to use the jogging client using the python interf
 
 ## Example 08: Trajectory Cache
 
+WIP EXAMPLE !
+
 This example show how to use the Trajectory Cache to cache a set of trajectories.
 Also, basic serialization is shown by using the Cache.
 
