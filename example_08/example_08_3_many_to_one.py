@@ -42,7 +42,7 @@ def get_one_to_one_trajectory_cache() -> TaskTrajectoryCache:
     cache = Cache("trajectory_cache", "example_08")
     cache.load()
 
-    key = "many-to-one"
+    key = "many_to_one"
 
     # First, show a one_to_one
     # Check if the key exists already in the cache
