@@ -13,27 +13,27 @@ import numpy as np
 from xamla_motion import EndEffector, WorldViewClient
 from xamla_motion.data_types import Pose
 
-from xamla_motion.trajectory_caching import TaskTrajectoryCache, create_trajectory_cache)
+from xamla_motion.trajectory_caching import TaskTrajectoryCache, create_trajectory_cache
 
 from xamla_motion import Cache
 
 import example_utils
 
-from sample_box_helper import get_sample_box
+from example_08.sample_box_helper import get_sample_box
 
 
 def test_cached_trajectories():
-    world_view_client=WorldViewClient()
-    move_group=example_utils.get_move_group()
-    end_effector=move_group.get_end_effector()
+    world_view_client = WorldViewClient()
+    move_group = example_utils.get_move_group()
+    end_effector = move_group.get_end_effector()
 
-    world_view_folder="example_08_trajectory_cache"
+    world_view_folder = "example_08_trajectory_cache"
 
     # Get start and end from world view
-    start_jv=world_view_client.get_joint_values(
+    start_jv = world_view_client.get_joint_values(
         "start_jv", world_view_folder)
-    start_pose=end_effector.get_current_pose(start_jv)
-    end_pose=world_view_client.get_joint_values(
+    start_pose = end_effector.compute_pose(start_jv)
+    end_pose = world_view_client.get_pose(
         "end_pose", world_view_folder)
 
     # Get a SampleBox, which cotains a Volume defined by translations and rotations

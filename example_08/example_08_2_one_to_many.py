@@ -13,13 +13,14 @@ import numpy as np
 from xamla_motion import EndEffector, WorldViewClient
 from xamla_motion.data_types import Pose
 
-from xamla_motion.trajectory_caching import TaskTrajectoryCache, create_trajectory_cache)
+from xamla_motion.trajectory_caching import TaskTrajectoryCache, create_trajectory_cache
 
 from xamla_motion import Cache
 
 import example_utils
 
-from sample_box_helper import  get_sample_box
+from example_08.sample_box_helper import get_sample_box
+
 
 def get_one_to_one_trajectory_cache() -> TaskTrajectoryCache:
     world_view_client = WorldViewClient()
@@ -31,11 +32,11 @@ def get_one_to_one_trajectory_cache() -> TaskTrajectoryCache:
     # Get start and end from world view
     start_jv = world_view_client.get_joint_values(
         "start_jv", world_view_folder)
-    start_pose = end_effector.get_current_pose(start_jv)
-    end_pose = world_view_client.get_joint_values(
+    start_pose = end_effector.compute_pose(start_jv)
+    end_pose = world_view_client.get_pose(
         "end_pose", world_view_folder)
 
-    # Get a SampleBox, which cotains a Volume defined by translations and rotations
+    # Get a SampleBox, which contains a Volume defined by translations and rotations
     end_box = get_sample_box(end_pose)
 
     # Use a cash to store the calculated trajectories
@@ -49,14 +50,18 @@ def get_one_to_one_trajectory_cache() -> TaskTrajectoryCache:
     trajectory_cache = cache.get(key)
     if trajectory_cache is None:
         print("Create the trajectory cache, since it has not been serialized yet")
-        trajectory_cache = create_trajectory_cache(end_effector=end_effector,
-                                                  seed=start_jv,
-                                                  start=start_pose,
-                                                  target=end_box)
+        trajectory_cache = create_trajectory_cache(set_robot_service_name="/sda10f/xamlaSda10fController/set_state",
+                                                   end_effector=end_effector,
+                                                   seed=start_jv,
+                                                   start=start_pose,
+                                                   target=end_box)
         print("Serialize the calculated trajectories")
         cache.add(key, trajectory_cache)
         cache.dump()
+    else:
+        print("Data already serialized.")
     return trajectory_cache
-  
+
+
 if __name__ == '__main__':
     get_one_to_one_trajectory_cache()
