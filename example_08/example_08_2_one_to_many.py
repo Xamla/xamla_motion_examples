@@ -22,7 +22,7 @@ import example_utils
 from example_08.sample_box_helper import get_sample_box
 
 
-def get_one_to_one_trajectory_cache() -> TaskTrajectoryCache:
+def get_one_to_many_trajectory_cache() -> TaskTrajectoryCache:
     world_view_client = WorldViewClient()
     move_group = example_utils.get_move_group()
     end_effector = move_group.get_end_effector()
@@ -64,4 +64,4 @@ def get_one_to_one_trajectory_cache() -> TaskTrajectoryCache:
 
 
 if __name__ == '__main__':
-    get_one_to_one_trajectory_cache()
+    get_one_to_many_trajectory_cache()
