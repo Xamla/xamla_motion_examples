@@ -82,11 +82,16 @@ def main(loopCount: int):
         await go_to_preplace()
         await place()
 
+    async def return_home():
+        print("Return home")
+        await move_group.move_joints_collision_free(jv_home)
+
     try:
         # plan a trajectory to the begin pose
         loop.run_until_complete(prepare_gripper())
         for i in range(loopCount):
             loop.run_until_complete(pick_and_place())      
+        loop.run_until_complete(return_home())
     finally:
         loop.close()
 
