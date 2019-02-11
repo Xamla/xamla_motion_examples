@@ -992,27 +992,6 @@
       "enabled": true,
       "children": [
         {
-          "type": "Pose",
-          "id": "Pose_TrackingPose",
-          "tags": [],
-          "value": {
-            "frame": "world",
-            "translation": [
-              0.73210692405700684,
-              -0.48067310452461243,
-              1.2025080919265747
-            ],
-            "rotation": [
-              -0.643980860710144,
-              0.28772029280662537,
-              -0.1623646467924118,
-              0.69003146886825562
-            ]
-          },
-          "enabled": true,
-          "visible": true
-        },
-        {
           "type": "JointValues",
           "id": "JointValues_Begin",
           "tags": [],

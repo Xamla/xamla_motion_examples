@@ -8,9 +8,12 @@ import time
 
 from xamla_motion.world_view_client import WorldViewClient
 
-import example_utils
+from xamla_motion.xamla_motion_exceptions.exceptions import ArgumentError as Xamla_ArgumentError
+
 from xamla_motion.jogging_client import JoggingClient
 from example_07.example_07_jogging_feedback import callback_function as feedback_function
+
+import example_utils
 
 def track_point(time_amount: float, 
                 frequency: float,  
@@ -60,7 +63,10 @@ def main():
 
     point_name = "TrackingPose"
     # Write pose to World View, so the tracking begins with the current end effector pose
-    world_view_client.update_pose( point_name,  world_view_folder, current_pose)
+    try:
+        world_view_client.add_pose(point_name,  world_view_folder, current_pose)
+    except Xamla_ArgumentError:
+        world_view_client.update_pose( point_name,  world_view_folder, current_pose)
 
     get_pose = lambda : world_view_client.get_pose(point_name, world_view_folder)
 
@@ -77,6 +83,10 @@ def main():
     jogging_client.toggle_tracking(False)
     # Unregister the feedback function
     jogging_client.unregister(feedback_function)
+
+    # Remove tracking pose    
+    world_view_client.remove_element( point_name,  world_view_folder)
+
     
 if __name__ == '__main__':
     main()
