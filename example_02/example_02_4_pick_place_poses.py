@@ -58,12 +58,12 @@ def main(poses: List[Pose], pre_place_jvs: List[JointValues], home: JointValues,
         pre_place_pose = end_effector.compute_pose(jv_pre_place)
 
         await end_effector.move_poses_linear(CartesianPath([pre_place_pose, place]), 
-                                                velocity_scaling = 0.2)
+                                                velocity_scaling = 0.05)
         
         # do something, e.g. place an object 
 
         await end_effector.move_poses_linear(CartesianPath([place, pre_place_pose]),
-                                                velocity_scaling = 0.2)
+                                                velocity_scaling = 0.05)
 
 
         # Creates a joint path over the joint values to the home pose
