@@ -31,8 +31,8 @@ def get_sample_box(mid_point: Pose) -> SampleBox:
         quaternions.append(r)
 
     sample_rect = SampleBox(origin=mid_point,
-                            size=[0.1, 0.1, 0.0],
-                            resolution=[0.05, 0.05, 0.1],
+                            size=[0.2, 0.2, 0],
+                            resolution=[0.05, 0.05, 0.05],
                             quaternions=quaternions)
     return sample_rect
 

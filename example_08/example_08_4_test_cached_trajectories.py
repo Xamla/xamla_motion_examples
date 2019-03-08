@@ -17,7 +17,6 @@ from xamla_motion.utility import register_asyncio_shutdown_handler
 
 from xamla_motion import EndEffector, WorldViewClient
 from xamla_motion.data_types import Pose
-
 from xamla_motion.trajectory_caching import (TaskTrajectoryCache,
                                              create_trajectory_cache,
                                              move_with_trajectory_cache)
@@ -26,13 +25,16 @@ from xamla_motion import Cache
 
 import example_utils
 from example_08.sample_box_helper import get_sample_box
+from example_08 import (remove_cache,
+                        example_08_2_one_to_many,
+                        example_08_3_many_to_one)
 
 loop = asyncio.get_event_loop()
 # Register the loop handler to be shutdown appropriately
 register_asyncio_shutdown_handler(loop)
 
 def add_generated_folder(world_view_client: WorldViewClient, world_view_folder: str) -> None:
-    """ Adds a folder to world view, deletes content if existand"""
+    """ Adds a folder to world view, deletes content if existent"""
 
     try:
         # delete folder if it already exists
@@ -130,6 +132,10 @@ def test_cached_trajectories(tc_go_to: TaskTrajectoryCache,
     input("Press enter to clean up")
     world_view_client.remove_element("generated", world_view_folder)
 
-
 if __name__ == '__main__':
-    _open_and_test()
+  #  if True:
+  #      remove_cache.remove_cache()
+    tc_go_to = example_08_2_one_to_many.get_one_to_many_trajectory_cache()
+    tc_come_back = example_08_3_many_to_one.get_many_to_one_trajectory_cache()
+    test_cached_trajectories(
+        tc_go_to, tc_come_back)

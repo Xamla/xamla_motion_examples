@@ -18,9 +18,7 @@ from xamla_motion.trajectory_caching import TaskTrajectoryCache, create_trajecto
 from xamla_motion import Cache
 
 import example_utils
-
 from example_08.sample_box_helper import get_sample_box
-
 
 def get_one_to_many_trajectory_cache() -> TaskTrajectoryCache:
     world_view_client = WorldViewClient()

@@ -16,7 +16,7 @@ from xamla_motion.xamla_motion_exceptions.exceptions import ArgumentError
 import example_utils 
 
 def add_generated_folder(world_view_client: WorldViewClient, world_view_folder: str) -> None:
-    """ Adds a folder to world view, deletes content if existand"""
+    """ Adds a folder to world view, deletes content if existent"""
 
     try:
         # delete folder if it already exists

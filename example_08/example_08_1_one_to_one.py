@@ -54,6 +54,8 @@ def get_one_to_one_trajectory_cache() -> TaskTrajectoryCache:
         cache.dump()
     else:
         print("Data already serialized.")
+
+    trajectory = trajectory_cache.get_trajectory(start_pose, end_pose, 3)
     return trajectory_cache
 
 

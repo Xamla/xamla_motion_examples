@@ -86,8 +86,8 @@ This [example script](example_06/example_06_null_space.py)  shows how to achieve
 This set of examples shows how to use the jogging client using the python interface.
 
 * The [first script](example_07/example_07_1_follow_pose.py) reads continuously a pose from world view and uses jogging to move the EndEffector to that position.
-* The [second script](example_07/example_07_2_rotate_joint.py) show how a joint can be addressed and moved directly.
-* The [third script](example_07/example_07_3_twist.py) show how a twist can be applied to an end effector.
+* The [second script](example_07/example_07_2_rotate_joint.py) shows how a joint can be addressed and moved directly.
+* The [third script](example_07/example_07_3_twist.py) shows how a twist can be applied to an end effector.
 * The [fourth script](example_07/example_07_4_keyboard_jogging.py) uses pynput to allow jogging via keys and saving poses by pressing enter. 
     For the key binding, press "h" after starting the script.
     To stop the listener thread, press "escape".
@@ -107,19 +107,26 @@ This set of examples shows how to use the jogging client using the python interf
 
 ## Example 08: Trajectory Cache
 
-WIP EXAMPLE !
+This example show how to use the TaskTrajectoryCache to cache a set of trajectories.
+Also, basic serialization is shown by using the Cache of the xamla_vision package.
 
-This example show how to use the Trajectory Cache to cache a set of trajectories.
-Also, basic serialization is shown by using the Cache.
-
-With the Trajectory Cache one can precalculate a set of trajectories.
+With the TaskTrajectoryCache one can precalculate a set of trajectories out of poses.
 At this moment, it supports:
 
 * one-to-one: caching a single trajectory defined by two poses
-* one-to-many: caching a set of trajectories, which all start at a fixed pose and end in poses defined by a set of poses (defined by a SampleVolume). 
-* many-to-one: caching a set of trajectories, which start at poses defined by a set of poses (defined by a SampleVolume) and end in a fixed pose.
+* one-to-many: caching a set of trajectories, which all start at a fixed pose and end in poses defined by a set of poses (defined by a SampleVolume instance). 
+* many-to-one: caching a set of trajectories, which start at poses defined by a set of poses (defined by a SampleVolume instance) and end in a fixed pose.
 
-The TrajectoryCache instance, once the trajectories have been calculated, offers  quick access to them.
-If for example a one-to-many scenario has been pre-calculated, a random pose which lies in the boundaries of the SampleVolume used for the precalculation can be chosen, and the TrajectoryCache will return the most probable trajectory for that pose without recalculating it.
-Furthermore, this allows for a more robust workflow, since the trajectories can be asserted to not violate any boundaries beforehand.
+Furthermore, the TaskTrajectoryCache instance gives access to the next best pre-calculated trajectory given a pose.
+If for example a one-to-many scenario has been pre-calculated, a random target pose which lies in the boundaries of the SampleVolume used for the pre-calculation can be chosen, and the TaskTrajectoryCache will return the nearest trajectory regarding its endpoint to the target pose. From there, simple linear movement can be done to move to the desired pose. The length of this movement depends on the density of the SampleBox instance.
 
+The SampleBox takes a pose and some parameter to generate a set of poses, composing a 3-d grid of poses at certain translations and rotations.
+
+* The [first script](example_08/example_08_1_one_to_one.py) shows how to instantiate a one-to-one TaskTrajectoryCache instance and serialize it. 
+Here, the TaskTrajectoryCache instance is stored under the key "one_to_one", to avoid conflict with the other scripts. All scripts use the same cache file. but different keys.  
+* The [second script](example_08/example_08_2_one_to_many.py) shows the one-to-many TaskTrajectoryCache.
+* The [third script](example_08/example_08_3_many_to_one.py) shows the many-to-one TaskTrajectoryCache.
+* The [fourth script](example_08/example_08_4_test_cached_trajectories.py) uses the serialized TaskTrajectoryCaches to show how a pose can be used to find the best suited trajectory. For that, a new pose ```target_pose``` is added to world view, which can be moved within the boundaries of the SampleBox to show how different trajectories are selected and executed. The pose must lie in the grid.
+The SampleBox grid is generated around the ```end_pose```.
+
+The script lazily calls the second and third script to generate the trajectories, so make sure to run  [remove_cache](example_08/remove_cache.py) if the trajectories should be calculated anew. 
