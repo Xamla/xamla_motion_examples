@@ -104,19 +104,21 @@ def test_cached_trajectories(tc_go_to: TaskTrajectoryCache,
                                    folder_path=world_view_folder + "/generated",
                                    pose=end_pose)
 
-        input("Please move target_pose in world view ")
+        input("Please move 'target_pose' in world view in folder 'example_08_trajectory_cache/generated', then press enter.")
         target_pose = world_view_client.get_pose(element_name="target_pose",
                                                  folder_path=world_view_folder + "/generated")
         try:
             # This movement uses the trajectory which ends nearest to target_pose
+            print("Move to nearest pose")
             execution = move_with_trajectory_cache(cache=tc_go_to,
                                                    end_effector=end_effector,
                                                    start_joint_values=start_jv,
                                                    target_pose=target_pose,
                                                    max_position_diff_radius=0.05)
             loop.run_until_complete(execution)
-
+           
             # This movement uses the trajectory which begins nearest to target_pose
+            print("Return home")
             execution = move_with_trajectory_cache(cache=tc_come_back,
                                                    end_effector=end_effector,
                                                    start_joint_values=None,

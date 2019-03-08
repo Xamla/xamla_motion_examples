@@ -90,7 +90,7 @@ class JoggingKeyboardInterface(object):
         # A lock object, which is used by the synchronized decorator 
         self._mutex = Lock()
 
-        self._current_frame = "_gripper_right_tool0"
+        self._current_frame = "tcp_link_right"
 
         self._linear = np.array([0.0,0.0,0.0])
         self._angular = np.array([0.0,0.0,0.0])
@@ -208,7 +208,7 @@ class JoggingKeyboardInterface(object):
         """Just toggle between world and gripper frame""" 
 
         if self._current_frame == "world":
-            return "_gripper_right_tool0"
+            return "tcp_link_right"
         else:
             return "world" 
 
@@ -299,11 +299,11 @@ class KeyboardListener(object):
             "x" : self._call_always(    # move in x direction
                 func=self._jogging_interface.update_linear,
                  args_pressed=(2, 1), 
-                 args_released=(0, 0)),
+                 args_released=(2, 0)),
             "y" : self._call_always(    # move in -x direction
                 func=self._jogging_interface.update_linear, 
                 args_pressed=(2, -1), 
-                args_released=(0, 0)),
+                args_released=(2, 0)),
             "down" : self._call_always(    # roll around x axis
                 func=self._jogging_interface.update_angular,
                  args_pressed=(0, 32), 

@@ -90,7 +90,7 @@ async def main():
     pose = end_effector.get_current_pose()
     # Create a cartesian path of the same poses
     path = []
-    for i in range(300):
+    for i in range(100):
         path.append(pose)
     cartesian_path = CartesianPath(path)
 

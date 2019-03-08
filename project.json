@@ -23,7 +23,7 @@
           "searchAttempts": 3,
           "kinematicChain": {
             "baselink": "torso_link_b1",
-            "tipLink": "arm_left_link_tool0"
+            "tipLink": "tcp_link_left"
           },
           "subGroups": []
         },
@@ -37,7 +37,7 @@
           "searchAttempts": 3,
           "kinematicChain": {
             "baselink": "torso_link_b1",
-            "tipLink": "arm_right_link_tool0"
+            "tipLink": "tcp_link_right"
           },
           "subGroups": []
         },
@@ -79,7 +79,7 @@
           "searchAttempts": 3,
           "kinematicChain": {
             "baselink": "torso_link_b1",
-            "tipLink": "arm_left_link_tool0"
+            "tipLink": "tcp_link_left"
           },
           "subGroups": [
             "/sda10f/sda10f_r1_controller",
@@ -96,7 +96,7 @@
           "searchAttempts": 3,
           "kinematicChain": {
             "baselink": "torso_link_b1",
-            "tipLink": "arm_right_link_tool0"
+            "tipLink": "tcp_link_right"
           },
           "subGroups": [
             "/sda10f/sda10f_r2_controller",
@@ -144,7 +144,7 @@
           "id": "endEffector_60d8ad11d3834a06a393272a49c30ce9",
           "name": "EE_manipulator_right",
           "group": "/sda10f/sda10f_r2_controller",
-          "parentLink": "arm_right_link_tool0",
+          "parentLink": "tcp_link_right",
           "positionIncrementMax": 0.5,
           "positionIncrementMin": 0.001,
           "rotationIncrementMax": 0.1,
@@ -158,7 +158,7 @@
           "id": "endEffector_258a62d4ec50418c8cac8f61a400b8cf",
           "name": "EE_manipulator_left",
           "group": "/sda10f/sda10f_r1_controller",
-          "parentLink": "arm_left_link_tool0",
+          "parentLink": "tcp_link_left",
           "positionIncrementMax": 0.5,
           "positionIncrementMin": 0.001,
           "rotationIncrementMax": 0.1,
@@ -172,7 +172,7 @@
           "id": "endEffector_04f9890a369c440b8498ef5392d26ed1",
           "name": "EE_manipulator_left_torso",
           "group": "/sda10f/left_arm_torso",
-          "parentLink": "arm_left_link_tool0",
+          "parentLink": "tcp_link_left",
           "positionIncrementMax": 0.5,
           "positionIncrementMin": 0.001,
           "rotationIncrementMax": 0.1,
@@ -186,7 +186,7 @@
           "id": "endEffector_98f2086dcb634e1da4c1ef7ebb51c56c",
           "name": "EE_manipulator_right_torso",
           "group": "/sda10f/right_arm_torso",
-          "parentLink": "arm_right_link_tool0",
+          "parentLink": "tcp_link_right",
           "positionIncrementMax": 0.5,
           "positionIncrementMin": 0.001,
           "rotationIncrementMax": 0.1,

@@ -147,7 +147,7 @@ def main(xSize: int, ySize: int, xStepSize: float , yStepSize: float):
 
     # For visualization and possible collisions, add some boxes below the positions 
     # we want to visit
-    getBoxPose = lambda pose : Pose(pose.translation + (orthogonal * (0.12)), pose.quaternion) 
+    getBoxPose = lambda pose : Pose(pose.translation + (orthogonal * (0.02)), pose.quaternion) 
     boxPoses = list(map(getBoxPose, poses))
     boxes = example_02_2_create_collision_boxes.main(boxPoses, (xStepSize*0.9, yStepSize*0.9, 0.01))
     world_view_client.add_collision_object("collision_matrix", 

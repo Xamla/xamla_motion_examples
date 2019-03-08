@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <robot name="xamla_motion_examples" xmlns:xacro="http://ros.org/wiki/xacro" xmlns:xamla="http://www.xamla.com/">
   <link name="world" />
+  <link name="tcp_link_left" />
+  <joint name="tcp_joint_left_F" type="fixed">
+    <child link="tcp_link_left" />
+    <parent link="arm_left_link_tool0" />
+    <origin xyz="0.0 0.000 0.09" rpy="0 0 0" />
+  </joint>
+  <link name="tcp_link_right" />
+  <joint name="tcp_joint_right_F" type="fixed">
+    <child link="tcp_link_right" />
+    <parent link="arm_right_link_tool0" />
+    <origin xyz="0.0 0.000 0.09" rpy="0 0 0" />
+  </joint>
   <link name="torso_base_link">
     <visual>
       <geometry>
